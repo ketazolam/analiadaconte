@@ -23,15 +23,17 @@ const Navigation = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
-          scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : "bg-transparent"
+          scrolled ? "backdrop-blur-xl border-b border-border" : "bg-transparent"
         }`}
+        style={scrolled ? { backgroundColor: "rgba(13,10,20,0.92)" } : undefined}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Logo */}
-        <a href="#" className="flex flex-col items-start">
+        <a href="#" className="flex flex-col items-start relative">
           <span className="font-display italic text-2xl text-foreground leading-none">AD</span>
+          <div className="w-full h-[1px] mt-0.5" style={{ background: "linear-gradient(90deg, hsl(274,69%,40%), transparent)" }} />
           <span className="label-accent text-text-secondary mt-0.5" style={{ fontSize: 9 }}>
             Analía Daconte
           </span>
@@ -43,9 +45,10 @@ const Navigation = () => {
             <a
               key={link.label}
               href={link.href}
-              className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-foreground transition-colors duration-300"
+              className="relative font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-foreground transition-colors duration-300 group"
             >
               {link.label}
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-violet opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
           ))}
         </div>
@@ -74,7 +77,8 @@ const Navigation = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="fixed inset-0 z-[60] bg-background flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[60] flex flex-col items-center justify-center"
+            style={{ backgroundColor: "#130E1E" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -91,7 +95,8 @@ const Navigation = () => {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  className="font-display text-3xl text-foreground"
+                  className="font-display text-3xl text-foreground pl-4"
+                  style={{ borderLeft: "2px solid hsl(274,69%,40%)" }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}

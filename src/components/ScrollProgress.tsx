@@ -6,8 +6,11 @@ const ScrollProgress = () => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-[2px] bg-primary origin-left z-[100]"
-      style={{ scaleX }}
+      className="fixed top-0 left-0 right-0 h-[2px] origin-left z-[100]"
+      style={{
+        scaleX,
+        background: "linear-gradient(90deg, hsl(274,69%,40%), hsl(38,54%,50%), hsl(42,76%,66%))",
+      }}
     />
   );
 };
