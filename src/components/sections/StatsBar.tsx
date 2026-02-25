@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, animate } from "framer-motion";
 
 const stats = [
   { value: 200, prefix: "+", suffix: "", label: "Propiedades activas" },
@@ -11,19 +11,16 @@ const stats = [
 const Counter = ({ value, prefix, suffix, isText }: { value: number; prefix: string; suffix: string; isText?: boolean }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
+  const inView = useInView(ref, { once: true, amount: 0.5 });
 
   useEffect(() => {
     if (!inView || isText) return;
-    let start = 0;
-    const duration = 2000;
-    const step = duration / value;
-    const timer = setInterval(() => {
-      start++;
-      setCount(start);
-      if (start >= value) clearInterval(timer);
-    }, step);
-    return () => clearInterval(timer);
+    const controls = animate(0, value, {
+      duration: 2,
+      ease: "easeOut",
+      onUpdate: (v) => setCount(Math.floor(v)),
+    });
+    return () => controls.stop();
   }, [inView, value, isText]);
 
   return (

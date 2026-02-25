@@ -3,11 +3,12 @@ import HeroSection from "@/components/sections/HeroSection";
 import DualPathSection from "@/components/sections/DualPathSection";
 import StatsBar from "@/components/sections/StatsBar";
 import FeaturedProperties from "@/components/sections/FeaturedProperties";
+import SellProposal from "@/components/sections/SellProposal";
 import AboutSection from "@/components/sections/AboutSection";
 import SellersSection from "@/components/sections/SellersSection";
 import ClosedDeals from "@/components/sections/ClosedDeals";
 import ReviewsSection from "@/components/sections/ReviewsSection";
-import ValuationCTA from "@/components/sections/ValuationCTA";
+import ValuationTool from "@/components/sections/ValuationTool";
 import Footer from "@/components/sections/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import CustomCursor from "@/components/CustomCursor";
@@ -25,11 +26,12 @@ const Index = () => {
         <DualPathSection />
         <StatsBar />
         <FeaturedProperties />
+        <SellProposal />
         <AboutSection />
         <SellersSection />
         <ClosedDeals />
         <ReviewsSection />
-        <ValuationCTA />
+        <ValuationTool />
       </main>
       <Footer />
     </>

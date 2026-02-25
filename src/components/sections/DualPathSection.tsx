@@ -20,6 +20,7 @@ const DualPathSection = () => {
       ],
       cta: "Ver propiedades",
       direction: -100,
+      bgImage: "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80",
     },
     {
       icon: Key,
@@ -31,6 +32,7 @@ const DualPathSection = () => {
       ],
       cta: "Quiero vender",
       direction: 100,
+      bgImage: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&q=80",
     },
   ];
 
@@ -47,9 +49,11 @@ const DualPathSection = () => {
         {panels.map((panel, i) => (
           <motion.div
             key={panel.title}
-            className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[60vh] noise-overlay"
+            className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[70vh] md:min-h-[60vh] noise-overlay relative"
             style={{
-              backgroundColor: i === 0 ? "#0C0B0F" : "#111015",
+              backgroundImage: `linear-gradient(to bottom, rgba(12,11,15,0.75), rgba(12,11,15,0.75)), url('${panel.bgImage}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
             initial={{ opacity: 0, x: panel.direction }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
