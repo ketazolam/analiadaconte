@@ -44,18 +44,18 @@ const CustomCursor = () => {
         style={{
           x: trailX,
           y: trailY,
-          opacity: isVisible ? 0.2 : 0,
-          backgroundColor: "hsl(263, 70%, 58%)",
+          opacity: isVisible ? 0.15 : 0,
+          backgroundColor: "hsl(38, 54%, 50%)",
         }}
       />
       {/* Main cursor */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999]"
         style={{
           x: cursorX,
           y: cursorY,
           opacity: isVisible ? 1 : 0,
-          backgroundColor: "hsl(263, 70%, 58%)",
+          backgroundColor: "hsl(38, 54%, 50%)",
         }}
       />
     </>

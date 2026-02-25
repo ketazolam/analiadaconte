@@ -4,32 +4,32 @@
 
 @layer base {
   :root {
-    --background: 270 25% 5%;
-    --foreground: 30 20% 93%;
+    --background: 260 15% 5%;
+    --foreground: 36 16% 93%;
 
-    --card: 270 30% 9%;
-    --card-foreground: 30 20% 93%;
+    --card: 260 14% 8%;
+    --card-foreground: 36 16% 93%;
 
-    --popover: 270 28% 11%;
-    --popover-foreground: 30 20% 93%;
+    --popover: 260 12% 9%;
+    --popover-foreground: 36 16% 93%;
 
     --primary: 38 54% 50%;
-    --primary-foreground: 270 25% 5%;
+    --primary-foreground: 260 15% 5%;
 
-    --secondary: 270 30% 9%;
-    --secondary-foreground: 30 20% 93%;
+    --secondary: 260 14% 8%;
+    --secondary-foreground: 36 16% 93%;
 
-    --muted: 270 28% 11%;
-    --muted-foreground: 24 6% 33%;
+    --muted: 260 12% 9%;
+    --muted-foreground: 30 4% 28%;
 
     --accent: 42 76% 66%;
-    --accent-foreground: 270 25% 5%;
+    --accent-foreground: 260 15% 5%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 270 30% 12%;
-    --input: 270 30% 12%;
+    --border: 0 0% 100% / 0.06;
+    --input: 0 0% 100% / 0.06;
     --ring: 38 54% 50%;
 
     --radius: 2px;
@@ -38,28 +38,28 @@
     --gold: 38 54% 50%;
     --gold-light: 42 76% 66%;
     --gold-muted: 42 74% 31%;
-    --text-primary: 30 20% 93%;
-    --text-secondary: 24 4% 59%;
-    --text-muted: 24 6% 33%;
-    --bg-primary: 270 25% 5%;
-    --bg-secondary: 270 35% 9%;
-    --bg-surface: 270 38% 11%;
-    --whatsapp: 142 70% 49%;
+    --gold-dim: 38 54% 50% / 0.15;
+    --text-primary: 36 16% 93%;
+    --text-secondary: 30 3% 52%;
+    --text-muted: 30 3% 28%;
+    --bg-primary: 260 15% 5%;
+    --bg-secondary: 260 10% 7%;
+    --bg-surface: 260 14% 10%;
 
-    /* Violet brand tokens */
+    /* Violet — micro-accent only */
     --violet: 274 69% 40%;
     --violet-deep: 274 72% 22%;
     --violet-mid: 263 70% 58%;
-    --violet-glow: 274 69% 40%;
-    --violet-border: 274 69% 40%;
 
-    --sidebar-background: 270 30% 9%;
-    --sidebar-foreground: 30 20% 93%;
+    --whatsapp: 142 70% 49%;
+
+    --sidebar-background: 260 14% 8%;
+    --sidebar-foreground: 36 16% 93%;
     --sidebar-primary: 38 54% 50%;
-    --sidebar-primary-foreground: 270 25% 5%;
-    --sidebar-accent: 270 28% 11%;
-    --sidebar-accent-foreground: 30 20% 93%;
-    --sidebar-border: 270 30% 12%;
+    --sidebar-primary-foreground: 260 15% 5%;
+    --sidebar-accent: 260 12% 9%;
+    --sidebar-accent-foreground: 36 16% 93%;
+    --sidebar-border: 0 0% 100% / 0.06;
     --sidebar-ring: 38 54% 50%;
   }
 }
@@ -151,27 +151,23 @@
     width: 100%;
     background: linear-gradient(90deg, 
       transparent 0%, 
-      rgba(107,33,168,0.4) 30%, 
-      rgba(196,154,60,0.4) 50%,
-      rgba(107,33,168,0.4) 70%,
+      rgba(196,154,60,0.2) 30%, 
+      rgba(196,154,60,0.3) 50%,
+      rgba(196,154,60,0.2) 70%,
       transparent 100%);
   }
 }
 
 /* Particle animation */
 @keyframes float-particle {
-  0%, 100% { transform: translate(0, 0); opacity: 0.15; }
-  25% { transform: translate(10px, -20px); opacity: 0.08; }
-  50% { transform: translate(-5px, -40px); opacity: 0.15; }
-  75% { transform: translate(15px, -20px); opacity: 0.05; }
+  0%, 100% { transform: translate(0, 0); opacity: 0.12; }
+  25% { transform: translate(6px, -15px); opacity: 0.06; }
+  50% { transform: translate(-3px, -30px); opacity: 0.12; }
+  75% { transform: translate(8px, -15px); opacity: 0.04; }
 }
 
-/* Scroll text rotation */
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-rotate-slow {
-  animation: rotate-slow 8s linear infinite;
+/* Scroll pulse */
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
 }

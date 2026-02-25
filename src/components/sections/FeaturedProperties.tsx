@@ -5,10 +5,10 @@ import { MapPin, Bed, Bath, MessageCircle } from "lucide-react";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const properties = [
-  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²" },
-  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²" },
-  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²" },
-  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²" },
+  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80" },
+  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80" },
+  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" },
+  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" },
 ];
 
 const FeaturedProperties = () => {
@@ -16,7 +16,7 @@ const FeaturedProperties = () => {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="propiedades" ref={ref} className="section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0D0A14" }}>
+    <section id="propiedades" ref={ref} className="section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F" }}>
       <div className="max-w-7xl mx-auto mb-12 relative z-10">
         <motion.h2
           className="font-display text-[clamp(40px,5vw,56px)] text-foreground leading-tight"
@@ -48,26 +48,36 @@ const FeaturedProperties = () => {
         {properties.map((prop, i) => (
           <motion.div
             key={i}
-            className="flex-shrink-0 w-[340px] md:w-[380px] h-[520px] relative group overflow-hidden border border-border"
-            style={{ background: "linear-gradient(135deg, #1A1228 0%, #130E1E 100%)" }}
+            className="flex-shrink-0 w-[340px] md:w-[380px] h-[520px] relative group overflow-hidden"
+            style={{
+              background: "#141218",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease, delay: i * 0.12 }}
             whileHover={{
               scale: 1.02,
-              boxShadow: "0 20px 60px rgba(107,33,168,0.2), 0 0 0 1px rgba(196,154,60,0.15)",
+              borderColor: "rgba(196,154,60,0.3)",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
             }}
           >
-            {/* Image placeholder */}
-            <div className="h-[65%] relative" style={{ background: "linear-gradient(135deg, #2D1B69 0%, #1A0A2E 100%)" }}>
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #130E1E 0%, transparent 60%)" }} />
+            {/* Image */}
+            <div className="h-[65%] relative overflow-hidden">
+              <img
+                src={prop.image}
+                alt={prop.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.95) 0%, transparent 60%)" }} />
               {/* Badge */}
               <span
                 className="absolute top-4 left-4 font-body text-[10px] uppercase tracking-wider px-3 py-1"
                 style={
                   prop.type === "VENTA"
-                    ? { backgroundColor: "hsl(274,69%,40%)", color: "white" }
-                    : { backgroundColor: "hsl(38,54%,50%)", color: "#0D0A14" }
+                    ? { backgroundColor: "#C49A3C", color: "#0C0B0F" }
+                    : { backgroundColor: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white" }
                 }
               >
                 {prop.type}
@@ -93,13 +103,13 @@ const FeaturedProperties = () => {
                 </div>
               )}
 
-              {/* WhatsApp hover button — violet */}
+              {/* WhatsApp hover button */}
               <motion.a
                 href="https://wa.me/5492235000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-white"
-                style={{ backgroundColor: "hsl(274,69%,40%)", opacity: 0 }}
+                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground"
+                style={{ backgroundColor: "#C49A3C", opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               >
                 <MessageCircle className="w-3.5 h-3.5" /> Consultar

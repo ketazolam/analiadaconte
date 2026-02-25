@@ -23,9 +23,9 @@ const Navigation = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
-          scrolled ? "backdrop-blur-xl border-b border-border" : "bg-transparent"
+          scrolled ? "backdrop-blur-xl" : "bg-transparent"
         }`}
-        style={scrolled ? { backgroundColor: "rgba(13,10,20,0.92)" } : undefined}
+        style={scrolled ? { backgroundColor: "rgba(12,11,15,0.92)", borderBottom: "1px solid rgba(255,255,255,0.06)" } : undefined}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -45,10 +45,9 @@ const Navigation = () => {
             <a
               key={link.label}
               href={link.href}
-              className="relative font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-foreground transition-colors duration-300 group"
+              className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300"
             >
               {link.label}
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-violet opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
           ))}
         </div>
@@ -59,7 +58,8 @@ const Navigation = () => {
             href="https://wa.me/5492235000000"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 border border-primary text-primary font-body text-[11px] uppercase tracking-[1.5px] px-4 py-2 rounded-sm hover:bg-primary/10 transition-colors"
+            className="hidden md:flex items-center gap-2 font-body text-[11px] uppercase tracking-[1.5px] px-4 py-2 rounded-sm transition-colors text-primary hover:bg-primary hover:text-primary-foreground"
+            style={{ border: "1px solid rgba(196,154,60,0.5)" }}
           >
             <MessageCircle className="w-3.5 h-3.5" />
             WhatsApp
@@ -78,7 +78,7 @@ const Navigation = () => {
         {menuOpen && (
           <motion.div
             className="fixed inset-0 z-[60] flex flex-col items-center justify-center"
-            style={{ backgroundColor: "#130E1E" }}
+            style={{ backgroundColor: "#0C0B0F" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -96,7 +96,7 @@ const Navigation = () => {
                   key={link.label}
                   href={link.href}
                   className="font-display text-3xl text-foreground pl-4"
-                  style={{ borderLeft: "2px solid hsl(274,69%,40%)" }}
+                  style={{ borderLeft: "2px solid rgba(196,154,60,0.4)" }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}

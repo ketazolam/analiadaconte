@@ -3,6 +3,15 @@ import { motion, useInView } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const dealImages = [
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&q=80",
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80",
+  "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&q=80",
+  "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=400&q=80",
+  "https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=400&q=80",
+  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=80",
+];
+
 const deals = [
   { type: "Chalet", year: "2025", status: "VENDIDO" },
   { type: "Departamento", year: "2025", status: "RESERVADO" },
@@ -19,7 +28,7 @@ const ClosedDeals = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#0D0A14" }}>
+      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#111015" }}>
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.p
             className="label-eyebrow text-primary mb-4"
@@ -43,23 +52,25 @@ const ClosedDeals = () => {
               <motion.div
                 key={i}
                 className="relative aspect-[4/3] overflow-hidden group"
-                style={{ backgroundColor: "#1A1228" }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, ease, delay: i * 0.1 }}
-                whileHover={{
-                  backgroundColor: "#1E1535",
-                }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet/5 to-transparent group-hover:from-violet/10 transition-all duration-500" />
+                <img
+                  src={dealImages[i]}
+                  alt={deal.type}
+                  className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.6) 0%, transparent 50%)" }} />
                 
                 {/* Diagonal ribbon */}
                 <div
                   className="absolute top-3 right-[-35px] w-[140px] text-center rotate-45 font-body text-[9px] uppercase tracking-wider py-1"
                   style={
                     deal.status === "VENDIDO"
-                      ? { backgroundColor: "hsl(274,69%,40%)", color: "white" }
-                      : { backgroundColor: "hsl(38,54%,50%)", color: "#0D0A14" }
+                      ? { backgroundColor: "#C49A3C", color: "#0C0B0F" }
+                      : { backgroundColor: "rgba(255,255,255,0.15)", color: "white" }
                   }
                 >
                   {deal.status}
@@ -67,7 +78,7 @@ const ClosedDeals = () => {
 
                 <div className="absolute bottom-4 left-4">
                   <p className="font-body text-xs text-text-muted">{deal.year}</p>
-                  <p className="font-body text-sm text-text-secondary">{deal.type}</p>
+                  <p className="font-body text-sm text-foreground">{deal.type}</p>
                 </div>
               </motion.div>
             ))}
