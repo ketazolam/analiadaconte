@@ -42,8 +42,9 @@ const StatsBar = () => {
       ref={ref}
       className="relative noise-overlay"
       style={{
-        backgroundColor: "#1A0A2E",
-        boxShadow: "0 -1px 0 rgba(107,33,168,0.5), 0 1px 0 rgba(107,33,168,0.5), inset 0 0 80px rgba(107,33,168,0.1)",
+        backgroundColor: "#18161E",
+        borderTop: "1px solid rgba(196,154,60,0.15)",
+        borderBottom: "1px solid rgba(196,154,60,0.15)",
       }}
     >
       {/* Animated line */}
@@ -58,13 +59,13 @@ const StatsBar = () => {
           <motion.div
             key={stat.label}
             className="flex flex-col items-center py-16 px-4"
-            style={i < stats.length - 1 ? { borderRight: "1px solid rgba(196,154,60,0.3)" } : undefined}
+            style={i < stats.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.08)" } : undefined}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
             <Counter {...stat} />
-            <span className="label-accent mt-3" style={{ color: "rgba(255,255,255,0.5)" }}>{stat.label}</span>
+            <span className="label-accent mt-3 text-text-muted">{stat.label}</span>
           </motion.div>
         ))}
       </div>

@@ -15,7 +15,7 @@ const FloatingInput = ({ label, type = "text" }: { label: string; type?: string 
         animate={{
           y: focused || value ? -20 : 0,
           scale: focused || value ? 0.8 : 1,
-          color: focused ? "hsl(274,69%,40%)" : undefined,
+          color: focused ? "hsl(38,54%,50%)" : undefined,
         }}
         transition={{ duration: 0.2 }}
       >
@@ -25,7 +25,7 @@ const FloatingInput = ({ label, type = "text" }: { label: string; type?: string 
         type={type}
         className="w-full bg-transparent outline-none font-body text-sm text-foreground py-2 transition-colors"
         style={{
-          borderBottom: focused ? "1px solid hsl(274,69%,40%)" : "1px solid hsl(var(--border))",
+          borderBottom: focused ? "1px solid hsl(38,54%,50%)" : "1px solid rgba(255,255,255,0.06)",
         }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -48,7 +48,7 @@ const ValuationCTA = () => {
           {/* Left */}
           <motion.div
             className="section-padding relative z-10"
-            style={{ backgroundColor: "#1A0A2E" }}
+            style={{ backgroundColor: "#111015" }}
             initial={{ opacity: 0, x: -40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease }}
@@ -66,14 +66,17 @@ const ValuationCTA = () => {
           {/* Right - Form */}
           <motion.div
             className="section-padding relative z-10"
-            style={{ backgroundColor: "#130E1E" }}
+            style={{ backgroundColor: "#0C0B0F" }}
             initial={{ opacity: 0, x: 40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease, delay: 0.2 }}
           >
             <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
               <div className="relative">
-                <select className="w-full bg-transparent border-b border-border focus:border-violet outline-none font-body text-sm text-text-muted py-2 appearance-none">
+                <select
+                  className="w-full bg-transparent outline-none font-body text-sm text-text-muted py-2 appearance-none focus:text-foreground"
+                  style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                >
                   <option value="">Tipo de propiedad</option>
                   <option value="casa">Casa / Chalet</option>
                   <option value="depto">Departamento</option>
@@ -87,7 +90,7 @@ const ValuationCTA = () => {
               <FloatingInput label="Tu nombre" />
               <FloatingInput label="WhatsApp" type="tel" />
               <div className="pt-2">
-                <MagneticButton variant="violet" className="w-full">
+                <MagneticButton variant="filled" className="w-full">
                   Quiero mi tasación
                 </MagneticButton>
               </div>

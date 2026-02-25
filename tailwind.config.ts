@@ -56,11 +56,6 @@ export default {
           light: "hsl(var(--gold-light))",
           muted: "hsl(var(--gold-muted))",
         },
-        violet: {
-          DEFAULT: "hsl(var(--violet))",
-          deep: "hsl(var(--violet-deep))",
-          mid: "hsl(var(--violet-mid))",
-        },
         whatsapp: "hsl(var(--whatsapp))",
         "bg-primary": "hsl(var(--bg-primary))",
         "bg-secondary": "hsl(var(--bg-secondary))",

@@ -26,7 +26,7 @@ const ReviewsSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#130E1E" }}>
+      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#18161E" }}>
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             className="font-display text-[clamp(32px,4vw,44px)] text-foreground mb-12 text-center"
@@ -43,8 +43,8 @@ const ReviewsSection = () => {
                 key={i}
                 className="p-8"
                 style={{
-                  border: "1px solid rgba(107,33,168,0.2)",
-                  backgroundColor: "#1A1228",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  backgroundColor: "#141218",
                 }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -59,10 +59,7 @@ const ReviewsSection = () => {
                   "{review.text}"
                 </p>
                 <p className="font-body text-[13px] text-foreground font-medium">{review.name}</p>
-                <p
-                  className="font-body text-[11px] mt-1"
-                  style={{ color: "rgba(107,33,168,0.7)" }}
-                >
+                <p className="font-body text-[11px] mt-1 text-text-muted">
                   Google Review
                 </p>
               </motion.div>

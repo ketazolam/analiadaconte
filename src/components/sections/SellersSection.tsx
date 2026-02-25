@@ -19,7 +19,7 @@ const SellersSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section id="vendedores" ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#1A0A2E" }}>
+      <section id="vendedores" ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#0C0B0F" }}>
         <div className="max-w-4xl mx-auto text-center mb-16 relative z-10">
           <motion.h2
             className="font-display text-[clamp(36px,5vw,52px)] text-foreground mb-4"
@@ -30,8 +30,7 @@ const SellersSection = () => {
             ¿Querés vender tu propiedad?
           </motion.h2>
           <motion.p
-            className="font-body text-base max-w-[560px] mx-auto"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="font-body text-base text-text-secondary max-w-[560px] mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease, delay: 0.15 }}
@@ -45,19 +44,19 @@ const SellersSection = () => {
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              className="p-8 border border-border transition-all duration-300"
-              style={{ backgroundColor: "rgba(26,18,40,0.5)" }}
+              className="p-8 transition-all duration-300"
+              style={{ backgroundColor: "rgba(20,18,24,0.5)", border: "1px solid rgba(255,255,255,0.06)" }}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease, delay: i * 0.12 }}
               whileHover={{
-                backgroundColor: "rgba(107,33,168,0.08)",
-                borderColor: "rgba(107,33,168,0.2)",
+                backgroundColor: "rgba(196,154,60,0.04)",
+                borderColor: "rgba(196,154,60,0.15)",
               }}
             >
-              <f.icon className="w-6 h-6 text-violet-mid mb-5 stroke-[1.2]" />
+              <f.icon className="w-6 h-6 text-primary mb-5 stroke-[1.2]" />
               <h3 className="font-display text-[22px] text-foreground mb-2">{f.title}</h3>
-              <p className="font-body text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>{f.desc}</p>
+              <p className="font-body text-sm text-text-secondary">{f.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -68,7 +67,7 @@ const SellersSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease, delay: 0.6 }}
         >
-          <MagneticButton variant="violet">Conocé nuestra propuesta completa</MagneticButton>
+          <MagneticButton variant="filled">Conocé nuestra propuesta completa</MagneticButton>
         </motion.div>
       </section>
     </>

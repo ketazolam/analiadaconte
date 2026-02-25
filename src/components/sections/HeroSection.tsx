@@ -13,50 +13,33 @@ const HeroSection = () => {
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">
-      {/* Background gradient — violet radial */}
+      {/* Background photo */}
       <motion.div
         className="absolute inset-0"
         style={{
           y: bgY,
-          background: "radial-gradient(ellipse at center, #1A0A2E 0%, #0D0A14 70%)",
-        }}
-      />
-
-      {/* Texture overlays */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 800px 600px at 30% 20%, rgba(107,33,168,0.08) 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 80% 80%, rgba(196,154,60,0.05) 0%, transparent 60%)",
+          backgroundImage: `
+            linear-gradient(to bottom, rgba(12,11,15,0.3) 0%, rgba(12,11,15,0.5) 50%, rgba(12,11,15,0.85) 100%),
+            url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80')
+          `,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
 
       {/* Particles */}
       <ParticleField />
 
-      {/* Large background text — violet */}
+      {/* Large background text */}
       <motion.div
         className="absolute bottom-0 right-0 font-display font-black text-[20vw] leading-none select-none pointer-events-none whitespace-nowrap"
         style={{
           y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
-          color: "rgba(107,33,168,0.04)",
+          color: "rgba(255,255,255,0.025)",
         }}
       >
         MAR DEL PLATA
       </motion.div>
-
-      {/* Violet glow behind title */}
-      <div
-        className="absolute pointer-events-none z-[5]"
-        style={{
-          width: "600px",
-          height: "400px",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "radial-gradient(ellipse 600px 400px at 50% 50%, rgba(107,33,168,0.12) 0%, transparent 70%)",
-        }}
-      />
 
       {/* Content */}
       <motion.div
@@ -99,33 +82,29 @@ const HeroSection = () => {
           transition={{ duration: 0.7, ease, delay: 0.9 }}
         >
           <MagneticButton variant="filled">Quiero comprar</MagneticButton>
-          <MagneticButton variant="violet">Quiero vender</MagneticButton>
+          <MagneticButton variant="outline">Quiero vender</MagneticButton>
         </motion.div>
       </motion.div>
 
       {/* Bottom line + scroll indicator */}
       <div className="absolute bottom-0 left-0 right-0">
-        <div className="h-px bg-primary/30" />
+        <div className="h-px" style={{ background: "rgba(196,154,60,0.3)" }} />
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
         >
-          <div className="animate-rotate-slow">
-            <svg viewBox="0 0 100 100" className="w-12 h-12">
-              <path
-                id="curve"
-                d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
-                fill="none"
-              />
-              <text className="fill-text-muted" style={{ fontSize: 10, letterSpacing: 5 }}>
-                <textPath href="#curve">
-                  SCROLL · SCROLL · SCROLL ·
-                </textPath>
-              </text>
-            </svg>
-          </div>
+          <div
+            className="w-px h-10"
+            style={{
+              backgroundColor: "hsl(38,54%,50%)",
+              animation: "scroll-pulse 2s ease-in-out infinite",
+            }}
+          />
+          <span className="label-accent text-text-muted" style={{ fontSize: 9 }}>
+            Scroll
+          </span>
         </motion.div>
       </div>
     </section>

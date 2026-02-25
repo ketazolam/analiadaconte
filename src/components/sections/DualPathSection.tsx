@@ -19,9 +19,6 @@ const DualPathSection = () => {
         "Asesoramiento personalizado",
       ],
       cta: "Ver propiedades",
-      ctaArrowColor: "text-violet-mid",
-      bg: "#0D0A14",
-      hoverStyle: "hover:border-l-[3px] hover:border-l-violet",
       direction: -100,
     },
     {
@@ -33,9 +30,6 @@ const DualPathSection = () => {
         "Tasación sin cargo",
       ],
       cta: "Quiero vender",
-      ctaArrowColor: "text-primary",
-      bg: "#130E1E",
-      hoverStyle: "hover:border-r-[3px] hover:border-r-violet",
       direction: 100,
     },
   ];
@@ -44,24 +38,25 @@ const DualPathSection = () => {
     <>
       <div className="section-divider" />
       <section ref={ref} className="grid md:grid-cols-2 relative">
-        {/* Center divider — gradient violet to gold */}
+        {/* Center divider */}
         <div
           className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px z-10"
-          style={{ background: "linear-gradient(180deg, hsl(274,69%,40%) 0%, hsl(38,54%,50%) 100%)" }}
+          style={{ background: "rgba(255,255,255,0.08)" }}
         />
 
         {panels.map((panel, i) => (
           <motion.div
             key={panel.title}
-            className={`${panel.hoverStyle} transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[60vh] noise-overlay`}
+            className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[60vh] noise-overlay"
             style={{
-              backgroundColor: panel.bg,
+              backgroundColor: i === 0 ? "#0C0B0F" : "#111015",
             }}
             initial={{ opacity: 0, x: panel.direction }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease, delay: i * 0.15 }}
             whileHover={{
-              boxShadow: "inset 0 -2px 40px rgba(107,33,168,0.1)",
+              borderLeft: i === 0 ? "2px solid rgba(196,154,60,0.4)" : undefined,
+              borderRight: i === 1 ? "2px solid rgba(196,154,60,0.4)" : undefined,
             }}
           >
             <div className="relative z-10">
@@ -77,9 +72,9 @@ const DualPathSection = () => {
               </ul>
               <a
                 href="#"
-                className={`font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors`}
+                className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors"
               >
-                {panel.cta} <span className={panel.ctaArrowColor}>→</span>
+                {panel.cta} <span className="text-primary">→</span>
               </a>
             </div>
           </motion.div>
