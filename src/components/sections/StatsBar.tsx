@@ -1,0 +1,69 @@
+import { useRef, useEffect, useState } from "react";
+import { motion, useInView } from "framer-motion";
+
+const stats = [
+  { value: 200, prefix: "+", suffix: "", label: "Propiedades activas" },
+  { value: 25, prefix: "", suffix: "", label: "Años de trayectoria" },
+  { value: 15, prefix: "", suffix: "K", label: "Seguidores" },
+  { value: 0, prefix: "", suffix: "MdP", label: "Mar del Plata", isText: true },
+];
+
+const Counter = ({ value, prefix, suffix, isText }: { value: number; prefix: string; suffix: string; isText?: boolean }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView || isText) return;
+    let start = 0;
+    const duration = 2000;
+    const step = duration / value;
+    const timer = setInterval(() => {
+      start++;
+      setCount(start);
+      if (start >= value) clearInterval(timer);
+    }, step);
+    return () => clearInterval(timer);
+  }, [inView, value, isText]);
+
+  return (
+    <span ref={ref} className="font-display text-[clamp(48px,5vw,64px)] text-primary leading-none">
+      {isText ? suffix : `${prefix}${count}${suffix}`}
+    </span>
+  );
+};
+
+const StatsBar = () => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  return (
+    <section ref={ref} className="relative bg-background border-y border-border">
+      {/* Animated line */}
+      <motion.div
+        className="absolute top-0 left-0 h-px bg-primary"
+        initial={{ width: "0%" }}
+        animate={inView ? { width: "100%" } : {}}
+        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <div className="grid grid-cols-2 md:grid-cols-4 max-w-6xl mx-auto">
+        {stats.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            className={`flex flex-col items-center py-16 px-4 ${
+              i < stats.length - 1 ? "border-r border-border" : ""
+            }`}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Counter {...stat} />
+            <span className="label-accent text-text-muted mt-3">{stat.label}</span>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default StatsBar;

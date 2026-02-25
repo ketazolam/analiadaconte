@@ -1,13 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Navigation from "@/components/sections/Navigation";
+import HeroSection from "@/components/sections/HeroSection";
+import DualPathSection from "@/components/sections/DualPathSection";
+import StatsBar from "@/components/sections/StatsBar";
+import FeaturedProperties from "@/components/sections/FeaturedProperties";
+import AboutSection from "@/components/sections/AboutSection";
+import SellersSection from "@/components/sections/SellersSection";
+import ClosedDeals from "@/components/sections/ClosedDeals";
+import ReviewsSection from "@/components/sections/ReviewsSection";
+import ValuationCTA from "@/components/sections/ValuationCTA";
+import Footer from "@/components/sections/Footer";
+import ScrollProgress from "@/components/ScrollProgress";
+import CustomCursor from "@/components/CustomCursor";
+import WhatsAppFAB from "@/components/WhatsAppFAB";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      <ScrollProgress />
+      <CustomCursor />
+      <WhatsAppFAB />
+      <Navigation />
+      <main>
+        <HeroSection />
+        <DualPathSection />
+        <StatsBar />
+        <FeaturedProperties />
+        <AboutSection />
+        <SellersSection />
+        <ClosedDeals />
+        <ReviewsSection />
+        <ValuationCTA />
+      </main>
+      <Footer />
+    </>
   );
 };
 
