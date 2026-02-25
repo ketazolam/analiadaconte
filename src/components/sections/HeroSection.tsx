@@ -13,22 +13,50 @@ const HeroSection = () => {
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">
-      {/* Background gradient */}
+      {/* Background gradient — violet radial */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-background to-bg-secondary"
-        style={{ y: bgY }}
+        className="absolute inset-0"
+        style={{
+          y: bgY,
+          background: "radial-gradient(ellipse at center, #1A0A2E 0%, #0D0A14 70%)",
+        }}
+      />
+
+      {/* Texture overlays */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 800px 600px at 30% 20%, rgba(107,33,168,0.08) 0%, transparent 60%), radial-gradient(ellipse 600px 500px at 80% 80%, rgba(196,154,60,0.05) 0%, transparent 60%)",
+        }}
       />
 
       {/* Particles */}
       <ParticleField />
 
-      {/* Large background text */}
+      {/* Large background text — violet */}
       <motion.div
-        className="absolute bottom-0 right-0 font-display font-black text-[20vw] leading-none text-foreground/[0.03] select-none pointer-events-none whitespace-nowrap"
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]) }}
+        className="absolute bottom-0 right-0 font-display font-black text-[20vw] leading-none select-none pointer-events-none whitespace-nowrap"
+        style={{
+          y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
+          color: "rgba(107,33,168,0.04)",
+        }}
       >
         MAR DEL PLATA
       </motion.div>
+
+      {/* Violet glow behind title */}
+      <div
+        className="absolute pointer-events-none z-[5]"
+        style={{
+          width: "600px",
+          height: "400px",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "radial-gradient(ellipse 600px 400px at 50% 50%, rgba(107,33,168,0.12) 0%, transparent 70%)",
+        }}
+      />
 
       {/* Content */}
       <motion.div
@@ -65,13 +93,13 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-row items-center justify-center gap-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.9 }}
         >
           <MagneticButton variant="filled">Quiero comprar</MagneticButton>
-          <MagneticButton variant="outline">Quiero vender</MagneticButton>
+          <MagneticButton variant="violet">Quiero vender</MagneticButton>
         </motion.div>
       </motion.div>
 

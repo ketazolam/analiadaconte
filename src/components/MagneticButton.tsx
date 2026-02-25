@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 interface MagneticButtonProps {
   children: React.ReactNode;
-  variant?: "filled" | "outline";
+  variant?: "filled" | "outline" | "violet";
   className?: string;
   onClick?: () => void;
 }
@@ -22,10 +22,11 @@ const MagneticButton = ({ children, variant = "filled", className = "", onClick 
 
   const reset = () => setPosition({ x: 0, y: 0 });
 
-  const base = "font-body text-[14px] uppercase tracking-[0.1em] px-10 py-4 rounded-sm transition-colors duration-300";
+  const base = "font-body text-[13px] sm:text-[14px] uppercase tracking-[0.1em] px-6 sm:px-10 py-3 sm:py-4 rounded-sm transition-colors duration-300";
   const variants = {
-    filled: "bg-primary text-primary-foreground hover:bg-gold-light",
+    filled: "bg-primary text-primary-foreground hover:bg-gold-light shadow-[0_0_30px_rgba(196,154,60,0.3)]",
     outline: "border border-primary text-primary hover:bg-primary/10",
+    violet: "border border-violet text-violet-mid hover:bg-violet hover:text-white",
   };
 
   return (
