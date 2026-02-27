@@ -171,3 +171,14 @@
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.8; }
 }
+
+/* WhatsApp FAB pulse — CSS only, zero JS cost */
+@keyframes whatsapp-pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* ScrollProgress GPU hint */
+.fixed[style*="scaleX"] {
+  will-change: transform;
+}
