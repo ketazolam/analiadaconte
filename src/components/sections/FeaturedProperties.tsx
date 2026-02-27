@@ -16,7 +16,7 @@ const FeaturedProperties = () => {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="propiedades" ref={ref} className="section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F" }}>
+    <section id="propiedades" ref={ref} className="section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
       <div className="max-w-7xl mx-auto mb-12 relative z-10">
         <motion.h2
           className="font-display text-[clamp(40px,5vw,56px)] text-foreground leading-tight"
@@ -48,7 +48,7 @@ const FeaturedProperties = () => {
         {properties.map((prop, i) => (
           <motion.div
             key={i}
-            className="flex-shrink-0 w-[340px] md:w-[380px] h-[520px] relative group overflow-hidden"
+            className="flex-shrink-0 w-[340px] md:w-[380px] h-[520px] relative group overflow-hidden transition-[border-color,box-shadow] duration-300 hover:scale-[1.02]"
             style={{
               background: "#141218",
               border: "1px solid rgba(255,255,255,0.06)",
@@ -56,11 +56,6 @@ const FeaturedProperties = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease, delay: i * 0.12 }}
-            whileHover={{
-              scale: 1.02,
-              borderColor: "rgba(196,154,60,0.3)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-            }}
           >
             {/* Image */}
             <div className="h-[65%] relative overflow-hidden">
@@ -71,7 +66,6 @@ const FeaturedProperties = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.95) 0%, transparent 60%)" }} />
-              {/* Badge */}
               <span
                 className="absolute top-4 left-4 font-body text-[10px] uppercase tracking-wider px-3 py-1"
                 style={
@@ -103,20 +97,16 @@ const FeaturedProperties = () => {
                 </div>
               )}
 
-              {/* WhatsApp hover button */}
-              <motion.a
+              {/* WhatsApp hover button - CSS only, no inline <style> */}
+              <a
                 href="https://wa.me/5492235000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground"
-                style={{ backgroundColor: "#C49A3C", opacity: 0 }}
-                whileHover={{ opacity: 1 }}
+                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ backgroundColor: "#C49A3C" }}
               >
                 <MessageCircle className="w-3.5 h-3.5" /> Consultar
-              </motion.a>
-              <style>{`
-                .group:hover a[href*="wa.me"] { opacity: 1 !important; }
-              `}</style>
+              </a>
             </div>
           </motion.div>
         ))}

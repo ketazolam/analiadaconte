@@ -10,6 +10,7 @@ const HeroSection = () => {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const bgTextY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">
@@ -34,7 +35,7 @@ const HeroSection = () => {
       <motion.div
         className="absolute bottom-0 right-0 font-display font-black text-[20vw] leading-none select-none pointer-events-none whitespace-nowrap"
         style={{
-          y: useTransform(scrollYProgress, [0, 1], ["0%", "20%"]),
+          y: bgTextY,
           color: "rgba(255,255,255,0.025)",
         }}
       >
