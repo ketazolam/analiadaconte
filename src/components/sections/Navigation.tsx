@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Propiedades", href: "#propiedades" },
@@ -54,16 +54,6 @@ const Navigation = () => {
 
         {/* Right */}
         <div className="flex items-center gap-4">
-          <a
-            href="https://wa.me/5492235000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 font-body text-[11px] uppercase tracking-[1.5px] px-4 py-2 rounded-sm transition-colors text-primary hover:bg-primary hover:text-primary-foreground"
-            style={{ border: "1px solid rgba(196,154,60,0.5)" }}
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            WhatsApp
-          </a>
           <button
             className="md:hidden text-foreground"
             onClick={() => setMenuOpen(true)}
