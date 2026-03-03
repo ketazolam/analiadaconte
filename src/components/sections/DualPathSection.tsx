@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Home, Key } from "lucide-react";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -19,18 +20,21 @@ const DualPathSection = () => {
         "Asesoramiento personalizado",
       ],
       cta: "Ver propiedades",
+      target: "propiedades",
       direction: -100,
       bgImage: "/images/mdp-coastline.jpg",
     },
     {
       icon: Key,
       title: "Vendedores",
+      id: "vendedores",
       features: [
         "Fotografía y drone profesional",
         "Plan de marketing a medida",
         "Tasación sin cargo",
       ],
       cta: "Quiero vender",
+      target: "tasacion",
       direction: 100,
       bgImage: "/images/office-wide.jpg",
     },
@@ -40,7 +44,6 @@ const DualPathSection = () => {
     <>
       <div className="section-divider" />
       <section ref={ref} className="grid md:grid-cols-2 relative">
-        {/* Center divider */}
         <div
           className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px z-10"
           style={{ background: "rgba(255,255,255,0.08)" }}
@@ -49,6 +52,7 @@ const DualPathSection = () => {
         {panels.map((panel, i) => (
           <motion.div
             key={panel.title}
+            id={panel.id}
             className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[70vh] md:min-h-[60vh] noise-overlay relative"
             style={{
               backgroundImage: `linear-gradient(to bottom, rgba(12,11,15,0.75), rgba(12,11,15,0.75)), url('${panel.bgImage}')`,
@@ -74,12 +78,12 @@ const DualPathSection = () => {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#"
-                className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors"
+              <button
+                onClick={() => smoothScrollTo(panel.target)}
+                className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors bg-transparent border-none cursor-pointer"
               >
                 {panel.cta} <span className="text-primary">→</span>
-              </a>
+              </button>
             </div>
           </motion.div>
         ))}

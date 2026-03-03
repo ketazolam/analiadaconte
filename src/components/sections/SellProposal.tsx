@@ -2,6 +2,8 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Ruler, Camera, Megaphone, CheckCircle } from "lucide-react";
 import MagneticButton from "../MagneticButton";
+import { whatsappLink } from "@/lib/constants";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -168,7 +170,7 @@ const SellProposal = () => {
             transition={{ duration: 0.7, ease, delay: 1.4 }}
           >
             <a
-              href="https://wa.me/5492235000000?text=Hola%20Anal%C3%ADa%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20la%20venta%20de%20mi%20propiedad"
+              href={whatsappLink("Hola Analía, me interesa conocer más sobre la venta de mi propiedad")}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -177,9 +179,12 @@ const SellProposal = () => {
               </MagneticButton>
             </a>
             <p className="mt-4">
-              <a href="#tasacion" className="font-body text-[13px] text-text-muted hover:text-primary transition-colors">
+              <button
+                onClick={() => smoothScrollTo("tasacion")}
+                className="font-body text-[13px] text-text-muted hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
+              >
                 O si preferís, coordinamos una tasación sin cargo →
-              </a>
+              </button>
             </p>
           </motion.div>
         </div>

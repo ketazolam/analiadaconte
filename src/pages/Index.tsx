@@ -5,7 +5,6 @@ import StatsBar from "@/components/sections/StatsBar";
 import FeaturedProperties from "@/components/sections/FeaturedProperties";
 import SellProposal from "@/components/sections/SellProposal";
 import AboutSection from "@/components/sections/AboutSection";
-import SellersSection from "@/components/sections/SellersSection";
 import ClosedDeals from "@/components/sections/ClosedDeals";
 import ReviewsSection from "@/components/sections/ReviewsSection";
 import ValuationTool from "@/components/sections/ValuationTool";
@@ -28,7 +27,6 @@ const Index = () => {
         <FeaturedProperties />
         <SellProposal />
         <AboutSection />
-        <SellersSection />
         <ClosedDeals />
         <ReviewsSection />
         <ValuationTool />

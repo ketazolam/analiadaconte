@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { Instagram, MessageCircle } from "lucide-react";
+import { PHONE, EMAIL, ADDRESS, INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/constants";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: "#080709" }}>
+    <footer id="contacto" style={{ backgroundColor: "#080709" }}>
       {/* Top gold border */}
       <div
         className="h-px w-full"
@@ -47,9 +48,9 @@ const Footer = () => {
           <div>
             <h4 className="label-accent mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Contacto</h4>
             <ul className="space-y-2 font-body text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
-              <li>Mar del Plata, Buenos Aires</li>
-              <li>+54 9 223 500-0000</li>
-              <li>info@analiadaconte.com.ar</li>
+              <li>{ADDRESS}</li>
+              <li>{PHONE}</li>
+              <li>{EMAIL}</li>
             </ul>
           </div>
         </div>
@@ -61,14 +62,16 @@ const Footer = () => {
           </p>
           <div className="flex items-center gap-4">
             <motion.a
-              href="#"
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-text-muted hover:text-primary transition-colors"
               whileHover={{ scale: 1.1 }}
             >
               <Instagram className="w-4 h-4" />
             </motion.a>
             <motion.a
-              href="https://wa.me/5492235000000"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-text-muted hover:text-primary transition-colors"

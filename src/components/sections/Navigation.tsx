@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const navLinks = [
-  { label: "Propiedades", href: "#propiedades" },
-  { label: "Vendedores", href: "#vendedores" },
-  { label: "Quiénes somos", href: "#about" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Propiedades", target: "propiedades" },
+  { label: "Vendedores", target: "vendedores" },
+  { label: "Quiénes somos", target: "about" },
+  { label: "Contacto", target: "contacto" },
 ];
 
 const Navigation = () => {
@@ -18,6 +19,11 @@ const Navigation = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleNav = (target: string) => {
+    setMenuOpen(false);
+    smoothScrollTo(target);
+  };
 
   return (
     <>
@@ -42,13 +48,13 @@ const Navigation = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.label}
-              href={link.href}
-              className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300"
+              onClick={() => handleNav(link.target)}
+              className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300 bg-transparent border-none cursor-pointer"
             >
               {link.label}
-            </a>
+            </button>
           ))}
         </div>
 
@@ -82,18 +88,17 @@ const Navigation = () => {
             </button>
             <div className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => (
-                <motion.a
+                <motion.button
                   key={link.label}
-                  href={link.href}
-                  className="font-display text-3xl text-foreground pl-4"
+                  className="font-display text-3xl text-foreground pl-4 bg-transparent border-none cursor-pointer"
                   style={{ borderLeft: "2px solid rgba(196,154,60,0.4)" }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => handleNav(link.target)}
                 >
                   {link.label}
-                </motion.a>
+                </motion.button>
               ))}
             </div>
           </motion.div>
