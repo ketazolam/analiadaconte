@@ -33,23 +33,26 @@ const SellProposal = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="relative overflow-hidden noise-overlay">
-        {/* Background image with heavy overlay */}
+      <section ref={ref} className="relative overflow-hidden noise-overlay" style={{ contain: "content" }}>
+        {/* Lazy background image */}
+        <img
+          src="/images/chesterfield-lounge.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `
-              linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, rgba(12,11,15,0.97) 40%),
-              url('/images/chesterfield-lounge.jpg')
-            `,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            background: "linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, rgba(12,11,15,0.97) 40%)",
+            zIndex: 1,
           }}
         />
 
         <div className="relative z-10 section-padding">
           <div className="max-w-[680px] mx-auto text-center">
-            {/* Eyebrow */}
             <motion.p
               className="label-eyebrow text-primary mb-6"
               initial={{ opacity: 0, y: 30 }}
@@ -59,7 +62,6 @@ const SellProposal = () => {
               Para propietarios
             </motion.p>
 
-            {/* Title */}
             <motion.h2
               className="font-display text-[clamp(40px,5vw,64px)] leading-[1.05] text-foreground mb-4"
               initial={{ opacity: 0, y: 30 }}
@@ -71,7 +73,6 @@ const SellProposal = () => {
               <span className="italic gold-gradient-text">la mejor estrategia</span>
             </motion.h2>
 
-            {/* Subtitle */}
             <motion.p
               className="font-body text-base text-text-secondary mb-12 max-w-lg mx-auto"
               initial={{ opacity: 0, y: 30 }}
@@ -81,7 +82,6 @@ const SellProposal = () => {
               Vendemos 1 de cada 3 propiedades en menos de 60 días. No es suerte — es método.
             </motion.p>
 
-            {/* Mini stats */}
             <motion.div
               className="flex items-center justify-center gap-0 mb-16"
               initial={{ opacity: 0, y: 30 }}
@@ -102,10 +102,8 @@ const SellProposal = () => {
             </motion.div>
           </div>
 
-          {/* Process steps */}
           <div className="max-w-4xl mx-auto mb-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-0 relative">
-              {/* Dashed connecting line - desktop */}
               <div
                 className="hidden md:block absolute top-5 left-[12.5%] right-[12.5%] h-px z-0"
                 style={{ borderTop: "1px dashed rgba(196,154,60,0.3)" }}
@@ -115,12 +113,10 @@ const SellProposal = () => {
                   key={step.num}
                   className="relative z-10 flex md:flex-col items-start md:items-center gap-4 md:gap-0 md:text-center px-4 py-4 md:py-0"
                   style={i < steps.length - 1 ? { borderLeft: "1px dashed rgba(196,154,60,0.3)" } : undefined}
-                  
                   initial={{ opacity: 0, y: 30 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.7, ease, delay: 0.4 + i * 0.15 }}
                 >
-                  {/* Mobile dashed left border handled via style above */}
                   <div className="flex flex-col items-center md:items-center">
                     <span className="label-accent text-primary mb-2" style={{ fontSize: 10 }}>{step.num}</span>
                     <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ border: "1px solid rgba(196,154,60,0.3)", backgroundColor: "rgba(12,11,15,0.9)" }}>
@@ -136,7 +132,6 @@ const SellProposal = () => {
             </div>
           </div>
 
-          {/* Service tags */}
           <motion.div
             className="max-w-3xl mx-auto flex flex-wrap justify-center gap-2 mb-16"
             initial={{ opacity: 0 }}
@@ -162,7 +157,6 @@ const SellProposal = () => {
             ))}
           </motion.div>
 
-          {/* CTA */}
           <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 20 }}

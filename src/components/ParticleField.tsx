@@ -1,8 +1,12 @@
 import { useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ParticleField = () => {
+  const isMobile = useIsMobile();
+  const count = isMobile ? 8 : 15;
+
   const particles = useMemo(() => {
-    return Array.from({ length: 15 }, (_, i) => ({
+    return Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -10,7 +14,7 @@ const ParticleField = () => {
       duration: 20 + Math.random() * 10,
       delay: Math.random() * 5,
     }));
-  }, []);
+  }, [count]);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ contain: "strict" }}>
@@ -26,7 +30,6 @@ const ParticleField = () => {
             opacity: 0.12,
             backgroundColor: "hsl(38, 54%, 50%)",
             animation: `float-particle ${p.duration}s ease-in-out ${p.delay}s infinite`,
-            willChange: "transform",
           }}
         />
       ))}

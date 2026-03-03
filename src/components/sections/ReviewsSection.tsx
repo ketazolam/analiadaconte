@@ -29,19 +29,24 @@ const ReviewsSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay relative overflow-hidden">
-        {/* Background image */}
+      <section ref={ref} className="section-padding noise-overlay relative overflow-hidden" style={{ contain: "content" }}>
+        {/* Lazy background image */}
+        <img
+          src="/images/waiting-room.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `
-              linear-gradient(to bottom, rgba(24,22,30,0.92) 0%, rgba(24,22,30,0.96) 100%),
-              url('/images/waiting-room.jpg')
-            `,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            background: "linear-gradient(to bottom, rgba(24,22,30,0.92) 0%, rgba(24,22,30,0.96) 100%)",
+            zIndex: 1,
           }}
         />
+
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Google rating badge */}
           <motion.div

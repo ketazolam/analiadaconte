@@ -35,6 +35,9 @@ const AboutSection = () => {
                 alt="Equipo Analía Daconte Propiedades"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
+                width={600}
+                height={800}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </div>
@@ -82,6 +85,9 @@ const AboutSection = () => {
                 alt="Oficina privada de Analía Daconte"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
+                width={800}
+                height={450}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
             </div>
