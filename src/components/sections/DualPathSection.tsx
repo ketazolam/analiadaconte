@@ -43,7 +43,7 @@ const DualPathSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="grid md:grid-cols-2 relative">
+      <section ref={ref} className="grid md:grid-cols-2 relative" style={{ contain: "content" }}>
         <div
           className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px z-10"
           style={{ background: "rgba(255,255,255,0.08)" }}
@@ -54,11 +54,6 @@ const DualPathSection = () => {
             key={panel.title}
             id={panel.id}
             className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[70vh] md:min-h-[60vh] noise-overlay relative"
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(12,11,15,0.75), rgba(12,11,15,0.75)), url('${panel.bgImage}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
             initial={{ opacity: 0, x: panel.direction }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease, delay: i * 0.15 }}
@@ -67,6 +62,17 @@ const DualPathSection = () => {
               borderRight: i === 1 ? "2px solid rgba(196,154,60,0.4)" : undefined,
             }}
           >
+            {/* Lazy background image */}
+            <img
+              src={panel.bgImage}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ zIndex: 0 }}
+            />
+            <div className="absolute inset-0" style={{ backgroundColor: "rgba(12,11,15,0.75)", zIndex: 1 }} />
+
             <div className="relative z-10">
               <panel.icon className="w-8 h-8 text-primary mb-8 stroke-[1]" />
               <h2 className="font-display text-5xl text-foreground mb-8">{panel.title}</h2>
