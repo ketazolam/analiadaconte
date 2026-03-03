@@ -21,11 +21,11 @@ const HeroSection = () => {
         style={{
           y: bgY,
           backgroundImage: `
-            linear-gradient(to bottom, rgba(12,11,15,0.3) 0%, rgba(12,11,15,0.5) 50%, rgba(12,11,15,0.85) 100%),
+            linear-gradient(to bottom, rgba(12,11,15,0.55) 0%, rgba(12,11,15,0.65) 50%, rgba(12,11,15,0.88) 100%),
             url('/images/mdp-aerial-hero.jpg')
           `,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center 30%",
         }}
       />
 
@@ -46,10 +46,10 @@ const HeroSection = () => {
       {/* Content */}
       <motion.div
         className="relative z-10 text-center max-w-4xl px-6"
-        style={{ y: textY }}
+        style={{ y: textY, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}
       >
         <motion.p
-          className="label-eyebrow text-primary mb-8"
+          className="label-eyebrow text-primary mb-8" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.3 }}
@@ -69,7 +69,7 @@ const HeroSection = () => {
         </motion.h1>
 
         <motion.p
-          className="font-body text-base text-text-secondary mb-12 max-w-md mx-auto"
+          className="font-body text-base mb-12 max-w-md mx-auto" style={{ color: "rgba(242,239,232,0.7)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.7 }}

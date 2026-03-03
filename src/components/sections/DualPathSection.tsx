@@ -71,7 +71,7 @@ const DualPathSection = () => {
               className="absolute inset-0 w-full h-full object-cover"
               style={{ zIndex: 0 }}
             />
-            <div className="absolute inset-0" style={{ backgroundColor: "rgba(12,11,15,0.75)", zIndex: 1 }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(12,11,15,0.5) 0%, rgba(12,11,15,0.75) 100%)", zIndex: 1 }} />
 
             <div className="relative z-10">
               <panel.icon className="w-8 h-8 text-primary mb-8 stroke-[1]" />

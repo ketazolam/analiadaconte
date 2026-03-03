@@ -158,7 +158,7 @@ const FeaturedProperties = () => {
                 href={whatsappLink(`Hola Analía, me interesa la propiedad: ${prop.title} en ${prop.location}`)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
                 style={{ backgroundColor: "#C49A3C" }}
               >
                 <MessageCircle className="w-3.5 h-3.5" /> Consultar
