@@ -29,9 +29,12 @@ const Navigation = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
-          scrolled ? "backdrop-blur-xl" : "bg-transparent"
+          scrolled ? "backdrop-blur-xl" : ""
         }`}
-        style={scrolled ? { backgroundColor: "rgba(12,11,15,0.92)", borderBottom: "1px solid rgba(255,255,255,0.06)" } : undefined}
+        style={scrolled
+          ? { backgroundColor: "rgba(12,11,15,0.92)", borderBottom: "1px solid rgba(255,255,255,0.06)" }
+          : { background: "linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, transparent 100%)" }
+        }
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
