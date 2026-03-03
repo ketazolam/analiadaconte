@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -57,7 +58,7 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.h1
-          className="font-display text-[clamp(52px,7vw,120px)] leading-[0.95] mb-6"
+          className="font-display text-[clamp(40px,7vw,100px)] leading-[0.95] mb-6"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.5 }}
@@ -82,8 +83,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.9 }}
         >
-          <MagneticButton variant="filled">Quiero comprar</MagneticButton>
-          <MagneticButton variant="outline">Quiero vender</MagneticButton>
+          <MagneticButton variant="filled" onClick={() => smoothScrollTo("propiedades")}>Quiero comprar</MagneticButton>
+          <MagneticButton variant="outline" onClick={() => smoothScrollTo("tasacion")}>Quiero vender</MagneticButton>
         </motion.div>
       </motion.div>
 

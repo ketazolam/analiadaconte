@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { WHATSAPP_URL } from "@/lib/constants";
 
 const TRIGGER_POINTS = [
   { type: "scroll", threshold: 0.3 },   // 30% scroll depth
@@ -115,7 +116,7 @@ const WhatsAppFAB = () => {
 
       {/* FAB button */}
       <motion.a
-        href="https://wa.me/5492235000000"
+        href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="w-14 h-14 rounded-full bg-whatsapp flex items-center justify-center shadow-lg shadow-whatsapp/25 flex-shrink-0"

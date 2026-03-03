@@ -2,30 +2,30 @@ import { useRef, useEffect, useState } from "react";
 import { motion, useInView, animate } from "framer-motion";
 
 const stats = [
-  { value: 200, prefix: "+", suffix: "", label: "Propiedades activas" },
+  { value: 200, prefix: "+", suffix: "", label: "Propiedades vendidas" },
   { value: 25, prefix: "", suffix: "", label: "Años de trayectoria" },
-  { value: 15, prefix: "", suffix: "K", label: "Seguidores" },
-  { value: 0, prefix: "", suffix: "MdP", label: "Mar del Plata", isText: true },
+  { value: 15, prefix: "", suffix: "K", label: "Seguidores en Instagram" },
+  { value: 98, prefix: "", suffix: "%", label: "Clientes satisfechos" },
 ];
 
-const Counter = ({ value, prefix, suffix, isText }: { value: number; prefix: string; suffix: string; isText?: boolean }) => {
+const Counter = ({ value, prefix, suffix }: { value: number; prefix: string; suffix: string }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.5 });
 
   useEffect(() => {
-    if (!inView || isText) return;
+    if (!inView) return;
     const controls = animate(0, value, {
       duration: 2,
       ease: "easeOut",
       onUpdate: (v) => setCount(Math.floor(v)),
     });
     return () => controls.stop();
-  }, [inView, value, isText]);
+  }, [inView, value]);
 
   return (
     <span ref={ref} className="font-display text-[clamp(48px,5vw,64px)] text-primary leading-none">
-      {isText ? suffix : `${prefix}${count}${suffix}`}
+      {`${prefix}${count}${suffix}`}
     </span>
   );
 };
@@ -44,7 +44,6 @@ const StatsBar = () => {
         borderBottom: "1px solid rgba(196,154,60,0.15)",
       }}
     >
-      {/* Animated line */}
       <motion.div
         className="absolute top-0 left-0 h-px bg-primary z-10"
         initial={{ width: "0%" }}

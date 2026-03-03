@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Home, Building2, Warehouse, LandPlot, Store, HelpCircle, Check, Loader2 } from "lucide-react";
 import MagneticButton from "../MagneticButton";
+import { whatsappLink } from "@/lib/constants";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -387,7 +388,7 @@ const ValuationTool = () => {
                     </p>
 
                     <a
-                      href={`https://wa.me/5492235000000?text=${encodeURIComponent(waMessage)}`}
+                      href={whatsappLink(waMessage)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 font-body text-sm uppercase tracking-wider py-3 px-8 mb-4 text-white"
