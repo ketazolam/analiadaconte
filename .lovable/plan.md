@@ -1,89 +1,44 @@
 
-# Performance Optimization Plan
 
-## Issues Found
+# Image Placement Plan — Strategic Analysis
 
-### 1. CustomCursor -- re-renders on every mouse move
-- `isVisible` is in the `useEffect` dependency array, causing the effect to re-register every time visibility changes
-- Using React state (`useState`) for visibility triggers re-renders; should use `useMotionValue` for opacity instead
-- Fix: Remove `isVisible` from deps, use a ref for first-show logic, use `useMotionValue` for opacity
+## Psychological Analysis of the Ideal Client
 
-### 2. MagneticButton -- setState on every mousemove
-- `setPosition({ x, y })` triggers a full React re-render on every single mouse movement
-- Fix: Replace `useState` with two `useMotionValue` instances (`mx`, `my`) and a `useSpring` wrapper, update via `.set()` which bypasses React rendering entirely
+The target client is a property owner or buyer in Mar del Plata, aged 35-60, upper-middle class. They need to feel:
+- **Trust**: Real photos of the office/team prove legitimacy (vs. stock photos)
+- **Local expertise**: Aerial shots of MdP say "I know every corner of this city"
+- **Premium service**: The Chesterfield lounge and modern office convey high-end treatment
+- **Human connection**: Seeing the team celebration creates emotional warmth
 
-### 3. HeroSection -- useTransform created inside JSX
-- `useTransform(scrollYProgress, ...)` is called inline inside JSX for the background text parallax, which creates a new motion value on every render
-- Fix: Move it to a named variable alongside the other `useTransform` calls at the top of the component
+## Image-to-Section Mapping
 
-### 4. ParticleField -- too many animated DOM nodes
-- 25 particles with CSS `animation` each running infinitely
-- Fix: Reduce to 15 particles, add `will-change: transform` so the browser composites them on GPU, and use `contain: strict` on the container
+| Image | Content | Placement | Rationale |
+|-------|---------|-----------|-----------|
+| `315b676b` | Vibrant aerial MdP (wider, bluer sky) | **Hero background** | First impression = "this is Mar del Plata". Drone perspective conveys authority and scope |
+| `7c3bb4b3` | Aerial coastline MdP | **DualPath — Compradores panel** | Buyers want to see the city they're investing in. Beach + buildings = lifestyle promise |
+| `c47e5c07` | Wide office (desk + Chesterfield) | **DualPath — Vendedores panel** | Sellers see a professional workspace. Signals "your property is in capable hands" |
+| `034e342f` | Chesterfield lounge close-up | **SellProposal background** | Premium ambiance behind the sales pitch. The warm lighting + marble wall = luxury service |
+| `8bc3e75c` | Team celebration/inauguration | **AboutSection — main photo** | Replaces stock portrait. Shows the real team, builds human connection and trust |
+| `a82cb95f` | Private office with antique desk | **AboutSection — secondary photo** (new addition below main) | Shows the actual workspace where deals happen. Antique furniture = tradition + experience |
+| `ebe4131e` | Waiting room with modern furniture | **ReviewsSection background** | Subtle background behind reviews. Clients see where they'd sit — makes testimonials feel real |
 
-### 5. FeaturedProperties -- inline style tag per card
-- Each card renders an inline `<style>` tag for the WhatsApp hover effect, creating/destroying style elements during scroll
-- Fix: Remove the inline `<style>` tags entirely; use a proper CSS class with `group-hover:opacity-100` in Tailwind instead
+**Not placed on the page**: The MP4 video file — can be used later as a hero video replacement.
 
-### 6. Navigation scroll listener -- not passive
-- The scroll event listener isn't marked as `{ passive: true }`
-- Fix: Add `{ passive: true }` to `addEventListener`
+## Files to Modify
 
-### 7. WhatsAppFAB pulse -- Framer Motion overhead for simple loop
-- The infinite pulse ring uses Framer Motion's `animate` prop with `repeat: Infinity`, which keeps the Framer animation loop running forever
-- Fix: Replace with a CSS `@keyframes` animation for the pulse ring (zero JS cost)
+1. **Copy all 7 images + video to `public/images/`**
+2. **HeroSection.tsx** — replace Unsplash URL with `/images/mdp-aerial-hero.jpg`
+3. **DualPathSection.tsx** — replace both panel backgrounds with real photos
+4. **SellProposal.tsx** — replace background with Chesterfield lounge
+5. **AboutSection.tsx** — replace portrait with team photo, add secondary office photo below
+6. **ReviewsSection.tsx** — add subtle office background behind reviews
 
-### 8. General GPU hints
-- Add `will-change: transform` to ScrollProgress bar and CustomCursor elements
-- Add CSS `contain: content` to heavy sections (ClosedDeals grid, FeaturedProperties scroll container) to limit paint/layout scope
+ClosedDeals and FeaturedProperties keep their Unsplash images (those represent actual properties — will be replaced when real listing photos arrive).
 
----
+## Technical Details
 
-## Implementation Plan
+- All images copied to `public/images/` for direct CSS `url()` references (since most are used as background-image, not React imports)
+- Team photo in AboutSection used as `<img>` tag — also goes to `public/images/`
+- Aspect ratios preserved; `object-fit: cover` and `object-position: center` handle cropping
+- All images get `loading="lazy"` where applicable
 
-### Task 1: Fix CustomCursor (zero-lag cursor)
-- Replace `useState(isVisible)` with `useMotionValue(0)` for opacity
-- Use a `useRef(false)` for the first-show flag instead of state
-- Remove `isVisible` from the `useEffect` dependency array (only keep spring values)
-- Add `will-change: transform` to both cursor divs
-
-### Task 2: Fix MagneticButton (no re-renders on hover)
-- Replace `useState({ x, y })` with `useMotionValue(0)` for x and y
-- Wrap each in `useSpring(mv, { stiffness: 150, damping: 15, mass: 0.1 })`
-- Update values via `.set()` in `onMouseMove` -- zero React re-renders
-- Pass spring values to `style={{ x: springX, y: springY }}` instead of `animate`
-
-### Task 3: Fix HeroSection inline useTransform
-- Move the background text `useTransform` call out of JSX into a named const at the top of the component
-
-### Task 4: Optimize ParticleField
-- Reduce particle count from 25 to 15
-- Add `will-change: transform` and `contain: strict` to the container
-- Increase minimum animation duration to 20s (slower = fewer compositor updates)
-
-### Task 5: Fix FeaturedProperties inline styles
-- Remove all inline `<style>` tags from the card render
-- Add `opacity-0 group-hover:opacity-100 transition-opacity` classes to the WhatsApp button instead
-- Remove `whileHover` scale on cards; replace with CSS `hover:scale-[1.02]` and `transition-transform` (cheaper than Framer Motion spring per card)
-
-### Task 6: Passive scroll listener in Navigation
-- Change `addEventListener("scroll", onScroll)` to `addEventListener("scroll", onScroll, { passive: true })`
-
-### Task 7: CSS-only WhatsApp pulse
-- Replace the Framer Motion animated pulse div with a plain `<div>` using a CSS `@keyframes whatsapp-pulse` animation
-- Add the keyframes to `index.css`
-
-### Task 8: GPU hints in CSS
-- Add `will-change: transform` to `.fixed` cursor/progress elements
-- Add CSS `contain: content` to section containers with many children
-
----
-
-## Files Modified
-- `src/components/CustomCursor.tsx` -- rewrite spring/visibility logic
-- `src/components/MagneticButton.tsx` -- useMotionValue instead of useState
-- `src/components/sections/HeroSection.tsx` -- move useTransform out of JSX
-- `src/components/ParticleField.tsx` -- reduce count, add GPU hints
-- `src/components/sections/FeaturedProperties.tsx` -- remove inline styles, CSS hover
-- `src/components/sections/Navigation.tsx` -- passive listener
-- `src/components/WhatsAppFAB.tsx` -- CSS pulse
-- `src/index.css` -- add whatsapp-pulse keyframes, GPU hint utilities
