@@ -20,7 +20,7 @@ const DualPathSection = () => {
       ],
       cta: "Ver propiedades",
       direction: -100,
-      bgImage: "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80",
+      bgImage: "/images/mdp-coastline.jpg",
     },
     {
       icon: Key,
@@ -32,7 +32,7 @@ const DualPathSection = () => {
       ],
       cta: "Quiero vender",
       direction: 100,
-      bgImage: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800&q=80",
+      bgImage: "/images/office-wide.jpg",
     },
   ];
 

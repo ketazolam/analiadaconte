@@ -26,7 +26,19 @@ const ReviewsSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#18161E" }}>
+      <section ref={ref} className="section-padding noise-overlay relative overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to bottom, rgba(24,22,30,0.92) 0%, rgba(24,22,30,0.96) 100%),
+              url('/images/waiting-room.jpg')
+            `,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
             className="font-display text-[clamp(32px,4vw,44px)] text-foreground mb-12 text-center"

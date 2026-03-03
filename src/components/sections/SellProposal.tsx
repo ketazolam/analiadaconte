@@ -38,7 +38,7 @@ const SellProposal = () => {
           style={{
             backgroundImage: `
               linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, rgba(12,11,15,0.97) 40%),
-              url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80')
+              url('/images/chesterfield-lounge.jpg')
             `,
             backgroundSize: "cover",
             backgroundPosition: "center",

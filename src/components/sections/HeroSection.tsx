@@ -21,7 +21,7 @@ const HeroSection = () => {
           y: bgY,
           backgroundImage: `
             linear-gradient(to bottom, rgba(12,11,15,0.3) 0%, rgba(12,11,15,0.5) 50%, rgba(12,11,15,0.85) 100%),
-            url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80')
+            url('/images/mdp-aerial-hero.jpg')
           `,
           backgroundSize: "cover",
           backgroundPosition: "center",

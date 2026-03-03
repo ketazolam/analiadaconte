@@ -31,8 +31,8 @@ const AboutSection = () => {
             <div className="absolute -top-2 -left-2 w-full h-full" style={{ border: "1px solid rgba(255,255,255,0.05)" }} />
             <div className="relative aspect-[3/4] overflow-hidden" style={{ backgroundColor: "#141218" }}>
               <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
-                alt="Analía Daconte"
+                src="/images/team-celebration.jpg"
+                alt="Equipo Analía Daconte Propiedades"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -63,7 +63,7 @@ const AboutSection = () => {
               Mi trabajo no termina en la firma del boleto. Acompaño cada etapa del proceso 
               con honestidad, dedicación y el conocimiento que solo dan los años.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-8">
               {badges.map((badge) => (
                 <span
                   key={badge.label}
@@ -73,6 +73,17 @@ const AboutSection = () => {
                   {badge.label}
                 </span>
               ))}
+            </div>
+
+            {/* Secondary office photo */}
+            <div className="relative aspect-[16/9] overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+              <img
+                src="/images/private-office.jpg"
+                alt="Oficina privada de Analía Daconte"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
             </div>
           </motion.div>
         </div>
