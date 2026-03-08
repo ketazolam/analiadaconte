@@ -77,7 +77,7 @@ const Navigation = () => {
           {navLinks.map((link) => (
             <button
               key={link.label}
-              onClick={() => handleNav(link.target)}
+              onClick={() => handleNav(link)}
               className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300 bg-transparent border-none cursor-pointer"
             >
               {link.label}
