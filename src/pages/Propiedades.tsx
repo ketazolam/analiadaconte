@@ -31,6 +31,8 @@ const Propiedades = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScrollProgress />
+      <CustomCursor />
       <Navigation />
       
       {/* Header */}
