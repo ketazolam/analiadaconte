@@ -147,7 +147,7 @@ const ValuationTool = () => {
   return (
     <>
       <div className="section-divider" />
-      <section id="tasacion" ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#111015" }}>
+      <section id="tasacion" ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
         <div className="max-w-[640px] mx-auto relative z-10">
           {/* Header */}
           <motion.div

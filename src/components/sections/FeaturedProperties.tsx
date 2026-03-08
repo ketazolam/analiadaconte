@@ -27,7 +27,7 @@ const FeaturedProperties = () => {
   };
 
   return (
-    <section id="propiedades" ref={ref} className="section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
+    <section id="propiedades" ref={ref} className="section-lazy section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
       <div className="max-w-7xl mx-auto mb-12 relative z-10">
         <div className="flex items-end justify-between gap-4">
           <div>

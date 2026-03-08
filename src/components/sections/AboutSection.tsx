@@ -15,7 +15,7 @@ const AboutSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section id="about" ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#111015" }}>
+      <section id="about" ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-[45%_55%] gap-12 lg:gap-20 items-center relative z-10">
           {/* Photo with frame */}
           <motion.div

@@ -121,7 +121,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay relative overflow-hidden" style={{ contain: "content" }}>
+      <section ref={ref} className="section-lazy gpu-layer section-padding noise-overlay relative overflow-hidden" style={{ contain: "content" }}>
         {/* Background */}
         <img
           src="/images/waiting-room.jpg"

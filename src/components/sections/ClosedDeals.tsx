@@ -27,7 +27,7 @@ const ClosedDeals = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
+      <section ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.p
             className="label-eyebrow text-primary mb-4"

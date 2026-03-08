@@ -36,7 +36,7 @@ const StatsBar = () => {
   return (
     <section
       ref={ref}
-      className="relative noise-overlay"
+      className="section-lazy relative noise-overlay"
       style={{
         background: "radial-gradient(ellipse at center, #1e1b28 0%, #18161E 70%)",
         borderTop: "1px solid rgba(196,154,60,0.15)",

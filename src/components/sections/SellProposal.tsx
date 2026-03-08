@@ -31,7 +31,7 @@ const SellProposal = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="relative overflow-hidden noise-overlay" style={{ contain: "content" }}>
+      <section ref={ref} className="section-lazy relative overflow-hidden noise-overlay" style={{ contain: "content" }}>
         {/* Lazy background image */}
         <img
           src="/images/chesterfield-lounge.jpg"
