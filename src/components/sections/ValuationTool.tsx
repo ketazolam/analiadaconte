@@ -172,7 +172,7 @@ const ValuationTool = () => {
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.15 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
           >
             {/* Progress bar */}
             <div className="h-[2px] w-full" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
