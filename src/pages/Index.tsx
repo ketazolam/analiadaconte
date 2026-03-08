@@ -26,12 +26,26 @@ const Index = () => {
         <HeroSection />
         <Suspense fallback={null}>
           <DualPathSection />
+        </Suspense>
+        <Suspense fallback={null}>
           <StatsBar />
+        </Suspense>
+        <Suspense fallback={null}>
           <FeaturedProperties />
+        </Suspense>
+        <Suspense fallback={null}>
           <SellProposal />
+        </Suspense>
+        <Suspense fallback={null}>
           <AboutSection />
+        </Suspense>
+        <Suspense fallback={null}>
           <ClosedDeals />
+        </Suspense>
+        <Suspense fallback={null}>
           <ReviewsSection />
+        </Suspense>
+        <Suspense fallback={null}>
           <ValuationTool />
         </Suspense>
       </main>

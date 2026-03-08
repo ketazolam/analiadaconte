@@ -1,17 +1,22 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
 import GoogleLogo from "@/components/GoogleLogo";
 import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const disableParallax = isMobile || prefersReduced;
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const bgTextY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const bgY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "40%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "20%"]);
+  const bgTextY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "20%"]);
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">

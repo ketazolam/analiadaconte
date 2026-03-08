@@ -2,6 +2,11 @@ import { useMemo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const ParticleField = () => {
+  // Skip for reduced motion
+  if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return null;
+  }
+
   const isMobile = useIsMobile();
   const count = isMobile ? 8 : 15;
 
