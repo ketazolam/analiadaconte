@@ -64,7 +64,9 @@ const reviews = [
   },
 ];
 
-const ReviewsSection = () => {
+import { forwardRef } from "react";
+
+const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwardedRef) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -281,6 +283,6 @@ const ReviewsSection = () => {
       </section>
     </>
   );
-};
+});
 
 export default ReviewsSection;
