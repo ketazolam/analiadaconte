@@ -22,6 +22,7 @@ const Index = () => {
       <ScrollProgress />
       <CustomCursor />
       <WhatsAppFAB />
+      <ScrollToTop />
       <Navigation />
       <main>
         <HeroSection />
