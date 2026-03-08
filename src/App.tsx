@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const Propiedades = lazy(() => import("./pages/Propiedades"));
+const Tasaciones = lazy(() => import("./pages/Tasaciones"));
+const Mapa = lazy(() => import("./pages/Mapa"));
 
 const queryClient = new QueryClient();
 
