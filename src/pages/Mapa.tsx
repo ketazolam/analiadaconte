@@ -8,7 +8,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
-import { useProperties } from "@/hooks/useProperties";
+import { useAllMapProperties } from "@/hooks/useProperties";
 import { whatsappLink } from "@/lib/constants";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
