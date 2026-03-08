@@ -47,9 +47,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <ReviewsSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <ValuationTool />
-        </Suspense>
+        {/* ValuationTool removed — will be /vender page */}
       </main>
       <Suspense fallback={null}>
         <Footer />
