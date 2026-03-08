@@ -107,7 +107,7 @@ const HeroSection = () => {
               </svg>
             ))}
           </div>
-          <span className="font-body text-[11px] text-text-muted" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+          <span className="font-body text-[12px] text-foreground/70" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
             4.9 en Google
           </span>
         </motion.div>
