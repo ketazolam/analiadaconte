@@ -5,7 +5,7 @@ import useEmblaCarousel from "embla-carousel-react";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const GOOGLE_REVIEW_URL = "https://www.google.com/maps/place/Anal%C3%ADa+Daconte+Propiedades";
+const GOOGLE_REVIEW_URL = "https://www.google.com/maps/place/Analia+Daconte+Inversiones+Inmobiliarias/@-37.9661192,-57.5554955,17z/data=!3m1!4b1!4m6!3m5!1s0x9584d97a632a135b:0x615a919b8924802a!8m2!3d-37.9661235!4d-57.5529206!16s%2Fg%2F1tkmnqyg?entry=ttu";
 
 const reviews = [
   {
