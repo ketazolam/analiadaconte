@@ -20,7 +20,7 @@ const DualPathSection = () => {
         "Asesoramiento personalizado",
       ],
       cta: "Ver propiedades",
-      target: "propiedades",
+      href: "/propiedades",
       direction: -100,
       bgImage: "/images/waiting-room.jpg",
     },
