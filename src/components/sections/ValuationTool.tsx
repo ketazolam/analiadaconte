@@ -2,9 +2,8 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Home, Building2, Warehouse, LandPlot, Store, HelpCircle, Check, Loader2 } from "lucide-react";
 import MagneticButton from "../MagneticButton";
-import { whatsappLink } from "@/lib/constants";
+import { whatsappLink, EASE } from "@/lib/constants";
 
-const ease = [0.22, 1, 0.36, 1] as const;
 
 const propertyTypes = [
   { icon: Home, label: "Casa / Chalet" },

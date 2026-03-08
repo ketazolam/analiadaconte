@@ -107,7 +107,7 @@ const FeaturedProperties = () => {
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: i * 0.12 }}
+            transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
           >
             {/* Image */}
             <div className="h-[65%] relative overflow-hidden">
