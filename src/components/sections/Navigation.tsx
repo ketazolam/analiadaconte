@@ -124,7 +124,7 @@ const Navigation = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  onClick={() => handleNav(link.target)}
+                  onClick={() => handleNav(link)}
                 >
                   {link.label}
                 </motion.button>
