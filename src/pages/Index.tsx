@@ -13,7 +13,7 @@ const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
 const AboutSection = lazy(() => import("@/components/sections/AboutSection"));
 const ClosedDeals = lazy(() => import("@/components/sections/ClosedDeals"));
 const ReviewsSection = lazy(() => import("@/components/sections/ReviewsSection"));
-const ValuationTool = lazy(() => import("@/components/sections/ValuationTool"));
+// ValuationTool removed — moved to /vender page
 const Footer = lazy(() => import("@/components/sections/Footer"));
 
 const Index = () => {
@@ -47,9 +47,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <ReviewsSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <ValuationTool />
-        </Suspense>
+        {/* ValuationTool removed — will be /vender page */}
       </main>
       <Suspense fallback={null}>
         <Footer />

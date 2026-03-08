@@ -1,30 +1,15 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { MapPin, Bed, Bath, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { whatsappLink, EASE } from "@/lib/constants";
-
-const properties = [
-  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=350&q=70&auto=format" },
-  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=350&q=70&auto=format" },
-  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=350&q=70&auto=format" },
-  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=350&q=70&auto=format" },
-];
-
-const CARD_W = 380;
-const GAP = 24;
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { EASE } from "@/lib/constants";
+import { useFeaturedProperties } from "@/hooks/useProperties";
+import PropertyCard from "@/components/PropertyCard";
 
 const FeaturedProperties = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const [scrollX, setScrollX] = useState(0);
-  const maxScroll = -((properties.length - 1) * (CARD_W + GAP));
-
-  const scroll = (dir: number) => {
-    setScrollX((prev) => {
-      const next = prev + dir * (CARD_W + GAP);
-      return Math.max(maxScroll, Math.min(0, next));
-    });
-  };
+  const { data: properties, isLoading } = useFeaturedProperties(6);
 
   return (
     <section id="propiedades" ref={ref} className="section-lazy section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
@@ -50,124 +35,40 @@ const FeaturedProperties = () => {
               Una selección de propiedades exclusivas en las mejores ubicaciones de Mar del Plata.
             </motion.p>
           </div>
-
-          {/* Navigation arrows - desktop */}
-          <motion.div
-            className="hidden md:flex items-center gap-2"
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <button
-              onClick={() => scroll(1)}
-              disabled={scrollX >= 0}
-              className="w-10 h-10 flex items-center justify-center transition-colors duration-200 disabled:opacity-20"
-              style={{ border: "1px solid rgba(196,154,60,0.4)", color: "hsl(38,54%,50%)" }}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => scroll(-1)}
-              disabled={scrollX <= maxScroll}
-              className="w-10 h-10 flex items-center justify-center transition-colors duration-200 disabled:opacity-20"
-              style={{ border: "1px solid rgba(196,154,60,0.4)", color: "hsl(38,54%,50%)" }}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </motion.div>
         </div>
-
-        {/* Mobile scroll hint */}
-        <motion.p
-          className="md:hidden font-body text-xs text-text-muted mt-4"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.5 }}
-        >
-          Deslizá para ver más →
-        </motion.p>
       </div>
 
-      {/* Horizontal scroll */}
-      <motion.div
-        className="flex gap-6 cursor-grab active:cursor-grabbing pb-4 relative z-10"
-        drag="x"
-        dragConstraints={{ left: maxScroll, right: 0 }}
-        dragElastic={0.1}
-        animate={{ x: scrollX }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
-        {properties.map((prop, i) => (
-          <motion.div
-            key={i}
-            className="flex-shrink-0 w-[340px] md:w-[380px] h-[520px] relative group overflow-hidden transition-[border-color,box-shadow] duration-300 hover:scale-[1.02]"
-            style={{
-              background: "#141218",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-            initial={{ opacity: 0, y: 40 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
-          >
-            {/* Image */}
-            <div className="h-[65%] relative overflow-hidden">
-              <img
-                src={prop.image}
-                srcSet={`${prop.imageSm} 350w, ${prop.image} 500w`}
-                sizes="(max-width: 768px) 350px, 500px"
-                alt={prop.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-                width={500}
-                height={375}
-                fetchPriority="low"
+      {/* Grid */}
+      <div className="max-w-7xl mx-auto relative z-10">
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[420px] animate-pulse"
+                style={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.95) 0%, transparent 60%)" }} />
-              <span
-                className="absolute top-4 left-4 font-body text-[10px] uppercase tracking-wider px-3 py-1"
-                style={
-                  prop.type === "VENTA"
-                    ? { backgroundColor: "#C49A3C", color: "#0C0B0F" }
-                    : { backgroundColor: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white" }
-                }
+            ))}
+          </div>
+        ) : !properties || properties.length === 0 ? (
+          <p className="font-body text-sm text-text-secondary text-center py-12">
+            No hay propiedades destacadas actualmente.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties.map((prop, i) => (
+              <motion.div
+                key={prop.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
               >
-                {prop.type}
-              </span>
-            </div>
-
-            {/* Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <p className="font-display text-[28px] text-primary mb-1">{prop.price}</p>
-              <p className="font-body text-sm text-foreground mb-1">{prop.title}</p>
-              <p className="flex items-center gap-1 font-body text-xs text-text-muted mb-3">
-                <MapPin className="w-3 h-3" /> {prop.location}
-              </p>
-              {(prop.beds > 0 || prop.baths > 0) && (
-                <div className="flex items-center gap-4 font-body text-xs text-text-secondary mb-4">
-                  {prop.beds > 0 && (
-                    <span className="flex items-center gap-1"><Bed className="w-3.5 h-3.5" /> {prop.beds}</span>
-                  )}
-                  {prop.baths > 0 && (
-                    <span className="flex items-center gap-1"><Bath className="w-3.5 h-3.5" /> {prop.baths}</span>
-                  )}
-                  <span>{prop.area}</span>
-                </div>
-              )}
-
-              <a
-                href={whatsappLink(`Hola Analía, me interesa la propiedad: ${prop.title} en ${prop.location}`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full font-body text-xs uppercase tracking-wider py-3 text-primary-foreground opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
-                style={{ backgroundColor: "#C49A3C" }}
-              >
-                <MessageCircle className="w-3.5 h-3.5" /> Consultar
-              </a>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+                <PropertyCard property={prop} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Ver todas button */}
       <motion.div
@@ -176,14 +77,12 @@ const FeaturedProperties = () => {
         animate={inView ? { opacity: 1 } : {}}
         transition={{ delay: 0.8 }}
       >
-        <a
-          href={whatsappLink("Hola Analía, me gustaría ver más propiedades disponibles")}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/propiedades"
           className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors"
         >
           Ver todas las propiedades →
-        </a>
+        </Link>
       </motion.div>
     </section>
   );

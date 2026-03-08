@@ -1,12 +1,14 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Home, Key } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE as ease } from "@/lib/constants";
 
 const DualPathSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const navigate = useNavigate();
 
   const panels = [
     {
@@ -18,7 +20,7 @@ const DualPathSection = () => {
         "Asesoramiento personalizado",
       ],
       cta: "Ver propiedades",
-      target: "propiedades",
+      href: "/propiedades",
       direction: -100,
       bgImage: "/images/waiting-room.jpg",
     },
@@ -83,7 +85,10 @@ const DualPathSection = () => {
                 ))}
               </ul>
               <button
-                onClick={() => smoothScrollTo(panel.target)}
+                onClick={() => {
+                  if (panel.href) navigate(panel.href);
+                  else if (panel.target) smoothScrollTo(panel.target);
+                }}
                 className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors bg-transparent border-none cursor-pointer"
               >
                 {panel.cta} <span className="text-primary">→</span>

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE } from "@/lib/constants";
 
 const navLinks = [
-  { label: "Propiedades", target: "propiedades" },
+  { label: "Propiedades", href: "/propiedades" },
   { label: "Vendedores", target: "vendedores" },
   { label: "Quiénes somos", target: "about" },
   { label: "Contacto", target: "contacto" },
@@ -15,6 +16,8 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const rafRef = useRef(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => {
@@ -32,9 +35,18 @@ const Navigation = () => {
     };
   }, []);
 
-  const handleNav = (target: string) => {
+  const handleNav = (link: typeof navLinks[0]) => {
     setMenuOpen(false);
-    smoothScrollTo(target);
+    if (link.href) {
+      navigate(link.href);
+    } else if (link.target) {
+      if (location.pathname !== "/") {
+        navigate("/");
+        setTimeout(() => smoothScrollTo(link.target!), 300);
+      } else {
+        smoothScrollTo(link.target);
+      }
+    }
   };
 
   return (
@@ -65,7 +77,7 @@ const Navigation = () => {
           {navLinks.map((link) => (
             <button
               key={link.label}
-              onClick={() => handleNav(link.target)}
+              onClick={() => handleNav(link)}
               className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300 bg-transparent border-none cursor-pointer"
             >
               {link.label}
@@ -112,7 +124,7 @@ const Navigation = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  onClick={() => handleNav(link.target)}
+                  onClick={() => handleNav(link)}
                 >
                   {link.label}
                 </motion.button>
