@@ -8,7 +8,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
-import { useProperties } from "@/hooks/useProperties";
+import { useAllMapProperties } from "@/hooks/useProperties";
 import { whatsappLink } from "@/lib/constants";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
@@ -87,15 +87,11 @@ const Mapa = () => {
     sort: "recientes",
   });
 
-  // Fetch all properties (large page to get coords)
-  const { data } = useProperties(filters, 0);
+  const { data: mapProperties } = useAllMapProperties(filters);
 
   const markers = useMemo(() => {
-    if (!data?.properties) return [];
-    return data.properties.filter(
-      (p) => p.lat != null && p.lng != null
-    );
-  }, [data]);
+    return mapProperties || [];
+  }, [mapProperties]);
 
   return (
     <div className="h-screen flex flex-col bg-background">
@@ -108,7 +104,7 @@ const Mapa = () => {
         <PropertyFiltersBar
           filters={filters}
           onChange={(f) => setFilters(f)}
-          total={data?.total}
+          total={markers.length}
           showMapLink={false}
         />
       </div>

@@ -69,6 +69,33 @@ export function useFeaturedProperties(limit = 6) {
   });
 }
 
+export function useAllMapProperties(filters: Omit<PropertyFilters, 'sort'>) {
+  return useQuery({
+    queryKey: ["propiedades-mapa", filters],
+    queryFn: async () => {
+      let query = supabase
+        .from("propiedades")
+        .select("id,titulo,barrio,precio,precio_texto,moneda,fotos,lat,lng,operacion,tipo")
+        .not("lat", "is", null)
+        .not("lng", "is", null);
+
+      if (filters.operacion) query = query.eq("operacion", filters.operacion);
+      if (filters.tipo) query = query.eq("tipo", filters.tipo);
+      if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
+      if (filters.precioMin) query = query.gte("precio", filters.precioMin);
+      if (filters.precioMax) query = query.lte("precio", filters.precioMax);
+
+      // Fetch up to 1000 (Supabase default max)
+      query = query.limit(1000);
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return (data as unknown as Propiedad[]) || [];
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+}
+
 export function usePropertyFilterOptions() {
   return useQuery({
     queryKey: ["property-filter-options"],

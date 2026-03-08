@@ -1,14 +1,15 @@
 import { useRef, useMemo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
 import GoogleLogo from "@/components/GoogleLogo";
-import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disableParallax = isMobile || prefersReduced;
@@ -88,8 +89,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.9 }}
         >
-          <MagneticButton variant="filled" onClick={() => smoothScrollTo("propiedades")}>Quiero comprar</MagneticButton>
-          <MagneticButton variant="outline" onClick={() => smoothScrollTo("tasacion")}>Quiero vender</MagneticButton>
+          <MagneticButton variant="filled" onClick={() => navigate("/propiedades")}>Quiero comprar</MagneticButton>
+          <MagneticButton variant="outline" onClick={() => navigate("/tasaciones")}>Quiero vender</MagneticButton>
         </motion.div>
 
         {/* Google rating badge */}

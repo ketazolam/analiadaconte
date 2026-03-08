@@ -39,7 +39,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
   const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada].filter(Boolean).length;
 
   const selectClass =
-    "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))]";
+    "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))] w-auto shrink-0";
 
   const inputClass =
     "font-body text-xs bg-transparent border border-[hsl(var(--border))] px-3 py-2.5 text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted w-full";

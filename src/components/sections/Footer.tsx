@@ -6,7 +6,7 @@ const quickLinks = [
   { label: "Inicio", to: "/" },
   { label: "Venta", to: "/propiedades?operacion=venta" },
   { label: "Alquiler", to: "/propiedades?operacion=alquiler" },
-  { label: "Vender", to: "/vender" },
+  { label: "Tasaciones", to: "/tasaciones" },
   { label: "Mapa", to: "/mapa" },
 ];
 
