@@ -88,8 +88,11 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Google rating badge */}
-        <motion.div
-          className="flex items-center justify-center gap-2 mt-8"
+        <motion.a
+          href="https://www.google.com/maps/place/Anal%C3%ADa+Daconte+Propiedades"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 mt-8 hover:opacity-80 transition-opacity cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, ease, delay: 1.2 }}
@@ -107,10 +110,10 @@ const HeroSection = () => {
               </svg>
             ))}
           </div>
-          <span className="font-body text-[12px] text-foreground/70" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
+          <span className="font-body text-[12px] text-foreground/70 underline underline-offset-2 decoration-foreground/30" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
             4.9 en Google
           </span>
-        </motion.div>
+        </motion.a>
       </motion.div>
 
       {/* Bottom line + scroll indicator */}
