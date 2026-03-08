@@ -35,7 +35,7 @@ const FeaturedProperties = () => {
               className="font-display text-[clamp(40px,5vw,56px)] text-foreground leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease }}
+              transition={{ duration: 0.7, ease: EASE }}
             >
               Propiedades
               <br />
