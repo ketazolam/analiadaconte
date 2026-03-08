@@ -16,6 +16,8 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const rafRef = useRef(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,9 +35,18 @@ const Navigation = () => {
     };
   }, []);
 
-  const handleNav = (target: string) => {
+  const handleNav = (link: typeof navLinks[0]) => {
     setMenuOpen(false);
-    smoothScrollTo(target);
+    if (link.href) {
+      navigate(link.href);
+    } else if (link.target) {
+      if (location.pathname !== "/") {
+        navigate("/");
+        setTimeout(() => smoothScrollTo(link.target!), 300);
+      } else {
+        smoothScrollTo(link.target);
+      }
+    }
   };
 
   return (
