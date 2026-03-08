@@ -170,13 +170,8 @@ const SellProposal = () => {
                 Quiero vender mi propiedad
               </MagneticButton>
             </a>
-            <p className="mt-4">
-              <button
-                onClick={() => smoothScrollTo("tasacion")}
-                className="font-body text-[13px] text-text-muted hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
-              >
-                O si preferís, coordinamos una tasación sin cargo →
-              </button>
+            <p className="mt-4 font-body text-[13px] text-text-muted">
+              Tasación gratuita · Sin compromiso
             </p>
           </motion.div>
         </div>
