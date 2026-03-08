@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE } from "@/lib/constants";
 
 const navLinks = [
-  { label: "Propiedades", target: "propiedades" },
+  { label: "Propiedades", href: "/propiedades" },
   { label: "Vendedores", target: "vendedores" },
   { label: "Quiénes somos", target: "about" },
   { label: "Contacto", target: "contacto" },
