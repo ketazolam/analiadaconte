@@ -2,7 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Home, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { smoothScrollTo } from "@/lib/smoothScroll";
+
 import { EASE as ease } from "@/lib/constants";
 
 const DualPathSection = () => {
@@ -34,7 +34,7 @@ const DualPathSection = () => {
         "Tasación sin cargo",
       ],
       cta: "Quiero vender",
-      target: "tasacion",
+      href: "/tasaciones",
       direction: 100,
       bgImage: "/images/office-wide.jpg",
     },
@@ -87,7 +87,6 @@ const DualPathSection = () => {
               <button
                 onClick={() => {
                   if (panel.href) navigate(panel.href);
-                  else if (panel.target) smoothScrollTo(panel.target);
                 }}
                 className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors bg-transparent border-none cursor-pointer"
               >

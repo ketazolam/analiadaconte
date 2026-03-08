@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const Propiedades = lazy(() => import("./pages/Propiedades"));
+const Tasaciones = lazy(() => import("./pages/Tasaciones"));
+const Mapa = lazy(() => import("./pages/Mapa"));
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/propiedades" element={<Suspense fallback={null}><Propiedades /></Suspense>} />
+          <Route path="/tasaciones" element={<Suspense fallback={null}><Tasaciones /></Suspense>} />
+          <Route path="/mapa" element={<Suspense fallback={null}><Mapa /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
