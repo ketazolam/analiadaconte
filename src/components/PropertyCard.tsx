@@ -1,7 +1,8 @@
-import { forwardRef, useState, useCallback } from "react";
+import { forwardRef, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Bed, Bath, Maximize, Car, ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import type { Propiedad } from "@/lib/types";
+import { sanitizeBarrio } from "@/lib/utils";
 
 interface PropertyCardProps {
   property: Propiedad;
