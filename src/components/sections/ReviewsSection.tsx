@@ -283,6 +283,6 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
       </section>
     </>
   );
-};
+});
 
 export default ReviewsSection;
