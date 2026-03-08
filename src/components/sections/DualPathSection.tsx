@@ -87,7 +87,6 @@ const DualPathSection = () => {
               <button
                 onClick={() => {
                   if (panel.href) navigate(panel.href);
-                  else if (panel.target) smoothScrollTo(panel.target);
                 }}
                 className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors bg-transparent border-none cursor-pointer"
               >
