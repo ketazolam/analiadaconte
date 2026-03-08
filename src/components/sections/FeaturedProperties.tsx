@@ -4,10 +4,10 @@ import { MapPin, Bed, Bath, MessageCircle, ChevronLeft, ChevronRight } from "luc
 import { whatsappLink, EASE } from "@/lib/constants";
 
 const properties = [
-  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format" },
-  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&q=70&auto=format" },
-  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=70&auto=format" },
-  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70&auto=format" },
+  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=350&q=70&auto=format" },
+  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=350&q=70&auto=format" },
+  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=350&q=70&auto=format" },
+  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=350&q=70&auto=format" },
 ];
 
 const CARD_W = 380;
