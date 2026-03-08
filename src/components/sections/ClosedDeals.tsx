@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { EASE as ease } from "@/lib/constants";
 
 const dealImages = [
   "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=350&q=70&auto=format",

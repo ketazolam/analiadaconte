@@ -1,10 +1,8 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Home, Key } from "lucide-react";
 import { smoothScrollTo } from "@/lib/smoothScroll";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { EASE as ease } from "@/lib/constants";
 
 const DualPathSection = () => {
   const ref = useRef(null);

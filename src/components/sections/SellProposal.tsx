@@ -2,10 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Ruler, Camera, Megaphone, CheckCircle } from "lucide-react";
 import MagneticButton from "../MagneticButton";
-import { whatsappLink } from "@/lib/constants";
-import { smoothScrollTo } from "@/lib/smoothScroll";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { whatsappLink, EASE as ease } from "@/lib/constants";
 
 const miniStats = [
   { value: "60 días", label: "promedio de venta" },
