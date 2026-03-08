@@ -1,9 +1,9 @@
 import { useRef, useMemo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
 import GoogleLogo from "@/components/GoogleLogo";
-import { smoothScrollTo } from "@/lib/smoothScroll";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
 
