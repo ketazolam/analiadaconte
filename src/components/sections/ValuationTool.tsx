@@ -208,7 +208,7 @@ const ValuationTool = () => {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.3, ease }}
+                    transition={{ duration: 0.3, ease: EASE }}
                     className="flex-1 flex flex-col"
                   >
                     {step === 1 && (
