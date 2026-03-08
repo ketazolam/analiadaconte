@@ -1,9 +1,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Bed, Bath, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { whatsappLink } from "@/lib/constants";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { whatsappLink, EASE } from "@/lib/constants";
 
 const properties = [
   { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format" },
