@@ -41,7 +41,7 @@ const DualPathSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="grid md:grid-cols-2 relative" style={{ contain: "content" }}>
+      <section ref={ref} className="section-lazy gpu-layer grid md:grid-cols-2 relative" style={{ contain: "content" }}>
         <div
           className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px z-10"
           style={{ background: "rgba(255,255,255,0.08)" }}

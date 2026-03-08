@@ -39,7 +39,11 @@ const CustomCursor = () => {
     };
   }, [cursorX, cursorY, trailX, trailY, opacity]);
 
-  if (typeof window !== "undefined" && !window.matchMedia("(pointer: fine)").matches) return null;
+  // Skip on touch devices and reduced motion
+  if (typeof window !== "undefined") {
+    if (!window.matchMedia("(pointer: fine)").matches) return null;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+  }
 
   return (
     <>

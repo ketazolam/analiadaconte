@@ -20,7 +20,7 @@ const footerLinks = {
 
 const Footer = () => {
   return (
-    <footer id="contacto" style={{ backgroundColor: "#080709" }}>
+    <footer id="contacto" className="section-lazy" style={{ backgroundColor: "#080709" }}>
       {/* Top gold border */}
       <div
         className="h-px w-full"
