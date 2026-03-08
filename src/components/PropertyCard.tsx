@@ -160,7 +160,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
             </h3>
             <p className="flex items-center gap-1 font-body text-xs text-text-muted mb-3">
               <MapPin className="w-3 h-3" />
-              {[property.barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata"}
+              {[barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata"}
             </p>
 
             {/* Features row */}
