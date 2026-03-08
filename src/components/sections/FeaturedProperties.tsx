@@ -45,7 +45,7 @@ const FeaturedProperties = () => {
               className="font-body text-sm text-text-secondary mt-4 max-w-md"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease, delay: 0.15 }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
             >
               Una selección de propiedades exclusivas en las mejores ubicaciones de Mar del Plata.
             </motion.p>
