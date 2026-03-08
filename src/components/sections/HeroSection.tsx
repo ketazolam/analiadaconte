@@ -68,9 +68,9 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.5 }}
         >
-          <span className="font-light text-foreground">Encontrá tu</span>
+          <span className="font-light text-foreground">Expertos en</span>
           <br />
-          <span className="italic gold-gradient-text">próxima propiedad</span>
+          <span className="italic gold-gradient-text">Mar del Plata</span>
         </motion.h1>
 
         <motion.p
