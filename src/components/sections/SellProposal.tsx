@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { Ruler, Camera, Megaphone, CheckCircle } from "lucide-react";
 import MagneticButton from "../MagneticButton";
 import { whatsappLink, EASE as ease } from "@/lib/constants";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const miniStats = [
   { value: "60 días", label: "promedio de venta" },
