@@ -1,81 +1,82 @@
 
 
-# Visual & Legibility Audit — Home Page
+## Phase 1 Deep Dive: `/propiedades` — Full Improvement Plan
 
-## Problem Analysis (from the screenshot)
+### Issues Found
 
-The screenshot reveals the core issue clearly: **the hero text is fighting a losing battle against the busy aerial photo**. The ocean, buildings, and bright sky create visual noise that makes "Encontrá tu próxima propiedad" and especially the subtitle nearly invisible. The navigation links at the top also disappear against the bright blue sky.
+1. **No property detail page (`/propiedad/:slug`)** — Cards are dead ends with no way to see full info, gallery, description, or map. This is the biggest gap.
 
-This isn't just the hero — there are legibility and visual hierarchy issues throughout the home.
+2. **Barrio data is garbage** — The scraper is extracting random description fragments as `barrio` (e.g. "nuestra redes y enterate de los nuevos ingresos @analiadacontepropiedades", "planta baja", "las fotos"). The barrio filter dropdown is unusable. Need to either clean data or hide the filter.
 
----
+3. **Pagination replaces instead of appending** — "Cargar más" replaces results instead of appending. Each page change triggers a new query that replaces the previous results.
 
-## Issues & Fixes
+4. **No search by text** — Vanzini has a search bar for barrio/direction. We have none.
 
-### 1. Hero — Weak Overlay Gradient (Critical)
-The current gradient is `rgba(12,11,15,0.3)` at top → `0.5` at center → `0.85` at bottom. The top half is nearly transparent, making the nav and eyebrow text invisible against the bright sky.
+5. **No image carousel on cards** — Vanzini shows multiple images per card. Our cards show only the first image.
 
-**Fix**: Strengthen the gradient significantly — `0.55` at top, `0.65` at center, `0.88` at bottom. This darkens the sky/buildings enough for white text to pop while still showing the photo through.
+6. **No share/bookmark actions** — Vanzini has favorite, share, alert buttons per card.
 
-### 2. Hero — Background Position
-The photo is centered, showing mostly buildings and parking lots in the middle. The ocean/coastline (the emotional hook) is pushed to the top edge.
-
-**Fix**: Shift `backgroundPosition` to `center 30%` so the coastline is more prominent behind the text, and the less interesting parking area is cropped out at the bottom.
-
-### 3. Navigation — Invisible Against Bright Sky
-When not scrolled, the nav has `bg-transparent` — links vanish against the bright sky. Even the logo "AD" is hard to see.
-
-**Fix**: Add a subtle top-to-bottom gradient behind the nav (even when not scrolled): `linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, transparent 100%)` as a pseudo-element or inline style. This creates a natural vignette without looking like a bar.
-
-### 4. Hero — Subtitle Too Dim
-"25 años construyendo confianza en Mar del Plata" uses `text-text-secondary` which is `hsl(30, 3%, 52%)` — a mid-gray that's nearly invisible over a photo. 
-
-**Fix**: Bump to `text-foreground/70` or `rgba(242,239,232,0.7)` — still secondary but legible.
-
-### 5. Hero — "Quiero Vender" Outline Button Hard to See
-The outline variant uses `border border-primary text-primary` — a thin 1px gold border over a photo background barely registers visually.
-
-**Fix**: Increase border to `border-2` and add a subtle backdrop: `bg-white/5 backdrop-blur-sm` to give the outline button a frosted-glass base.
-
-### 6. Hero — Eyebrow Text Too Small
-`label-eyebrow` is 10px with 3px letter-spacing. At that size on a photo background, it's invisible.
-
-**Fix**: Bump to 12px and add a subtle text-shadow: `0 1px 8px rgba(0,0,0,0.5)`.
-
-### 7. Hero — Add Text Shadow to All Hero Text
-Every text element in the hero sits over a photo. Even with a stronger gradient, a subtle `text-shadow` on the h1 and subtitle dramatically improves legibility without changing the aesthetic.
-
-**Fix**: Add `textShadow: "0 2px 20px rgba(0,0,0,0.4)"` to the hero content wrapper.
-
-### 8. DualPath — Overlay Too Dark
-Both panels use `rgba(12,11,15,0.75)` overlay. The photos are almost invisible — defeats the purpose of having them.
-
-**Fix**: Reduce to `0.65` and add a gradient (darker at bottom where text sits, lighter at top where photo shows).
-
-### 9. Property Cards — "Consultar" Button Always Hidden
-The WhatsApp "Consultar" button only appears on hover (`opacity-0 group-hover:opacity-100`). On mobile there's no hover — the button is permanently invisible.
-
-**Fix**: On mobile, always show the button. Use `opacity-100 md:opacity-0 md:group-hover:opacity-100`.
-
-### 10. StatsBar — Numbers Need More Visual Weight
-The counters blend with the section. They need a stronger visual separation.
-
-**Fix**: Add a subtle `textShadow: "0 0 30px rgba(196,154,60,0.3)"` to the gold numbers for a glow effect that reinforces the premium feel.
-
-### 11. Section Backgrounds — Monotone Dark
-Every section alternates between `#0C0B0F` and `#111015` — the difference is nearly imperceptible. The page feels like one continuous dark block.
-
-**Fix**: Alternate more noticeably: keep `#0C0B0F` for primary sections, use `#151320` (slightly warmer/violet-tinted) for alternate sections. This creates visual rhythm without breaking the dark theme.
+7. **Filters UX on mobile** — The current filter row wraps awkwardly on small screens. Needs a collapsible/drawer approach.
 
 ---
 
-## Files to Modify
+### Plan
 
-1. **HeroSection.tsx** — stronger gradient, background position, text shadows, eyebrow size
-2. **Navigation.tsx** — add gradient overlay behind nav when not scrolled
-3. **MagneticButton.tsx** — outline variant gets `border-2` + frosted glass
-4. **DualPathSection.tsx** — lighter overlay with gradient
-5. **FeaturedProperties.tsx** — mobile-visible Consultar button
-6. **StatsBar.tsx** — gold glow on numbers
-7. **src/index.css** — alternate section background token, eyebrow size bump
+#### 1. Create Property Detail Page (`/propiedad/:slug`)
+- New route `/propiedad/:slug` using `pixel_slug` field
+- New hook `useProperty(slug)` to fetch single property
+- **Layout** (inspired by Vanzini detail page):
+  - Full-width image gallery with thumbnails + navigation (Anterior/Siguiente)
+  - Title, address, type badges
+  - Price + surface prominently displayed
+  - Features grid: dormitorios, banos, superficie total/cubierta, cochera, apto credito, mascotas
+  - Full description text
+  - Mini map (Leaflet) showing property location if lat/lng available
+  - WhatsApp CTA sidebar (sticky on desktop)
+  - Share button (copy link, WhatsApp share)
+- **PropertyCard** updated to be a `<Link to={/propiedad/${slug}}>` wrapping the card
+- Includes: Navigation, CustomCursor, ScrollProgress, WhatsAppFAB, Footer
+
+#### 2. Fix Pagination (Infinite Scroll / Append)
+- Change from page replacement to accumulation: store all loaded properties in state
+- "Cargar más" appends next page results to existing array
+- Show running count: "Mostrando 21 de 208"
+
+#### 3. Fix Barrio Filter
+- Remove the barrio dropdown from filters since the data is corrupted
+- Replace with a **text search input** that searches across `titulo`, `direccion`, and `barrio` using Supabase `or(titulo.ilike.%term%,direccion.ilike.%term%)` 
+- Add search icon and debounce (300ms)
+- Add `searchText` to `PropertyFilters` type
+
+#### 4. Image Carousel on Cards
+- Add small dot indicators or a subtle left/right hover arrow on cards to browse 2-3 images
+- Use `embla-carousel-react` (already installed) for lightweight swipe
+- Show photo count badge (e.g. "1/12")
+
+#### 5. Mobile Filters Drawer
+- On mobile (`< md`), collapse filters into a button that opens a bottom sheet/drawer
+- Show active filter count as badge
+- Use the existing `vaul` drawer component
+
+#### 6. Route Updates
+- `App.tsx`: Add `/propiedad/:slug` route
+- `PropertyCard`: Wrap entire card in `<Link>` to detail page
+- Add new `useProperty` hook for single property fetch
+
+### Files to create/modify
+- **Create**: `src/pages/PropiedadDetalle.tsx` — detail page
+- **Create**: `src/hooks/useProperty.ts` — single property hook
+- **Modify**: `src/App.tsx` — add route
+- **Modify**: `src/components/PropertyCard.tsx` — add Link, image carousel, photo count
+- **Modify**: `src/components/PropertyFilters.tsx` — remove barrio, add text search, mobile drawer
+- **Modify**: `src/pages/Propiedades.tsx` — fix pagination accumulation
+- **Modify**: `src/hooks/useProperties.ts` — add text search filter
+- **Modify**: `src/lib/types.ts` — add `searchText` to PropertyFilters
+
+### Priority order
+1. Property detail page (biggest UX gap)
+2. Fix pagination
+3. Text search + remove broken barrio filter
+4. Image carousel on cards
+5. Mobile filters drawer
 
