@@ -14,13 +14,18 @@ export function useProperties(filters: PropertyFilters, page = 0) {
 
       if (filters.operacion) query = query.eq("operacion", filters.operacion);
       if (filters.tipo) query = query.eq("tipo", filters.tipo);
-      if (filters.barrio) query = query.eq("barrio", filters.barrio);
       if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
       if (filters.precioMin) query = query.gte("precio", filters.precioMin);
       if (filters.precioMax) query = query.lte("precio", filters.precioMax);
       if (filters.superficieMin) query = query.gte("superficie_total", filters.superficieMin);
       if (filters.superficieMax) query = query.lte("superficie_total", filters.superficieMax);
       if (filters.destacada) query = query.eq("destacada", true);
+
+      // Text search across titulo and direccion
+      if (filters.searchText) {
+        const term = `%${filters.searchText}%`;
+        query = query.or(`titulo.ilike.${term},direccion.ilike.${term}`);
+      }
 
       // Sort
       if (filters.sort === "precio_asc") {
@@ -68,15 +73,13 @@ export function usePropertyFilterOptions() {
   return useQuery({
     queryKey: ["property-filter-options"],
     queryFn: async () => {
-      const [tipos, barrios] = await Promise.all([
+      const [tipos] = await Promise.all([
         supabase.from("propiedades").select("tipo").not("tipo", "is", null),
-        supabase.from("propiedades").select("barrio").not("barrio", "is", null),
       ]);
 
       const uniqueTipos = [...new Set((tipos.data || []).map((r: any) => r.tipo))].filter(Boolean).sort();
-      const uniqueBarrios = [...new Set((barrios.data || []).map((r: any) => r.barrio))].filter(Boolean).sort();
 
-      return { tipos: uniqueTipos as string[], barrios: uniqueBarrios as string[] };
+      return { tipos: uniqueTipos as string[] };
     },
     staleTime: 5 * 60 * 1000,
   });
