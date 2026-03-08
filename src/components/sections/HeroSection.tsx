@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disableParallax = isMobile || prefersReduced;
