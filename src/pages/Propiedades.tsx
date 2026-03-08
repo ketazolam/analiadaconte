@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import CustomCursor from "@/components/CustomCursor";
@@ -11,11 +11,13 @@ import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
 import { useProperties } from "@/hooks/useProperties";
 import type { PropertyFilters } from "@/lib/types";
+import type { Propiedad } from "@/lib/types";
 import { EASE } from "@/lib/constants";
 
 const Propiedades = () => {
   const [searchParams] = useSearchParams();
   const [page, setPage] = useState(0);
+  const [accumulated, setAccumulated] = useState<Propiedad[]>([]);
   const [filters, setFilters] = useState<PropertyFilters>({
     operacion: searchParams.get("operacion") || undefined,
     tipo: searchParams.get("tipo") || undefined,
@@ -24,10 +26,29 @@ const Propiedades = () => {
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
+  // Accumulate properties across pages
+  useEffect(() => {
+    if (data?.properties) {
+      if (page === 0) {
+        setAccumulated(data.properties);
+      } else {
+        setAccumulated((prev) => {
+          const existingIds = new Set(prev.map((p) => p.id));
+          const newProps = data.properties.filter((p) => !existingIds.has(p.id));
+          return [...prev, ...newProps];
+        });
+      }
+    }
+  }, [data, page]);
+
   const handleFiltersChange = (newFilters: PropertyFilters) => {
     setFilters(newFilters);
     setPage(0);
+    setAccumulated([]);
   };
+
+  const total = data?.total ?? 0;
+  const showingCount = accumulated.length;
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,13 +84,13 @@ const Propiedades = () => {
         <PropertyFiltersBar
           filters={filters}
           onChange={handleFiltersChange}
-          total={data?.total}
+          total={total}
         />
       </div>
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-12">
-        {isLoading ? (
+        {isLoading && page === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
@@ -83,7 +104,7 @@ const Propiedades = () => {
           <div className="text-center py-20">
             <p className="font-body text-text-secondary">Error al cargar propiedades. Intentá de nuevo.</p>
           </div>
-        ) : data?.properties.length === 0 ? (
+        ) : accumulated.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-display text-2xl text-foreground mb-2">No encontramos propiedades</p>
             <p className="font-body text-sm text-text-secondary mb-6">Probá ajustando los filtros de búsqueda.</p>
@@ -97,7 +118,7 @@ const Propiedades = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data?.properties.map((prop, i) => (
+              {accumulated.map((prop, i) => (
                 <motion.div
                   key={prop.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -110,17 +131,21 @@ const Propiedades = () => {
             </div>
 
             {/* Load more */}
-            {data?.hasMore && (
-              <div className="text-center mt-12">
+            <div className="text-center mt-12 space-y-3">
+              <p className="font-body text-xs text-text-muted">
+                Mostrando {showingCount} de {total}
+              </p>
+              {data?.hasMore && (
                 <button
                   onClick={() => setPage((p) => p + 1)}
-                  className="font-body text-sm uppercase tracking-[0.1em] px-8 py-3 text-primary transition-colors hover:bg-primary/10"
+                  disabled={isLoading}
+                  className="font-body text-sm uppercase tracking-[0.1em] px-8 py-3 text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
                   style={{ border: "1px solid hsl(var(--primary))" }}
                 >
-                  Cargar más propiedades
+                  {isLoading ? "Cargando..." : "Cargar más propiedades"}
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </>
         )}
       </div>

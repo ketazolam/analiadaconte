@@ -43,4 +43,5 @@ export interface PropertyFilters {
   superficieMax?: number;
   destacada?: boolean;
   sort?: "precio_asc" | "precio_desc" | "recientes";
+  searchText?: string;
 }
