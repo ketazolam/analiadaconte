@@ -8,6 +8,7 @@ import { EASE as ease } from "@/lib/constants";
 const DualPathSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const navigate = useNavigate();
 
   const panels = [
     {
