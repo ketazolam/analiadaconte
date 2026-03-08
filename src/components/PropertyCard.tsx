@@ -30,6 +30,21 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
     const images = getAllImages(property.fotos);
     const showPlaceholder = images.length === 0 || imgError;
     const slug = property.pixel_slug || String(property.id);
+    const barrio = sanitizeBarrio(property.barrio);
+
+    // Touch swipe for mobile
+    const touchStartX = useRef(0);
+    const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+    const handleTouchEnd = (e: React.TouchEvent) => {
+      if (images.length <= 1) return;
+      const diff = touchStartX.current - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        e.preventDefault();
+        setImgLoaded(false); setImgError(false);
+        if (diff > 0) setCurrentImg((c) => (c + 1) % images.length);
+        else setCurrentImg((c) => (c - 1 + images.length) % images.length);
+      }
+    };
 
     const priceDisplay =
       property.precio_texto ||
