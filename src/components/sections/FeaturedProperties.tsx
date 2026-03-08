@@ -113,12 +113,15 @@ const FeaturedProperties = () => {
             <div className="h-[65%] relative overflow-hidden">
               <img
                 src={prop.image}
+                srcSet={`${prop.imageSm} 350w, ${prop.image} 500w`}
+                sizes="(max-width: 768px) 350px, 500px"
                 alt={prop.title}
                 className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
                 width={500}
                 height={375}
+                fetchPriority="low"
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.95) 0%, transparent 60%)" }} />
               <span

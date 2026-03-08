@@ -182,3 +182,8 @@
 .fixed[style*="scaleX"] {
   will-change: transform;
 }
+
+/* Scroll margin for fixed nav */
+[id] {
+  scroll-margin-top: 80px;
+}

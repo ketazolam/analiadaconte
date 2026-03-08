@@ -1,6 +1,22 @@
 import { motion } from "framer-motion";
 import { Instagram, MessageCircle } from "lucide-react";
 import { PHONE, EMAIL, ADDRESS, INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/constants";
+import { smoothScrollTo } from "@/lib/smoothScroll";
+
+const footerLinks = {
+  propiedades: [
+    { label: "Venta", target: "propiedades" },
+    { label: "Alquiler", target: "propiedades" },
+    { label: "Emprendimientos", target: "propiedades" },
+    { label: "Tasaciones", target: "tasacion" },
+  ],
+  empresa: [
+    { label: "Quién soy", target: "about" },
+    { label: "Trayectoria", target: "about" },
+    { label: "Servicios", target: "vendedores" },
+    { label: "Reseñas", target: "contacto" },
+  ],
+};
 
 const Footer = () => {
   return (
@@ -24,11 +40,15 @@ const Footer = () => {
           <div>
             <h4 className="label-accent mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Propiedades</h4>
             <ul className="space-y-2">
-              {["Venta", "Alquiler", "Emprendimientos", "Tasaciones"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="font-body text-sm hover:text-primary transition-colors" style={{ color: "rgba(255,255,255,0.5)" }}>
-                    {item}
-                  </a>
+              {footerLinks.propiedades.map((item) => (
+                <li key={item.label}>
+                  <button
+                    onClick={() => smoothScrollTo(item.target)}
+                    className="font-body text-sm hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
+                    style={{ color: "rgba(255,255,255,0.5)" }}
+                  >
+                    {item.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -36,11 +56,15 @@ const Footer = () => {
           <div>
             <h4 className="label-accent mb-4" style={{ color: "rgba(255,255,255,0.4)" }}>Empresa</h4>
             <ul className="space-y-2">
-              {["Quién soy", "Trayectoria", "Servicios", "Prensa"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="font-body text-sm hover:text-primary transition-colors" style={{ color: "rgba(255,255,255,0.5)" }}>
-                    {item}
-                  </a>
+              {footerLinks.empresa.map((item) => (
+                <li key={item.label}>
+                  <button
+                    onClick={() => smoothScrollTo(item.target)}
+                    className="font-body text-sm hover:text-primary transition-colors bg-transparent border-none cursor-pointer"
+                    style={{ color: "rgba(255,255,255,0.5)" }}
+                  >
+                    {item.label}
+                  </button>
                 </li>
               ))}
             </ul>
