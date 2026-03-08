@@ -87,15 +87,11 @@ const Mapa = () => {
     sort: "recientes",
   });
 
-  // Fetch all properties (large page to get coords)
-  const { data } = useProperties(filters, 0);
+  const { data: mapProperties } = useAllMapProperties(filters);
 
   const markers = useMemo(() => {
-    if (!data?.properties) return [];
-    return data.properties.filter(
-      (p) => p.lat != null && p.lng != null
-    );
-  }, [data]);
+    return mapProperties || [];
+  }, [mapProperties]);
 
   return (
     <div className="h-screen flex flex-col bg-background">
