@@ -81,7 +81,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
       >
         <Link to={`/propiedad/${slug}`} className="block">
           {/* Image */}
-          <div className="relative h-[240px] overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }}>
+          <div className="relative h-[240px] overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             {showPlaceholder ? (
               <div className="w-full h-full flex items-center justify-center">
                 <ImageOff className="w-10 h-10 text-muted-foreground/40" />
