@@ -358,7 +358,7 @@ const ValuationTool = () => {
                     key="success"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease }}
+                    transition={{ duration: 0.5, ease: EASE }}
                     className="flex-1 flex flex-col items-center justify-center text-center py-8"
                   >
                     {/* Animated checkmark */}
