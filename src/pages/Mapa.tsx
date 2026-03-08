@@ -104,7 +104,7 @@ const Mapa = () => {
         <PropertyFiltersBar
           filters={filters}
           onChange={(f) => setFilters(f)}
-          total={data?.total}
+          total={markers.length}
           showMapLink={false}
         />
       </div>
