@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { externalSupabase as supabase } from "@/lib/externalSupabase";
 import type { Propiedad, PropertyFilters } from "@/lib/types";
 
 const PAGE_SIZE = 21;
