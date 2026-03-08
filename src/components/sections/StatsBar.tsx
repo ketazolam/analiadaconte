@@ -4,7 +4,6 @@ import { motion, useInView, animate } from "framer-motion";
 const stats = [
   { value: 200, prefix: "+", suffix: "", label: "Propiedades vendidas" },
   { value: 25, prefix: "", suffix: "", label: "Años de trayectoria" },
-  { value: 15, prefix: "", suffix: "K", label: "Seguidores en Instagram" },
   { value: 98, prefix: "", suffix: "%", label: "Clientes satisfechos" },
 ];
 
@@ -24,7 +23,7 @@ const Counter = ({ value, prefix, suffix }: { value: number; prefix: string; suf
   }, [inView, value]);
 
   return (
-    <span ref={ref} className="font-display text-[clamp(48px,5vw,64px)] text-primary leading-none" style={{ textShadow: "0 0 30px rgba(196,154,60,0.3)" }}>
+    <span ref={ref} className="font-display text-[clamp(56px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(196,154,60,0.3)" }}>
       {`${prefix}${count}${suffix}`}
     </span>
   );
@@ -39,7 +38,7 @@ const StatsBar = () => {
       ref={ref}
       className="relative noise-overlay"
       style={{
-        backgroundColor: "#18161E",
+        background: "radial-gradient(ellipse at center, #1e1b28 0%, #18161E 70%)",
         borderTop: "1px solid rgba(196,154,60,0.15)",
         borderBottom: "1px solid rgba(196,154,60,0.15)",
       }}
@@ -50,18 +49,18 @@ const StatsBar = () => {
         animate={inView ? { width: "100%" } : {}}
         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
       />
-      <div className="grid grid-cols-2 md:grid-cols-4 max-w-6xl mx-auto relative z-10">
+      <div className="grid grid-cols-3 max-w-5xl mx-auto relative z-10">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
-            className="flex flex-col items-center py-16 px-4"
-            style={i < stats.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.08)" } : undefined}
+            className="flex flex-col items-center py-20 px-4"
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <Counter {...stat} />
-            <span className="label-accent mt-3 text-text-muted">{stat.label}</span>
+            <div className="w-6 h-px bg-primary/40 mt-4 mb-3" />
+            <span className="label-accent text-text-secondary">{stat.label}</span>
           </motion.div>
         ))}
       </div>
