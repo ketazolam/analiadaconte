@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      propiedades: {
+        Row: {
+          acepta_mascotas: boolean | null
+          ambientes: number | null
+          apto_credito: boolean | null
+          banos: number | null
+          barrio: string | null
+          ciudad: string | null
+          cochera: boolean | null
+          created_at: string
+          descripcion: string | null
+          destacada: boolean | null
+          direccion: string | null
+          dormitorios: number | null
+          estado: string | null
+          fotos: Json | null
+          id: number
+          last_scraped_at: string | null
+          lat: number | null
+          lng: number | null
+          moneda: string | null
+          operacion: string | null
+          pixel_codigo: string | null
+          pixel_slug: string | null
+          precio: number | null
+          precio_texto: string | null
+          superficie_cubierta: number | null
+          superficie_total: number | null
+          tipo: string | null
+          titulo: string | null
+          toilets: number | null
+          updated_at: string
+          url_original: string | null
+        }
+        Insert: {
+          acepta_mascotas?: boolean | null
+          ambientes?: number | null
+          apto_credito?: boolean | null
+          banos?: number | null
+          barrio?: string | null
+          ciudad?: string | null
+          cochera?: boolean | null
+          created_at?: string
+          descripcion?: string | null
+          destacada?: boolean | null
+          direccion?: string | null
+          dormitorios?: number | null
+          estado?: string | null
+          fotos?: Json | null
+          id?: number
+          last_scraped_at?: string | null
+          lat?: number | null
+          lng?: number | null
+          moneda?: string | null
+          operacion?: string | null
+          pixel_codigo?: string | null
+          pixel_slug?: string | null
+          precio?: number | null
+          precio_texto?: string | null
+          superficie_cubierta?: number | null
+          superficie_total?: number | null
+          tipo?: string | null
+          titulo?: string | null
+          toilets?: number | null
+          updated_at?: string
+          url_original?: string | null
+        }
+        Update: {
+          acepta_mascotas?: boolean | null
+          ambientes?: number | null
+          apto_credito?: boolean | null
+          banos?: number | null
+          barrio?: string | null
+          ciudad?: string | null
+          cochera?: boolean | null
+          created_at?: string
+          descripcion?: string | null
+          destacada?: boolean | null
+          direccion?: string | null
+          dormitorios?: number | null
+          estado?: string | null
+          fotos?: Json | null
+          id?: number
+          last_scraped_at?: string | null
+          lat?: number | null
+          lng?: number | null
+          moneda?: string | null
+          operacion?: string | null
+          pixel_codigo?: string | null
+          pixel_slug?: string | null
+          precio?: number | null
+          precio_texto?: string | null
+          superficie_cubierta?: number | null
+          superficie_total?: number | null
+          tipo?: string | null
+          titulo?: string | null
+          toilets?: number | null
+          updated_at?: string
+          url_original?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
