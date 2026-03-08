@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Bed, Bath, Maximize, Car, PawPrint, CreditCard,
@@ -9,10 +9,13 @@ import {
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
+import PropertyCard from "@/components/PropertyCard";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
 import { useProperty } from "@/hooks/useProperty";
+import { useProperties } from "@/hooks/useProperties";
+import { sanitizeBarrio } from "@/lib/utils";
 import { whatsappLink, EASE } from "@/lib/constants";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -40,14 +43,34 @@ const goldIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-/* ── Gallery ── */
+/* ── Gallery with keyboard + touch ── */
 function Gallery({ images, title }: { images: string[]; title: string }) {
   const [current, setCurrent] = useState(0);
   const [lightbox, setLightbox] = useState(false);
-  const [loadErrors, setLoadErrors] = useState<Set<number>>(new Set());
+  const touchStartX = useRef(0);
 
   const prev = useCallback(() => setCurrent((c) => (c - 1 + images.length) % images.length), [images.length]);
   const next = useCallback(() => setCurrent((c) => (c + 1) % images.length), [images.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === "Escape" && lightbox) setLightbox(false);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [prev, next, lightbox]);
+
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (images.length <= 1) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next(); else prev();
+    }
+  };
 
   if (images.length === 0) {
     return (
@@ -60,22 +83,26 @@ function Gallery({ images, title }: { images: string[]; title: string }) {
   return (
     <>
       {/* Main image */}
-      <div className="relative w-full h-[400px] md:h-[520px] overflow-hidden group" style={{ backgroundColor: "hsl(var(--muted))" }}>
+      <div
+        className="relative w-full h-[400px] md:h-[520px] overflow-hidden group"
+        style={{ backgroundColor: "hsl(var(--muted))" }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <img
           src={images[current]}
           alt={`${title} - ${current + 1}`}
           className="w-full h-full object-cover cursor-pointer transition-transform duration-500"
           onClick={() => setLightbox(true)}
-          onError={() => setLoadErrors((s) => new Set(s).add(current))}
         />
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 30%)" }} />
 
         {images.length > 1 && (
           <>
-            <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+            <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-background/60 backdrop-blur-sm md:opacity-0 md:group-hover:opacity-100 transition-opacity">
               <ChevronLeft className="w-5 h-5 text-foreground" />
             </button>
-            <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+            <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-background/60 backdrop-blur-sm md:opacity-0 md:group-hover:opacity-100 transition-opacity">
               <ChevronRight className="w-5 h-5 text-foreground" />
             </button>
           </>
@@ -105,7 +132,12 @@ function Gallery({ images, title }: { images: string[]; title: string }) {
 
       {/* Lightbox */}
       {lightbox && (
-        <div className="fixed inset-0 z-[200] bg-background/95 flex items-center justify-center" onClick={() => setLightbox(false)}>
+        <div
+          className="fixed inset-0 z-[200] bg-background/95 flex items-center justify-center"
+          onClick={() => setLightbox(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <button className="absolute top-6 right-6 text-foreground" onClick={() => setLightbox(false)}>
             <X className="w-6 h-6" />
           </button>
@@ -152,9 +184,27 @@ const PropiedadDetalle = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: property, isLoading, isError } = useProperty(slug);
 
+  // SEO: dynamic title
+  useEffect(() => {
+    if (property?.titulo) {
+      document.title = `${property.titulo} | Analía Da Conte Propiedades`;
+    }
+    return () => { document.title = "Analía Da Conte Propiedades"; };
+  }, [property]);
+
   const images = property ? getAllImages(property.fotos) : [];
   const priceDisplay = property?.precio_texto || (property?.precio ? `${property.moneda || "USD"} ${property.precio.toLocaleString("es-AR")}` : "Consultar");
-  const location = property ? [property.barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata" : "";
+  const barrio = sanitizeBarrio(property?.barrio);
+  const location = property ? [barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata" : "";
+
+  // Similar properties
+  const similarFilters = property ? {
+    operacion: property.operacion || undefined,
+    tipo: property.tipo || undefined,
+    sort: "recientes" as const,
+  } : { sort: "recientes" as const };
+  const { data: similarData } = useProperties(similarFilters, 0);
+  const similarProperties = (similarData?.properties || []).filter((p) => p.id !== property?.id).slice(0, 3);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -236,21 +286,12 @@ const PropiedadDetalle = () => {
                 </motion.div>
 
                 {/* Price */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-                >
-                  <p className="font-display text-[clamp(32px,5vw,48px)] gold-gradient-text leading-none">
-                    {priceDisplay}
-                  </p>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}>
+                  <p className="font-display text-[clamp(32px,5vw,48px)] gold-gradient-text leading-none">{priceDisplay}</p>
                 </motion.div>
 
                 {/* Features grid */}
-                <motion.div
-                  className="grid grid-cols-2 sm:grid-cols-3 gap-3"
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
-                >
+                <motion.div className="grid grid-cols-2 sm:grid-cols-3 gap-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}>
                   {(property.dormitorios ?? 0) > 0 && <FeaturePill icon={Bed} label="Dormitorios" value={property.dormitorios!} />}
                   {(property.ambientes ?? 0) > 0 && <FeaturePill icon={DoorOpen} label="Ambientes" value={property.ambientes!} />}
                   {(property.banos ?? 0) > 0 && <FeaturePill icon={Bath} label="Baños" value={property.banos!} />}
@@ -263,39 +304,21 @@ const PropiedadDetalle = () => {
 
                 {/* Description */}
                 {property.descripcion && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
-                  >
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}>
                     <h2 className="font-display text-2xl text-foreground mb-4">Descripción</h2>
-                    <div className="font-body text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-                      {property.descripcion}
-                    </div>
+                    <div className="font-body text-sm text-text-secondary leading-relaxed whitespace-pre-line">{property.descripcion}</div>
                   </motion.div>
                 )}
 
                 {/* Map */}
                 {property.lat && property.lng && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-                  >
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}>
                     <h2 className="font-display text-2xl text-foreground mb-4">Ubicación</h2>
                     <div className="h-[300px] overflow-hidden" style={{ border: "1px solid hsl(var(--border))" }}>
-                      <MapContainer
-                        center={[Number(property.lat), Number(property.lng)]}
-                        zoom={15}
-                        scrollWheelZoom={false}
-                        style={{ height: "100%", width: "100%" }}
-                      >
-                        <TileLayer
-                          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-                          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                        />
+                      <MapContainer center={[Number(property.lat), Number(property.lng)]} zoom={15} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+                        <TileLayer attribution='&copy; <a href="https://carto.com/">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
                         <Marker position={[Number(property.lat), Number(property.lng)]} icon={goldIcon}>
-                          <Popup>
-                            <span style={{ color: "#333" }}>{property.titulo}</span>
-                          </Popup>
+                          <Popup><span style={{ color: "#333" }}>{property.titulo}</span></Popup>
                         </Marker>
                       </MapContainer>
                     </div>
@@ -304,13 +327,8 @@ const PropiedadDetalle = () => {
               </div>
 
               {/* Sidebar */}
-              <motion.aside
-                className="lg:col-span-1 space-y-4"
-                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
-              >
+              <motion.aside className="lg:col-span-1 space-y-4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}>
                 <div className="lg:sticky lg:top-28 space-y-4">
-                  {/* WhatsApp CTA */}
                   <a
                     href={whatsappLink(`Hola Analía, me interesa la propiedad: ${property.titulo} (${priceDisplay}) en ${location}`)}
                     target="_blank"
@@ -321,7 +339,6 @@ const PropiedadDetalle = () => {
                     <MessageCircle className="w-4 h-4" /> Consultar por WhatsApp
                   </a>
 
-                  {/* Share */}
                   <button
                     onClick={handleShare}
                     className="flex items-center justify-center gap-3 w-full font-body text-xs uppercase tracking-wider py-3 text-foreground transition-colors hover:text-primary"
@@ -330,7 +347,6 @@ const PropiedadDetalle = () => {
                     <Share2 className="w-3.5 h-3.5" /> Compartir propiedad
                   </button>
 
-                  {/* Quick info */}
                   <div className="p-5 space-y-3" style={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}>
                     <p className="font-body text-[10px] uppercase tracking-wider text-text-muted">Código</p>
                     <p className="font-body text-sm text-foreground">{property.pixel_codigo || slug}</p>
@@ -345,6 +361,18 @@ const PropiedadDetalle = () => {
               </motion.aside>
             </div>
           </div>
+
+          {/* Similar properties */}
+          {similarProperties.length > 0 && (
+            <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-16">
+              <h2 className="font-display text-2xl text-foreground mb-6">Propiedades similares</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {similarProperties.map((p) => (
+                  <PropertyCard key={p.id} property={p} />
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
 

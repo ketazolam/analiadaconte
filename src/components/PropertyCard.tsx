@@ -1,7 +1,8 @@
-import { forwardRef, useState, useCallback } from "react";
+import { forwardRef, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Bed, Bath, Maximize, Car, ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import type { Propiedad } from "@/lib/types";
+import { sanitizeBarrio } from "@/lib/utils";
 
 interface PropertyCardProps {
   property: Propiedad;
@@ -29,6 +30,21 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
     const images = getAllImages(property.fotos);
     const showPlaceholder = images.length === 0 || imgError;
     const slug = property.pixel_slug || String(property.id);
+    const barrio = sanitizeBarrio(property.barrio);
+
+    // Touch swipe for mobile
+    const touchStartX = useRef(0);
+    const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+    const handleTouchEnd = (e: React.TouchEvent) => {
+      if (images.length <= 1) return;
+      const diff = touchStartX.current - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        e.preventDefault();
+        setImgLoaded(false); setImgError(false);
+        if (diff > 0) setCurrentImg((c) => (c + 1) % images.length);
+        else setCurrentImg((c) => (c - 1 + images.length) % images.length);
+      }
+    };
 
     const priceDisplay =
       property.precio_texto ||
@@ -65,7 +81,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
       >
         <Link to={`/propiedad/${slug}`} className="block">
           {/* Image */}
-          <div className="relative h-[240px] overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }}>
+          <div className="relative h-[240px] overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             {showPlaceholder ? (
               <div className="w-full h-full flex items-center justify-center">
                 <ImageOff className="w-10 h-10 text-muted-foreground/40" />
@@ -144,7 +160,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
             </h3>
             <p className="flex items-center gap-1 font-body text-xs text-text-muted mb-3">
               <MapPin className="w-3 h-3" />
-              {[property.barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata"}
+              {[barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata"}
             </p>
 
             {/* Features row */}

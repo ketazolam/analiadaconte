@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import CustomCursor from "@/components/CustomCursor";
@@ -6,6 +6,8 @@ import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
+import PropertyCardRow from "@/components/PropertyCardRow";
+import PropertyCardSkeleton from "@/components/PropertyCardSkeleton";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
@@ -14,15 +16,45 @@ import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
 import { EASE } from "@/lib/constants";
 
+/* ── URL ↔ Filters sync helpers ── */
+function filtersFromParams(sp: URLSearchParams): PropertyFilters {
+  return {
+    operacion: sp.get("operacion") || undefined,
+    tipo: sp.get("tipo") || undefined,
+    dormitorios: sp.get("dormitorios") ? Number(sp.get("dormitorios")) : undefined,
+    precioMin: sp.get("precioMin") ? Number(sp.get("precioMin")) : undefined,
+    precioMax: sp.get("precioMax") ? Number(sp.get("precioMax")) : undefined,
+    superficieMin: sp.get("superficieMin") ? Number(sp.get("superficieMin")) : undefined,
+    superficieMax: sp.get("superficieMax") ? Number(sp.get("superficieMax")) : undefined,
+    destacada: sp.get("destacada") === "1" ? true : undefined,
+    sort: (sp.get("sort") as PropertyFilters["sort"]) || "recientes",
+    searchText: sp.get("q") || undefined,
+  };
+}
+
+function filtersToParams(f: PropertyFilters): Record<string, string> {
+  const p: Record<string, string> = {};
+  if (f.operacion) p.operacion = f.operacion;
+  if (f.tipo) p.tipo = f.tipo;
+  if (f.dormitorios) p.dormitorios = String(f.dormitorios);
+  if (f.precioMin) p.precioMin = String(f.precioMin);
+  if (f.precioMax) p.precioMax = String(f.precioMax);
+  if (f.superficieMin) p.superficieMin = String(f.superficieMin);
+  if (f.superficieMax) p.superficieMax = String(f.superficieMax);
+  if (f.destacada) p.destacada = "1";
+  if (f.sort && f.sort !== "recientes") p.sort = f.sort;
+  if (f.searchText) p.q = f.searchText;
+  return p;
+}
+
 const Propiedades = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(0);
   const [accumulated, setAccumulated] = useState<Propiedad[]>([]);
-  const [filters, setFilters] = useState<PropertyFilters>({
-    operacion: searchParams.get("operacion") || undefined,
-    tipo: searchParams.get("tipo") || undefined,
-    sort: "recientes",
-  });
+  const [prevCount, setPrevCount] = useState(0);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  const [filters, setFilters] = useState<PropertyFilters>(() => filtersFromParams(searchParams));
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
@@ -31,8 +63,10 @@ const Propiedades = () => {
     if (data?.properties) {
       if (page === 0) {
         setAccumulated(data.properties);
+        setPrevCount(0);
       } else {
         setAccumulated((prev) => {
+          setPrevCount(prev.length);
           const existingIds = new Set(prev.map((p) => p.id));
           const newProps = data.properties.filter((p) => !existingIds.has(p.id));
           return [...prev, ...newProps];
@@ -41,11 +75,16 @@ const Propiedades = () => {
     }
   }, [data, page]);
 
-  const handleFiltersChange = (newFilters: PropertyFilters) => {
+  const handleFiltersChange = useCallback((newFilters: PropertyFilters) => {
     setFilters(newFilters);
     setPage(0);
     setAccumulated([]);
-  };
+    setPrevCount(0);
+    // Sync to URL
+    setSearchParams(filtersToParams(newFilters), { replace: true });
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [setSearchParams]);
 
   const total = data?.total ?? 0;
   const showingCount = accumulated.length;
@@ -85,19 +124,17 @@ const Propiedades = () => {
           filters={filters}
           onChange={handleFiltersChange}
           total={total}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
         />
       </div>
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-12">
         {isLoading && page === 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={viewMode === "list" ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-[420px] animate-pulse"
-                style={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
-              />
+              <PropertyCardSkeleton key={i} variant={viewMode} />
             ))}
           </div>
         ) : isError ? (
@@ -117,17 +154,24 @@ const Propiedades = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {accumulated.map((prop, i) => (
-                <motion.div
-                  key={prop.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: EASE, delay: Math.min(i * 0.05, 0.3) }}
-                >
-                  <PropertyCard property={prop} />
-                </motion.div>
-              ))}
+            <div className={viewMode === "list" ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+              {accumulated.map((prop, i) => {
+                const isNew = i >= prevCount;
+                return (
+                  <motion.div
+                    key={prop.id}
+                    initial={isNew ? { opacity: 0, y: 20 } : false}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: EASE, delay: isNew ? Math.min((i - prevCount) * 0.05, 0.3) : 0 }}
+                  >
+                    {viewMode === "list" ? (
+                      <PropertyCardRow property={prop} />
+                    ) : (
+                      <PropertyCard property={prop} />
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Load more */}
