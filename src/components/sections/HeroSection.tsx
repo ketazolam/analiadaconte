@@ -89,8 +89,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.9 }}
         >
-          <MagneticButton variant="filled" onClick={() => smoothScrollTo("propiedades")}>Quiero comprar</MagneticButton>
-          <MagneticButton variant="outline" onClick={() => smoothScrollTo("tasacion")}>Quiero vender</MagneticButton>
+          <MagneticButton variant="filled" onClick={() => navigate("/propiedades")}>Quiero comprar</MagneticButton>
+          <MagneticButton variant="outline" onClick={() => navigate("/tasaciones")}>Quiero vender</MagneticButton>
         </motion.div>
 
         {/* Google rating badge */}
