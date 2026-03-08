@@ -4,6 +4,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import ScrollProgress from "@/components/ScrollProgress";
 import CustomCursor from "@/components/CustomCursor";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const DualPathSection = lazy(() => import("@/components/sections/DualPathSection"));
 const StatsBar = lazy(() => import("@/components/sections/StatsBar"));
