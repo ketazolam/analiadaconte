@@ -22,7 +22,7 @@ const DualPathSection = () => {
       cta: "Ver propiedades",
       target: "propiedades",
       direction: -100,
-      bgImage: "/images/mdp-coastline.jpg",
+      bgImage: "/images/waiting-room.jpg",
     },
     {
       icon: Key,
