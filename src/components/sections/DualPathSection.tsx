@@ -34,7 +34,7 @@ const DualPathSection = () => {
         "Tasación sin cargo",
       ],
       cta: "Quiero vender",
-      target: "tasacion",
+      href: "/tasaciones",
       direction: 100,
       bgImage: "/images/office-wide.jpg",
     },

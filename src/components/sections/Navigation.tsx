@@ -7,7 +7,7 @@ import { EASE } from "@/lib/constants";
 
 const navLinks = [
   { label: "Propiedades", href: "/propiedades" },
-  { label: "Vendedores", target: "vendedores" },
+  { label: "Tasación", href: "/tasaciones" },
   { label: "Quiénes somos", target: "about" },
   { label: "Contacto", target: "contacto" },
 ];
