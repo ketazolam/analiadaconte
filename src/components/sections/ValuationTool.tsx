@@ -126,9 +126,11 @@ const ValuationTool = () => {
 
   const handleSubmit = () => {
     setSubmitting(true);
+    const msg = `Hola Analía! Solicito tasación gratuita:\n• Tipo: ${selectedType}\n• Zona: ${zona}\n• Superficie: ${superficie} m²\n• Ambientes: ${ambientes}\n• Estado: ${estado}\n• Cochera: ${cochera ? "Sí" : "No"}\n• Nombre: ${nombre}\n• WhatsApp: ${whatsapp}${email ? `\n• Email: ${email}` : ""}`;
     setTimeout(() => {
       setSubmitting(false);
       setSubmitted(true);
+      window.open(whatsappLink(msg), "_blank");
     }, 1500);
   };
 
