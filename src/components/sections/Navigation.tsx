@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { smoothScrollTo } from "@/lib/smoothScroll";
+import { EASE } from "@/lib/constants";
 
 const navLinks = [
   { label: "Propiedades", target: "propiedades" },
@@ -37,7 +38,7 @@ const Navigation = () => {
         }
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, ease: EASE }}
       >
         {/* Logo */}
         <a href="#" className="flex flex-col items-start relative">
@@ -66,6 +67,7 @@ const Navigation = () => {
           <button
             className="md:hidden text-foreground"
             onClick={() => setMenuOpen(true)}
+            aria-label="Abrir menú de navegación"
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -86,6 +88,7 @@ const Navigation = () => {
             <button
               className="absolute top-5 right-6 text-foreground"
               onClick={() => setMenuOpen(false)}
+              aria-label="Cerrar menú de navegación"
             >
               <X className="w-6 h-6" />
             </button>

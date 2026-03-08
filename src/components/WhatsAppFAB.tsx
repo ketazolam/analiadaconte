@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WHATSAPP_URL } from "@/lib/constants";
 
 const TRIGGER_POINTS = [
-  { type: "scroll", threshold: 0.3 },   // 30% scroll depth
-  { type: "scroll", threshold: 0.7 },   // 70% scroll depth
-  { type: "idle", delay: 45000 },        // 45s idle on page
+  { type: "scroll", threshold: 0.3 },
+  { type: "scroll", threshold: 0.7 },
+  { type: "idle", delay: 45000 },
 ];
 
 const WhatsAppFAB = () => {
@@ -14,8 +14,8 @@ const WhatsAppFAB = () => {
   const tooltipTimer = useRef<ReturnType<typeof setTimeout>>();
   const triggeredScrollPoints = useRef(new Set<number>());
   const idleTimer = useRef<ReturnType<typeof setTimeout>>();
+  const lastMove = useRef(0);
 
-  // Auto-hide tooltip after 6s
   useEffect(() => {
     if (showTooltip) {
       tooltipTimer.current = setTimeout(() => setShowTooltip(false), 6000);
@@ -23,7 +23,6 @@ const WhatsAppFAB = () => {
     }
   }, [showTooltip]);
 
-  // Scroll-based triggers
   useEffect(() => {
     const onScroll = () => {
       if (dismissed) return;
@@ -39,28 +38,31 @@ const WhatsAppFAB = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [dismissed]);
 
-  // Idle trigger
+  // Throttled idle reset
+  const resetIdle = useCallback(() => {
+    const now = Date.now();
+    if (now - lastMove.current < 1000) return;
+    lastMove.current = now;
+    clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => {
+      if (!dismissed) setShowTooltip(true);
+    }, 45000);
+  }, [dismissed]);
+
   useEffect(() => {
     const idlePoint = TRIGGER_POINTS.find(t => t.type === "idle");
     if (!idlePoint || dismissed) return;
 
-    const resetIdle = () => {
-      clearTimeout(idleTimer.current);
-      idleTimer.current = setTimeout(() => {
-        if (!dismissed) setShowTooltip(true);
-      }, idlePoint.delay);
-    };
-
     resetIdle();
-    window.addEventListener("mousemove", resetIdle, { passive: true });
+    window.addEventListener("pointermove", resetIdle, { passive: true });
     window.addEventListener("touchstart", resetIdle, { passive: true });
 
     return () => {
       clearTimeout(idleTimer.current);
-      window.removeEventListener("mousemove", resetIdle);
+      window.removeEventListener("pointermove", resetIdle);
       window.removeEventListener("touchstart", resetIdle);
     };
-  }, [dismissed]);
+  }, [dismissed, resetIdle]);
 
   const handleDismiss = () => {
     setShowTooltip(false);
@@ -69,7 +71,6 @@ const WhatsAppFAB = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3">
-      {/* Tooltip */}
       <AnimatePresence>
         {showTooltip && (
           <motion.div
@@ -91,6 +92,7 @@ const WhatsAppFAB = () => {
                 onClick={handleDismiss}
                 className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-text-muted hover:text-foreground transition-colors"
                 style={{ backgroundColor: "#111015", border: "1px solid rgba(255,255,255,0.1)" }}
+                aria-label="Cerrar"
               >
                 ✕
               </button>
@@ -101,7 +103,6 @@ const WhatsAppFAB = () => {
                 Chateá con Analía por WhatsApp
               </p>
             </div>
-            {/* Arrow pointing right */}
             <div
               className="absolute top-1/2 -right-[6px] -translate-y-1/2 w-3 h-3 rotate-45"
               style={{
@@ -114,11 +115,11 @@ const WhatsAppFAB = () => {
         )}
       </AnimatePresence>
 
-      {/* FAB button */}
       <motion.a
         href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Contactar por WhatsApp"
         className="w-14 h-14 rounded-full bg-whatsapp flex items-center justify-center shadow-lg shadow-whatsapp/25 flex-shrink-0"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}

@@ -2,9 +2,8 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Home, Building2, Warehouse, LandPlot, Store, HelpCircle, Check, Loader2 } from "lucide-react";
 import MagneticButton from "../MagneticButton";
-import { whatsappLink } from "@/lib/constants";
+import { whatsappLink, EASE } from "@/lib/constants";
 
-const ease = [0.22, 1, 0.36, 1] as const;
 
 const propertyTypes = [
   { icon: Home, label: "Casa / Chalet" },
@@ -127,9 +126,11 @@ const ValuationTool = () => {
 
   const handleSubmit = () => {
     setSubmitting(true);
+    const msg = `Hola Analía! Solicito tasación gratuita:\n• Tipo: ${selectedType}\n• Zona: ${zona}\n• Superficie: ${superficie} m²\n• Ambientes: ${ambientes}\n• Estado: ${estado}\n• Cochera: ${cochera ? "Sí" : "No"}\n• Nombre: ${nombre}\n• WhatsApp: ${whatsapp}${email ? `\n• Email: ${email}` : ""}`;
     setTimeout(() => {
       setSubmitting(false);
       setSubmitted(true);
+      window.open(whatsappLink(msg), "_blank");
     }, 1500);
   };
 
@@ -153,7 +154,7 @@ const ValuationTool = () => {
             className="text-center mb-10"
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             <p className="label-eyebrow text-primary mb-4">Tasación gratuita</p>
             <h2 className="font-display text-[clamp(32px,4vw,48px)] text-foreground mb-3">
@@ -173,7 +174,7 @@ const ValuationTool = () => {
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.15 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
           >
             {/* Progress bar */}
             <div className="h-[2px] w-full" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
@@ -209,7 +210,7 @@ const ValuationTool = () => {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.3, ease }}
+                    transition={{ duration: 0.3, ease: EASE }}
                     className="flex-1 flex flex-col"
                   >
                     {step === 1 && (
@@ -359,7 +360,7 @@ const ValuationTool = () => {
                     key="success"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease }}
+                    transition={{ duration: 0.5, ease: EASE }}
                     className="flex-1 flex flex-col items-center justify-center text-center py-8"
                   >
                     {/* Animated checkmark */}

@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import MagneticButton from "../MagneticButton";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { EASE as ease } from "@/lib/constants";
 
 const FloatingInput = ({ label, type = "text" }: { label: string; type?: string }) => {
   const [focused, setFocused] = useState(false);

@@ -23,7 +23,7 @@ const Counter = ({ value, prefix, suffix }: { value: number; prefix: string; suf
   }, [inView, value]);
 
   return (
-    <span ref={ref} className="font-display text-[clamp(56px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(196,154,60,0.3)" }}>
+    <span ref={ref} className="font-display text-[clamp(42px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(196,154,60,0.3)" }}>
       {`${prefix}${count}${suffix}`}
     </span>
   );
@@ -49,11 +49,12 @@ const StatsBar = () => {
         animate={inView ? { width: "100%" } : {}}
         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
       />
-      <div className="grid grid-cols-3 max-w-5xl mx-auto relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 max-w-5xl mx-auto relative z-10">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
-            className="flex flex-col items-center py-20 px-4"
+            className="flex flex-col items-center py-10 sm:py-20 px-4 border-b sm:border-b-0 last:border-b-0"
+            style={{ borderColor: "rgba(196,154,60,0.15)" }}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] }}

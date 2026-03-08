@@ -1,15 +1,13 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Bed, Bath, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { whatsappLink } from "@/lib/constants";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { whatsappLink, EASE } from "@/lib/constants";
 
 const properties = [
-  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format" },
-  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&q=70&auto=format" },
-  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=70&auto=format" },
-  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70&auto=format" },
+  { type: "VENTA", price: "USD 185.000", title: "Chalet 3 dormitorios", location: "Playa Grande", beds: 3, baths: 2, area: "180 m²", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=350&q=70&auto=format" },
+  { type: "ALQUILER", price: "USD 1.200/mes", title: "Departamento vista al mar", location: "La Perla", beds: 2, baths: 1, area: "95 m²", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=350&q=70&auto=format" },
+  { type: "VENTA", price: "USD 65.000", title: "Lote en barrio cerrado", location: "Sierra de los Padres", beds: 0, baths: 0, area: "600 m²", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=350&q=70&auto=format" },
+  { type: "VENTA", price: "USD 210.000", title: "PH reciclado con terraza", location: "Güemes", beds: 3, baths: 2, area: "145 m²", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70&auto=format", imageSm: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=350&q=70&auto=format" },
 ];
 
 const CARD_W = 380;
@@ -37,7 +35,7 @@ const FeaturedProperties = () => {
               className="font-display text-[clamp(40px,5vw,56px)] text-foreground leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease }}
+              transition={{ duration: 0.7, ease: EASE }}
             >
               Propiedades
               <br />
@@ -47,7 +45,7 @@ const FeaturedProperties = () => {
               className="font-body text-sm text-text-secondary mt-4 max-w-md"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease, delay: 0.15 }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
             >
               Una selección de propiedades exclusivas en las mejores ubicaciones de Mar del Plata.
             </motion.p>
@@ -109,18 +107,21 @@ const FeaturedProperties = () => {
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: i * 0.12 }}
+            transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
           >
             {/* Image */}
             <div className="h-[65%] relative overflow-hidden">
               <img
                 src={prop.image}
+                srcSet={`${prop.imageSm} 350w, ${prop.image} 500w`}
+                sizes="(max-width: 768px) 350px, 500px"
                 alt={prop.title}
                 className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
                 width={500}
                 height={375}
+                fetchPriority="low"
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.95) 0%, transparent 60%)" }} />
               <span
