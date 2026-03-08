@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, X, Map, SlidersHorizontal } from "lucide-react";
+import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters as Filters } from "@/lib/types";
@@ -10,11 +10,18 @@ interface PropertyFiltersProps {
   onChange: (filters: Filters) => void;
   total?: number;
   showMapLink?: boolean;
+  viewMode?: "grid" | "list";
+  onViewModeChange?: (mode: "grid" | "list") => void;
 }
 
-const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true }: PropertyFiltersProps) => {
+const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, viewMode = "grid", onViewModeChange }: PropertyFiltersProps) => {
   const { data: options } = usePropertyFilterOptions();
   const [searchInput, setSearchInput] = useState(filters.searchText || "");
+
+  // Sync external filter changes to local search input
+  useEffect(() => {
+    setSearchInput(filters.searchText || "");
+  }, [filters.searchText]);
 
   // Debounce search
   useEffect(() => {
@@ -27,89 +34,110 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true }: Pr
   }, [searchInput]);
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.precioMin || filters.precioMax || filters.searchText;
+  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText;
 
-  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.searchText].filter(Boolean).length;
+  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada].filter(Boolean).length;
 
   const selectClass =
     "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))]";
 
-  const filterControls = (
-    <>
-      {/* Search input */}
-      <div className="relative flex-1 min-w-[180px]">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
-        <input
-          type="text"
-          placeholder="Buscar por zona, dirección..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          className="font-body text-xs bg-transparent border border-[hsl(var(--border))] pl-9 pr-3 py-2.5 w-full text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted"
-        />
-      </div>
+  const inputClass =
+    "font-body text-xs bg-transparent border border-[hsl(var(--border))] px-3 py-2.5 text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted w-full";
 
-      {/* Operacion pills */}
-      <div className="flex gap-0">
-        {["venta", "alquiler"].map((op) => (
-          <button
-            key={op}
-            onClick={() => update({ operacion: filters.operacion === op ? undefined : op })}
-            className={`font-body text-xs uppercase tracking-wider px-4 py-2.5 transition-colors border ${
-              filters.operacion === op
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
-            }`}
-          >
-            {op}
-          </button>
-        ))}
-      </div>
+  const clearAll = () => { onChange({ sort: filters.sort }); setSearchInput(""); };
 
-      {/* Tipo */}
-      <select
-        className={selectClass}
-        value={filters.tipo || ""}
-        onChange={(e) => update({ tipo: e.target.value || undefined })}
-      >
-        <option value="">Tipo</option>
-        {(options?.tipos || []).map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
-
-      {/* Dormitorios */}
-      <select
-        className={selectClass}
-        value={filters.dormitorios || ""}
-        onChange={(e) => update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })}
-      >
-        <option value="">Dormitorios</option>
-        {[1, 2, 3, 4, 5].map((n) => (
-          <option key={n} value={n}>{n}+</option>
-        ))}
-      </select>
-
-      {/* Sort */}
-      <select
-        className={selectClass}
-        value={filters.sort || "recientes"}
-        onChange={(e) => update({ sort: e.target.value as Filters["sort"] })}
-      >
-        <option value="recientes">Más recientes</option>
-        <option value="precio_asc">Precio ↑</option>
-        <option value="precio_desc">Precio ↓</option>
-      </select>
-
-      {/* Clear */}
-      {hasFilters && (
+  /* ── Shared filter rows ── */
+  const operacionPills = (className = "") => (
+    <div className={`flex gap-0 ${className}`}>
+      {["venta", "alquiler"].map((op) => (
         <button
-          onClick={() => { onChange({ sort: filters.sort }); setSearchInput(""); }}
-          className="flex items-center gap-1 font-body text-xs text-text-muted hover:text-primary transition-colors"
+          key={op}
+          onClick={() => update({ operacion: filters.operacion === op ? undefined : op })}
+          className={`font-body text-xs uppercase tracking-wider px-4 py-2.5 transition-colors border ${
+            filters.operacion === op
+              ? "bg-primary text-primary-foreground border-primary"
+              : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
+          } ${className}`}
         >
-          <X className="w-3 h-3" /> Limpiar
+          {op}
         </button>
-      )}
-    </>
+      ))}
+    </div>
+  );
+
+  const destacadaToggle = (className = "") => (
+    <button
+      onClick={() => update({ destacada: filters.destacada ? undefined : true })}
+      className={`flex items-center gap-1.5 font-body text-xs uppercase tracking-wider px-3 py-2.5 transition-colors border ${
+        filters.destacada
+          ? "bg-primary text-primary-foreground border-primary"
+          : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
+      } ${className}`}
+    >
+      <Star className="w-3 h-3" /> Destacadas
+    </button>
+  );
+
+  const tipoSelect = (className = "") => (
+    <select className={`${selectClass} ${className}`} value={filters.tipo || ""} onChange={(e) => update({ tipo: e.target.value || undefined })}>
+      <option value="">Tipo</option>
+      {(options?.tipos || []).map((t) => (<option key={t} value={t}>{t}</option>))}
+    </select>
+  );
+
+  const dormSelect = (className = "") => (
+    <select className={`${selectClass} ${className}`} value={filters.dormitorios || ""} onChange={(e) => update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })}>
+      <option value="">Dormitorios</option>
+      {[1, 2, 3, 4, 5].map((n) => (<option key={n} value={n}>{n}+</option>))}
+    </select>
+  );
+
+  const sortSelect = (className = "") => (
+    <select className={`${selectClass} ${className}`} value={filters.sort || "recientes"} onChange={(e) => update({ sort: e.target.value as Filters["sort"] })}>
+      <option value="recientes">Más recientes</option>
+      <option value="precio_asc">Precio ↑</option>
+      <option value="precio_desc">Precio ↓</option>
+    </select>
+  );
+
+  const priceRange = (className = "") => (
+    <div className={`flex items-center gap-1 ${className}`}>
+      <input
+        type="number"
+        placeholder="Precio desde"
+        value={filters.precioMin || ""}
+        onChange={(e) => update({ precioMin: e.target.value ? Number(e.target.value) : undefined })}
+        className={`${inputClass} w-[110px]`}
+      />
+      <span className="text-text-muted text-xs">–</span>
+      <input
+        type="number"
+        placeholder="Precio hasta"
+        value={filters.precioMax || ""}
+        onChange={(e) => update({ precioMax: e.target.value ? Number(e.target.value) : undefined })}
+        className={`${inputClass} w-[110px]`}
+      />
+    </div>
+  );
+
+  const surfaceRange = (className = "") => (
+    <div className={`flex items-center gap-1 ${className}`}>
+      <input
+        type="number"
+        placeholder="m² desde"
+        value={filters.superficieMin || ""}
+        onChange={(e) => update({ superficieMin: e.target.value ? Number(e.target.value) : undefined })}
+        className={`${inputClass} w-[100px]`}
+      />
+      <span className="text-text-muted text-xs">–</span>
+      <input
+        type="number"
+        placeholder="m² hasta"
+        value={filters.superficieMax || ""}
+        onChange={(e) => update({ superficieMax: e.target.value ? Number(e.target.value) : undefined })}
+        className={`${inputClass} w-[100px]`}
+      />
+    </div>
   );
 
   return (
@@ -117,7 +145,37 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true }: Pr
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-4">
         {/* Desktop filters */}
         <div className="hidden md:flex flex-wrap items-center gap-3">
-          {filterControls}
+          {/* Search */}
+          <div className="relative flex-1 min-w-[180px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+            <input
+              type="text"
+              placeholder="Buscar por zona, dirección..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="font-body text-xs bg-transparent border border-[hsl(var(--border))] pl-9 pr-3 py-2.5 w-full text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted"
+            />
+          </div>
+
+          {operacionPills()}
+          {destacadaToggle()}
+          {tipoSelect()}
+          {dormSelect()}
+          {sortSelect()}
+
+          {hasFilters && (
+            <button onClick={clearAll} className="flex items-center gap-1 font-body text-xs text-text-muted hover:text-primary transition-colors">
+              <X className="w-3 h-3" /> Limpiar
+            </button>
+          )}
+        </div>
+
+        {/* Desktop row 2: advanced filters */}
+        <div className="hidden md:flex flex-wrap items-center gap-3 mt-3">
+          <span className="font-body text-[10px] uppercase tracking-wider text-text-muted">Precio</span>
+          {priceRange()}
+          <span className="font-body text-[10px] uppercase tracking-wider text-text-muted ml-2">Superficie</span>
+          {surfaceRange()}
         </div>
 
         {/* Mobile: search + drawer */}
@@ -148,44 +206,24 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true }: Pr
               <div className="pt-4 space-y-4">
                 <p className="font-display text-lg text-foreground">Filtros</p>
 
-                {/* Operacion */}
-                <div className="flex gap-0">
-                  {["venta", "alquiler"].map((op) => (
-                    <button
-                      key={op}
-                      onClick={() => update({ operacion: filters.operacion === op ? undefined : op })}
-                      className={`flex-1 font-body text-xs uppercase tracking-wider px-4 py-3 transition-colors border ${
-                        filters.operacion === op
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
-                      }`}
-                    >
-                      {op}
-                    </button>
-                  ))}
+                {operacionPills("flex-1")}
+                {destacadaToggle("w-full justify-center")}
+                {tipoSelect("w-full")}
+                {dormSelect("w-full")}
+
+                <div>
+                  <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>
+                  {priceRange("w-full")}
+                </div>
+                <div>
+                  <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Superficie (m²)</p>
+                  {surfaceRange("w-full")}
                 </div>
 
-                <select className={`${selectClass} w-full`} value={filters.tipo || ""} onChange={(e) => update({ tipo: e.target.value || undefined })}>
-                  <option value="">Tipo de propiedad</option>
-                  {(options?.tipos || []).map((t) => (<option key={t} value={t}>{t}</option>))}
-                </select>
-
-                <select className={`${selectClass} w-full`} value={filters.dormitorios || ""} onChange={(e) => update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })}>
-                  <option value="">Dormitorios</option>
-                  {[1, 2, 3, 4, 5].map((n) => (<option key={n} value={n}>{n}+</option>))}
-                </select>
-
-                <select className={`${selectClass} w-full`} value={filters.sort || "recientes"} onChange={(e) => update({ sort: e.target.value as Filters["sort"] })}>
-                  <option value="recientes">Más recientes</option>
-                  <option value="precio_asc">Precio ↑</option>
-                  <option value="precio_desc">Precio ↓</option>
-                </select>
+                {sortSelect("w-full")}
 
                 {hasFilters && (
-                  <button
-                    onClick={() => { onChange({ sort: filters.sort }); setSearchInput(""); }}
-                    className="w-full font-body text-xs text-text-muted hover:text-primary transition-colors py-2"
-                  >
+                  <button onClick={clearAll} className="w-full font-body text-xs text-text-muted hover:text-primary transition-colors py-2">
                     Limpiar filtros
                   </button>
                 )}
@@ -203,14 +241,33 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true }: Pr
               "Cargando..."
             )}
           </p>
-          {showMapLink && (
-            <Link
-              to={`/mapa${filters.operacion ? `?operacion=${filters.operacion}` : ""}`}
-              className="flex items-center gap-1.5 font-body text-xs text-primary hover:text-gold-light transition-colors"
-            >
-              <Map className="w-3.5 h-3.5" /> Ver en mapa
-            </Link>
-          )}
+          <div className="flex items-center gap-3">
+            {/* View toggle */}
+            {onViewModeChange && (
+              <div className="hidden md:flex items-center gap-1">
+                <button
+                  onClick={() => onViewModeChange("grid")}
+                  className={`p-1.5 transition-colors ${viewMode === "grid" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onViewModeChange("list")}
+                  className={`p-1.5 transition-colors ${viewMode === "list" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
+                >
+                  <LayoutList className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            {showMapLink && (
+              <Link
+                to={`/mapa${filters.operacion ? `?operacion=${filters.operacion}` : ""}`}
+                className="flex items-center gap-1.5 font-body text-xs text-primary hover:text-gold-light transition-colors"
+              >
+                <Map className="w-3.5 h-3.5" /> Ver en mapa
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
