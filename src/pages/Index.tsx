@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import Navigation from "@/components/sections/Navigation";
 import HeroSection from "@/components/sections/HeroSection";
 import ScrollProgress from "@/components/ScrollProgress";
-import CustomCursor from "@/components/CustomCursor";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 
@@ -20,7 +19,7 @@ const Index = () => {
   return (
     <>
       <ScrollProgress />
-      <CustomCursor />
+
       <WhatsAppFAB />
       <ScrollToTop />
       <Navigation />

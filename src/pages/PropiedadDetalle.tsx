@@ -6,7 +6,6 @@ import {
   MapPin, MessageCircle, Share2, ChevronLeft, ChevronRight, ImageOff, X,
   Home, DoorOpen,
 } from "lucide-react";
-import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import PropertyCard from "@/components/PropertyCard";
@@ -219,7 +218,7 @@ const PropiedadDetalle = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollProgress />
-      <CustomCursor />
+
       <Navigation />
 
       {isLoading ? (

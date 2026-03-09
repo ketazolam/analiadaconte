@@ -1,14 +1,16 @@
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const CustomCursor = () => {
   const showRef = useRef(false);
   const opacity = useMotionValue(0);
+  // Trail opacity is derived from main opacity so both hide/show together
+  const trailOpacity = useTransform(opacity, (v) => v * 0.18);
 
   const cursorX = useSpring(0, { stiffness: 2000, damping: 60, mass: 0.2 });
   const cursorY = useSpring(0, { stiffness: 2000, damping: 60, mass: 0.2 });
-  const trailX = useSpring(0, { stiffness: 400, damping: 40, mass: 0.5 });
-  const trailY = useSpring(0, { stiffness: 400, damping: 40, mass: 0.5 });
+  const trailX = useSpring(0, { stiffness: 300, damping: 35, mass: 0.5 });
+  const trailY = useSpring(0, { stiffness: 300, damping: 35, mass: 0.5 });
 
   useEffect(() => {
     const mq = window.matchMedia("(pointer: fine)");
@@ -47,16 +49,18 @@ const CustomCursor = () => {
 
   return (
     <>
+      {/* Trail — hidden until first mouse move */}
       <motion.div
         className="fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-[9999]"
         style={{
           x: trailX,
           y: trailY,
-          opacity: 0.15,
+          opacity: trailOpacity,
           backgroundColor: "hsl(38, 54%, 50%)",
           willChange: "transform",
         }}
       />
+      {/* Dot */}
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999]"
         style={{

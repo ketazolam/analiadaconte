@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import ValuationTool from "@/components/sections/ValuationTool";
@@ -12,7 +11,7 @@ const Tasaciones = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollProgress />
-      <CustomCursor />
+
       <Navigation />
 
       {/* Header */}

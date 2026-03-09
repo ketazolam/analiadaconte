@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import CustomCursor from "@/components/CustomCursor";
 import ScrollProgress from "@/components/ScrollProgress";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
@@ -92,7 +91,7 @@ const Propiedades = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollProgress />
-      <CustomCursor />
+
       <Navigation />
       
       {/* Header */}

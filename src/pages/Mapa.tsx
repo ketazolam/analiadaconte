@@ -8,7 +8,6 @@ import {
   ImageOff, MapPin, Bed, Maximize2, List, Map as MapIcon,
   SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff, X,
 } from "lucide-react";
-import CustomCursor from "@/components/CustomCursor";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
@@ -681,7 +680,7 @@ const Mapa = () => {
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <CustomCursor />
+
 
       {/* Global CSS overrides */}
       <style>{`

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import CustomCursor from "@/components/CustomCursor";
 
 const Propiedades = lazy(() => import("./pages/Propiedades"));
 const PropiedadDetalle = lazy(() => import("./pages/PropiedadDetalle"));
@@ -17,6 +18,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <CustomCursor />
       <Toaster />
       <Sonner />
       <BrowserRouter>
