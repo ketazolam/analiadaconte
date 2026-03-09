@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { EASE } from "@/lib/constants";
 import { useFeaturedProperties } from "@/hooks/useProperties";
@@ -70,9 +70,9 @@ const FeaturedProperties = () => {
         )}
       </div>
 
-      {/* Ver todas button */}
+      {/* CTAs */}
       <motion.div
-        className="max-w-7xl mx-auto mt-10 text-center relative z-10"
+        className="max-w-7xl mx-auto mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 relative z-10"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ delay: 0.8 }}
@@ -82,6 +82,14 @@ const FeaturedProperties = () => {
           className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors"
         >
           Ver todas las propiedades →
+        </Link>
+        <span className="hidden sm:block text-text-muted/30 text-xs">|</span>
+        <Link
+          to="/mapa"
+          className="font-body text-sm uppercase tracking-[0.1em] text-text-secondary hover:text-primary transition-colors flex items-center gap-1.5"
+        >
+          <MapPin className="w-3.5 h-3.5" />
+          Explorar en el mapa
         </Link>
       </motion.div>
     </section>
