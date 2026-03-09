@@ -1,8 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Home, Key } from "lucide-react";
+import { Home, Key, TrendingUp, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import { EASE as ease } from "@/lib/constants";
 
 const DualPathSection = () => {
@@ -13,88 +12,80 @@ const DualPathSection = () => {
   const panels = [
     {
       icon: Home,
-      title: "Compradores",
-      features: [
-        "200+ propiedades disponibles",
-        "Búsqueda por zona y precio",
-        "Asesoramiento personalizado",
-      ],
+      title: "Comprar",
+      desc: "200+ propiedades en las mejores zonas de Mar del Plata.",
       cta: "Ver propiedades",
-      href: "/propiedades",
-      direction: -100,
+      href: "/propiedades?operacion=venta",
       bgImage: "/images/waiting-room.jpg",
     },
     {
       icon: Key,
-      title: "Vendedores",
-      id: "vendedores",
-      features: [
-        "Fotografía y drone profesional",
-        "Plan de marketing a medida",
-        "Tasación sin cargo",
-      ],
+      title: "Vender",
+      desc: "Tasación sin cargo, fotografía profesional y plan de marketing a medida.",
       cta: "Quiero vender",
       href: "/tasaciones",
-      direction: 100,
       bgImage: "/images/office-wide.jpg",
+    },
+    {
+      icon: Building2,
+      title: "Alquilar",
+      desc: "Alquileres temporarios y permanentes con asesoramiento integral.",
+      cta: "Ver alquileres",
+      href: "/propiedades?operacion=alquiler",
+      bgImage: "/images/chesterfield-lounge.jpg",
+    },
+    {
+      icon: TrendingUp,
+      title: "Invertir",
+      desc: "Oportunidades de inversión y desarrollos desde pozo en Mar del Plata.",
+      cta: "Explorar inversiones",
+      href: "/propiedades",
+      bgImage: "/images/mdp-coastline.jpg",
     },
   ];
 
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-lazy gpu-layer grid md:grid-cols-2 relative" style={{ contain: "content" }}>
-        <div
-          className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px z-10"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
+      <section ref={ref} className="section-lazy gpu-layer relative" style={{ contain: "content" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {panels.map((panel, i) => (
+            <motion.button
+              key={panel.title}
+              className="relative overflow-hidden group text-left min-h-[280px] sm:min-h-[360px]"
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, ease, delay: i * 0.1 }}
+              onClick={() => navigate(panel.href)}
+            >
+              {/* BG image */}
+              <img
+                src={panel.bgImage}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              {/* Overlay */}
+              <div
+                className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-90"
+                style={{ background: "linear-gradient(to bottom, rgba(12,11,15,0.4) 0%, rgba(12,11,15,0.8) 100%)", opacity: 0.85 }}
+              />
+              {/* Border between cards */}
+              <div className="absolute inset-0 border-r border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
 
-        {panels.map((panel, i) => (
-          <motion.div
-            key={panel.title}
-            id={panel.id}
-            className="transition-all duration-500 py-24 px-8 md:px-16 lg:px-24 flex flex-col justify-center min-h-[70vh] md:min-h-[60vh] noise-overlay relative"
-            initial={{ opacity: 0, x: panel.direction }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease, delay: i * 0.15 }}
-            whileHover={{
-              borderLeft: i === 0 ? "2px solid rgba(196,154,60,0.4)" : undefined,
-              borderRight: i === 1 ? "2px solid rgba(196,154,60,0.4)" : undefined,
-            }}
-          >
-            {/* Lazy background image */}
-            <img
-              src={panel.bgImage}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ zIndex: 0 }}
-            />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(12,11,15,0.5) 0%, rgba(12,11,15,0.75) 100%)", zIndex: 1 }} />
-
-            <div className="relative z-10">
-              <panel.icon className="w-8 h-8 text-primary mb-8 stroke-[1]" />
-              <h2 className="font-display text-5xl text-foreground mb-8">{panel.title}</h2>
-              <ul className="space-y-4 mb-10">
-                {panel.features.map((f) => (
-                  <li key={f} className="flex items-start gap-3 font-body text-[15px] text-text-secondary">
-                    <span className="text-primary mt-1">—</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => {
-                  if (panel.href) navigate(panel.href);
-                }}
-                className="font-body text-sm uppercase tracking-[0.1em] text-primary hover:text-gold-light transition-colors bg-transparent border-none cursor-pointer"
-              >
-                {panel.cta} <span className="text-primary">→</span>
-              </button>
-            </div>
-          </motion.div>
-        ))}
+              {/* Content */}
+              <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8">
+                <panel.icon className="w-7 h-7 text-primary mb-4 stroke-[1.2] transition-transform duration-500 group-hover:translate-y-[-4px]" />
+                <h3 className="font-display text-3xl sm:text-4xl text-foreground mb-2">{panel.title}</h3>
+                <p className="font-body text-[13px] text-foreground/50 mb-5 max-w-[220px] leading-relaxed">{panel.desc}</p>
+                <span className="font-body text-xs uppercase tracking-[0.12em] text-primary group-hover:text-gold-light transition-colors">
+                  {panel.cta} <span className="ml-1">→</span>
+                </span>
+              </div>
+            </motion.button>
+          ))}
+        </div>
       </section>
       <div className="section-divider" />
     </>
