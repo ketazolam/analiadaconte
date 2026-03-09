@@ -122,14 +122,20 @@ const MapBoundsWatcher = ({
 }) => {
   const map = useMap();
   useEffect(() => {
-    const update = () => onBoundsChange(map.getBounds());
+    let timer: ReturnType<typeof setTimeout>;
+    const update = () => {
+      // Debounce: only fire after the user stops panning/zooming
+      // This prevents React re-renders from conflicting with Leaflet cluster animations
+      clearTimeout(timer);
+      timer = setTimeout(() => onBoundsChange(map.getBounds()), 300);
+    };
     map.on("moveend", update);
     map.on("zoomend", update);
-    // Fire immediately after mount so we have initial bounds
     update();
     return () => {
       map.off("moveend", update);
       map.off("zoomend", update);
+      clearTimeout(timer);
     };
   }, [map, onBoundsChange]);
   return null;
@@ -601,6 +607,14 @@ const Mapa = () => {
   const { data: mapProperties, isLoading } = useAllMapProperties(filters);
   const markers = useMemo(() => mapProperties || [], [mapProperties]);
 
+  // Pre-compute icons — only recomputes when markers list or selectedId changes
+  // Avoids recreating L.Icon objects on every bounds-triggered re-render
+  const iconMap = useMemo(() => {
+    const m = new Map<number, L.Icon>();
+    markers.forEach((p) => m.set(p.id, createPropertyIcon(p.tipo, selectedId === p.id)));
+    return m;
+  }, [markers, selectedId]);
+
   // Sidebar list: optionally filtered by current map viewport
   const visibleMarkers = useMemo(() => {
     if (!filterByBounds || !mapBounds) return markers;
@@ -909,7 +923,7 @@ const Mapa = () => {
               spiderfyOnMaxZoom={true}
               disableClusteringAtZoom={17}
               maxClusterRadius={60}
-              animate={true}
+              animate={false}
               animateAddingMarkers={false}
             >
               {markers.map((p) =>
@@ -917,7 +931,7 @@ const Mapa = () => {
                   <Marker
                     key={p.id}
                     position={[p.lat, p.lng]}
-                    icon={createPropertyIcon(p.tipo, selectedId === p.id)}
+                    icon={iconMap.get(p.id) ?? createPropertyIcon(p.tipo, false)}
                     eventHandlers={{ click: () => handleMarkerClick(p) }}
                   >
                     <Popup>
