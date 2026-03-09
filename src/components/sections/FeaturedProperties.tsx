@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { EASE } from "@/lib/constants";
 import { useFeaturedProperties } from "@/hooks/useProperties";
 import PropertyCard from "@/components/PropertyCard";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const FeaturedProperties = () => {
   const ref = useRef(null);
