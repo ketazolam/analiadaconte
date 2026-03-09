@@ -168,7 +168,7 @@ const Propiedades = () => {
                     {viewMode === "list" ? (
                       <PropertyCardRow property={prop} />
                     ) : (
-                      <PropertyCard property={prop} />
+                      <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
                     )}
                   </motion.div>
                 );

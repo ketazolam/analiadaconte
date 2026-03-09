@@ -65,7 +65,7 @@ const FeaturedProperties = () => {
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
               >
-                <PropertyCard property={prop} />
+                <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
               </motion.div>
             ))}
           </div>

@@ -46,7 +46,9 @@ const Index = () => {
         <Suspense fallback={null}>
           <ReviewsSection />
         </Suspense>
-        {/* ValuationTool removed — will be /vender page */}
+        <Suspense fallback={null}>
+          <NewsletterSection />
+        </Suspense>
       </main>
       <Suspense fallback={null}>
         <Footer />

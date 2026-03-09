@@ -94,6 +94,16 @@ const HeroSection = () => {
           <MagneticButton variant="outline" onClick={() => navigate("/tasaciones")}>Quiero vender</MagneticButton>
         </motion.div>
 
+        {/* Quick Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: EASE, delay: 1.1 }}
+          className="hidden sm:block"
+        >
+          <HeroSearchBar />
+        </motion.div>
+
         {/* Google rating badge */}
         <motion.a
           href={GOOGLE_MAPS_URL}
