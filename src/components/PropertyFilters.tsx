@@ -34,9 +34,9 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
   }, [searchInput]);
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.banos || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
+  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
-  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.banos, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
+  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
 
   const selectClass =
     "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))] w-auto shrink-0";
