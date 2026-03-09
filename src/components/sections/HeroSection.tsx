@@ -75,7 +75,7 @@ const HeroSection = () => {
         </motion.h1>
 
         <motion.p
-          className="font-body text-base mb-12 max-w-md mx-auto" style={{ color: "rgba(242,239,232,0.7)" }}
+          className="font-body text-base mb-6 md:mb-12 max-w-md mx-auto" style={{ color: "rgba(242,239,232,0.7)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.7 }}
