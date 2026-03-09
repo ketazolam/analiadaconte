@@ -28,75 +28,89 @@ const Footer = () => {
     <footer id="contacto" style={{ backgroundColor: "#080709" }}>
       <div className="h-px w-full" style={{ background: "rgba(196,154,60,0.2)" }} />
 
-      <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 pt-16 pb-8">
-        {/* 4-column grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-14 text-center md:text-left">
-          {/* Col 1 — Brand */}
-          <div className="flex flex-col items-center md:items-start">
-            <span className="font-display italic text-5xl text-primary mb-1">AD</span>
-            <span className="label-accent text-muted-foreground mb-4">Inversiones Inmobiliarias</span>
-            <p className="font-body text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+      <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 pt-12 md:pt-16 pb-8">
+        {/* Mobile-first optimized layout */}
+        <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-12 mb-12 md:mb-14">
+          
+          {/* Col 1 — Brand (Mobile: Full width, prominent) */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <span className="font-display italic text-4xl md:text-5xl text-primary mb-1">AD</span>
+            <span className="label-accent text-muted-foreground mb-4 text-xs md:text-[10px]">Inversiones Inmobiliarias</span>
+            <p className="font-body text-sm leading-relaxed mb-6 max-w-xs md:max-w-none" style={{ color: "rgba(255,255,255,0.5)" }}>
               Más de 25 años como Martillera y Corredora Pública en la ciudad de Mar&nbsp;del&nbsp;Plata y alrededores.
             </p>
             <a
               href={whatsappLink("Hola Analía, quiero más información.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-body text-xs uppercase tracking-[0.1em] px-6 py-3 border border-primary text-primary rounded-sm hover:bg-primary/10 transition-colors w-full md:w-auto text-center"
+              className="font-body text-xs uppercase tracking-[0.1em] px-8 py-4 md:px-6 md:py-3 border border-primary text-primary rounded-sm hover:bg-primary/10 transition-colors w-full max-w-xs md:w-auto md:max-w-none text-center touch-manipulation"
             >
               Contáctenos
             </a>
           </div>
 
-          {/* Col 2 — Quick Links */}
-          <div className="flex flex-col items-center md:items-start">
-            <SectionTitle>Links Rápidos</SectionTitle>
-            <ul className="space-y-2.5">
-              {quickLinks.map((l) => (
-                <li key={l.label}>
-                  <Link
-                    to={l.to}
-                    className="font-body text-sm hover:text-primary transition-colors"
-                    style={{ color: "rgba(255,255,255,0.5)" }}
-                  >
-                    {l.label}
-                  </Link>
+          {/* Mobile: 2-column grid for links and contact */}
+          <div className="grid grid-cols-2 gap-8 md:contents">
+            {/* Col 2 — Quick Links */}
+            <div className="flex flex-col">
+              <SectionTitle>Links</SectionTitle>
+              <ul className="space-y-3">
+                {quickLinks.map((l) => (
+                  <li key={l.label}>
+                    <Link
+                      to={l.to}
+                      className="font-body text-sm hover:text-primary transition-colors block py-1 touch-manipulation"
+                      style={{ color: "rgba(255,255,255,0.5)" }}
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 3 — Contact (Simplified for mobile) */}
+            <div className="flex flex-col">
+              <SectionTitle>Contacto</SectionTitle>
+              <ul className="space-y-3 font-body text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+                <li className="md:flex md:items-start md:gap-2">
+                  <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5 hidden md:block" />
+                  <span className="text-xs leading-relaxed md:text-sm">{ADDRESS_FULL}</span>
                 </li>
-              ))}
-            </ul>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-primary shrink-0" />
+                  <a 
+                    href={`tel:${PHONE.replace(/\s/g, "")}`} 
+                    className="hover:text-primary transition-colors text-sm touch-manipulation"
+                  >
+                    {PHONE}
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-primary shrink-0" />
+                  <a 
+                    href={`mailto:${EMAIL}`} 
+                    className="hover:text-primary transition-colors text-sm touch-manipulation break-all"
+                  >
+                    {EMAIL}
+                  </a>
+                </li>
+                <li className="flex items-center gap-2 md:hidden">
+                  <Award className="w-4 h-4 text-primary shrink-0" />
+                  <span className="text-sm">Mat. 2815</span>
+                </li>
+                <li className="hidden md:flex md:items-center md:gap-2">
+                  <Award className="w-4 h-4 text-primary shrink-0" />
+                  <span>Matrícula 2815</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Col 3 — Contact */}
-          <div className="flex flex-col items-center md:items-start">
-            <SectionTitle>Contacto</SectionTitle>
-            <ul className="space-y-3 font-body text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <span>{ADDRESS_FULL}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-primary shrink-0" />
-                <a href={`tel:${PHONE.replace(/\s/g, "")}`} className="hover:text-primary transition-colors">
-                  {PHONE}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-primary shrink-0" />
-                <a href={`mailto:${EMAIL}`} className="hover:text-primary transition-colors">
-                  {EMAIL}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Award className="w-4 h-4 text-primary shrink-0" />
-                <span>Matrícula 2815</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 4 — Social */}
-          <div className="flex flex-col items-center md:items-start">
+          {/* Col 4 — Social (Mobile: Centered, larger touch targets) */}
+          <div className="flex flex-col items-center md:items-start pt-4 md:pt-0">
             <SectionTitle>Síguenos</SectionTitle>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-6 md:gap-5">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -104,9 +118,9 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-primary transition-colors p-2 md:p-0 -m-2 md:m-0 touch-manipulation"
                 >
-                  <s.icon className="w-6 h-6" />
+                  <s.icon className="w-7 h-7 md:w-6 md:h-6" />
                 </a>
               ))}
             </div>
