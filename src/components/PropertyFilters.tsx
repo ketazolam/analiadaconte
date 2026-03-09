@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard, Bath } from "lucide-react";
+import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters as Filters } from "@/lib/types";
