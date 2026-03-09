@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Mapa", href: "/mapa" },
   { label: "Tasación", href: "/tasaciones" },
   { label: "Quiénes somos", target: "about" },
-  { label: "Contacto", target: "contacto" },
+  { label: "Contacto", href: "/contacto" },
 ];
 
 const Navigation = () => {

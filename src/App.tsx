@@ -12,6 +12,7 @@ const Propiedades = lazy(() => import("./pages/Propiedades"));
 const PropiedadDetalle = lazy(() => import("./pages/PropiedadDetalle"));
 const Tasaciones = lazy(() => import("./pages/Tasaciones"));
 const Mapa = lazy(() => import("./pages/Mapa"));
+const Contacto = lazy(() => import("./pages/Contacto"));
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/propiedad/:slug" element={<Suspense fallback={null}><PropiedadDetalle /></Suspense>} />
           <Route path="/tasaciones" element={<Suspense fallback={null}><Tasaciones /></Suspense>} />
           <Route path="/mapa" element={<Suspense fallback={null}><Mapa /></Suspense>} />
+          <Route path="/contacto" element={<Suspense fallback={null}><Contacto /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
