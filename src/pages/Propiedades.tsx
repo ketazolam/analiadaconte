@@ -55,6 +55,7 @@ const Propiedades = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [filters, setFilters] = useState<PropertyFilters>(() => filtersFromParams(searchParams));
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
