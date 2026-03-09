@@ -20,14 +20,14 @@ const HeroSection = () => {
   const bgTextY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "20%"]);
 
   return (
-    <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">
+    <section ref={ref} className="relative h-screen overflow-hidden flex items-start pt-[28vh] md:items-center md:pt-0 justify-center">
       {/* Background photo */}
       <motion.div
         className="absolute inset-0"
         style={{
           y: bgY,
           backgroundImage: `
-            linear-gradient(to bottom, rgba(12,11,15,0.55) 0%, rgba(12,11,15,0.65) 50%, rgba(12,11,15,0.88) 100%),
+            linear-gradient(to bottom, rgba(12,11,15,0.3) 0%, rgba(12,11,15,0.7) 50%, rgba(12,11,15,0.92) 100%),
             url('/images/mdp-aerial-hero.jpg')
           `,
           backgroundSize: "cover",
@@ -55,7 +55,7 @@ const HeroSection = () => {
         style={{ y: textY, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}
       >
         <motion.p
-          className="label-eyebrow text-primary mb-8" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+          className="label-eyebrow text-primary mb-4 md:mb-8 hidden sm:block" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
@@ -75,7 +75,7 @@ const HeroSection = () => {
         </motion.h1>
 
         <motion.p
-          className="font-body text-base mb-12 max-w-md mx-auto" style={{ color: "rgba(242,239,232,0.7)" }}
+          className="font-body text-base mb-6 md:mb-12 max-w-md mx-auto" style={{ color: "rgba(242,239,232,0.7)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.7 }}
@@ -121,7 +121,7 @@ const HeroSection = () => {
       <div className="absolute bottom-0 left-0 right-0">
         <div className="h-px" style={{ background: "rgba(196,154,60,0.3)" }} />
         <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
@@ -133,7 +133,7 @@ const HeroSection = () => {
               animation: "scroll-pulse 2s ease-in-out infinite",
             }}
           />
-          <span className="label-accent text-text-muted" style={{ fontSize: 9 }}>
+          <span className="label-accent text-text-muted" style={{ fontSize: 10 }}>
             Scroll
           </span>
         </motion.div>
