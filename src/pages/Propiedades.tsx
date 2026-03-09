@@ -11,6 +11,7 @@ import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
 import { useProperties } from "@/hooks/useProperties";
+import { useFavorites } from "@/hooks/useFavorites";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
 import { EASE } from "@/lib/constants";
