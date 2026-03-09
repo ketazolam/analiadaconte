@@ -4,13 +4,15 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ImageOff, MapPin, Bed, Maximize2, List, Map, SlidersHorizontal } from "lucide-react";
+import {
+  ImageOff, MapPin, Bed, Maximize2, List, Map,
+  SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff,
+} from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import { useAllMapProperties } from "@/hooks/useProperties";
-import { whatsappLink } from "@/lib/constants";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
 import { sanitizeBarrio } from "@/lib/utils";
@@ -82,7 +84,7 @@ const createClusterIcon = (cluster: L.MarkerCluster) => {
   });
 };
 
-// ─── Map fly-to helper ────────────────────────────────────────────────────────
+// ─── Map helpers (must be children of MapContainer) ───────────────────────────
 const FlyTo = ({ position }: { position: [number, number] | null }) => {
   const map = useMap();
   useEffect(() => {
@@ -90,6 +92,46 @@ const FlyTo = ({ position }: { position: [number, number] | null }) => {
       map.flyTo(position, Math.max(map.getZoom(), 15), { animate: true, duration: 0.6 });
     }
   }, [position, map]);
+  return null;
+};
+
+const FitBoundsHelper = ({
+  markers,
+  trigger,
+}: {
+  markers: Propiedad[];
+  trigger: number;
+}) => {
+  const map = useMap();
+  const prevTrigger = useRef(0);
+  useEffect(() => {
+    if (trigger === 0 || trigger === prevTrigger.current) return;
+    prevTrigger.current = trigger;
+    const valid = markers.filter((p) => p.lat && p.lng);
+    if (valid.length === 0) return;
+    const bounds = L.latLngBounds(valid.map((p) => [p.lat!, p.lng!] as [number, number]));
+    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16, animate: true });
+  }, [trigger, markers, map]);
+  return null;
+};
+
+const MapBoundsWatcher = ({
+  onBoundsChange,
+}: {
+  onBoundsChange: (b: L.LatLngBounds) => void;
+}) => {
+  const map = useMap();
+  useEffect(() => {
+    const update = () => onBoundsChange(map.getBounds());
+    map.on("moveend", update);
+    map.on("zoomend", update);
+    // Fire immediately after mount so we have initial bounds
+    update();
+    return () => {
+      map.off("moveend", update);
+      map.off("zoomend", update);
+    };
+  }, [map, onBoundsChange]);
   return null;
 };
 
@@ -107,6 +149,19 @@ function getFirstImage(fotos: unknown): string | null {
   return null;
 }
 
+// ─── Skeleton card ────────────────────────────────────────────────────────────
+const SkeletonCard = () => (
+  <div style={{ display: "flex", borderBottom: "1px solid #f0f0f0", overflow: "hidden" }}>
+    <div className="skeleton-shimmer" style={{ width: 140, height: 105, flexShrink: 0 }} />
+    <div style={{ flex: 1, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+      <div className="skeleton-shimmer" style={{ height: 9, width: "38%", borderRadius: 2 }} />
+      <div className="skeleton-shimmer" style={{ height: 12, width: "82%", borderRadius: 2 }} />
+      <div className="skeleton-shimmer" style={{ height: 10, width: "55%", borderRadius: 2 }} />
+      <div className="skeleton-shimmer" style={{ height: 12, width: "32%", borderRadius: 2, marginTop: "auto" }} />
+    </div>
+  </div>
+);
+
 // ─── Sidebar property card ────────────────────────────────────────────────────
 interface SidebarCardProps {
   property: Propiedad;
@@ -118,15 +173,20 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
   const navigate = useNavigate();
   const img = getFirstImage(property.fotos);
   const slug = property.pixel_slug || String(property.id);
-  const price = property.precio_texto ||
-    (property.precio ? `${property.moneda || "U$D"} ${property.precio.toLocaleString("es-AR")}` : "Consultar");
-  const location = [sanitizeBarrio(property.barrio), property.ciudad].filter(Boolean).join(", ") || "Mar del Plata";
+  const price =
+    property.precio_texto ||
+    (property.precio
+      ? `${property.moneda || "U$D"} ${property.precio.toLocaleString("es-AR")}`
+      : "Consultar");
+  const location =
+    [sanitizeBarrio(property.barrio), property.ciudad].filter(Boolean).join(", ") ||
+    "Mar del Plata";
   const tipo = (property.tipo || "").toUpperCase();
 
   return (
     <div
       onClick={onSelect}
-      className="flex overflow-hidden cursor-pointer transition-all duration-200"
+      className="map-sidebar-card flex overflow-hidden cursor-pointer transition-all duration-200"
       style={{
         borderBottom: "1px solid #f0f0f0",
         background: selected ? "#f0f6ff" : "#fff",
@@ -143,7 +203,16 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
             loading="lazy"
           />
         ) : (
-          <div style={{ width: 140, height: 105, background: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div
+            style={{
+              width: 140,
+              height: 105,
+              background: "#f5f5f5",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <ImageOff style={{ width: 20, height: 20, color: "#ccc" }} />
           </div>
         )}
@@ -153,12 +222,31 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
       <div className="flex-1 p-3 flex flex-col justify-between min-w-0">
         <div>
           {tipo && (
-            <p style={{ fontSize: 10, fontWeight: 700, color: ACCENT, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
+            <p
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: ACCENT,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                marginBottom: 4,
+              }}
+            >
               {tipo}
             </p>
           )}
           <p
-            style={{ fontSize: 13, fontWeight: 600, color: "#111", lineHeight: 1.3, marginBottom: 4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#111",
+              lineHeight: 1.3,
+              marginBottom: 4,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
           >
             {property.titulo || "Sin título"}
           </p>
@@ -172,12 +260,14 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
           <div className="flex items-center gap-2" style={{ fontSize: 11, color: "#888" }}>
             {(property.dormitorios ?? 0) > 0 && (
               <span className="flex items-center gap-0.5">
-                <Bed style={{ width: 11, height: 11 }} />{property.dormitorios}
+                <Bed style={{ width: 11, height: 11 }} />
+                {property.dormitorios}
               </span>
             )}
             {property.superficie_total && (
               <span className="flex items-center gap-0.5">
-                <Maximize2 style={{ width: 11, height: 11 }} />{property.superficie_total}m²
+                <Maximize2 style={{ width: 11, height: 11 }} />
+                {property.superficie_total}m²
               </span>
             )}
           </div>
@@ -186,7 +276,10 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
 
       {/* Ver ficha */}
       <button
-        onClick={(e) => { e.stopPropagation(); navigate(`/propiedad/${slug}`); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/propiedad/${slug}`);
+        }}
         style={{
           alignSelf: "center",
           marginRight: 10,
@@ -208,13 +301,16 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
   );
 };
 
-// ─── Minimal map popup ────────────────────────────────────────────────────────
+// ─── Map popup ────────────────────────────────────────────────────────────────
 const MapPopup = ({ property }: { property: Propiedad }) => {
   const navigate = useNavigate();
   const img = getFirstImage(property.fotos);
   const slug = property.pixel_slug || String(property.id);
-  const price = property.precio_texto ||
-    (property.precio ? `${property.moneda || "U$D"} ${property.precio.toLocaleString("es-AR")}` : "Consultar");
+  const price =
+    property.precio_texto ||
+    (property.precio
+      ? `${property.moneda || "U$D"} ${property.precio.toLocaleString("es-AR")}`
+      : "Consultar");
 
   return (
     <div
@@ -222,55 +318,139 @@ const MapPopup = ({ property }: { property: Propiedad }) => {
       onClick={() => navigate(`/propiedad/${slug}`)}
     >
       {img && (
-        <img src={img} alt="" style={{ width: 80, height: 60, objectFit: "cover", borderRadius: 4, flexShrink: 0 }} loading="lazy" />
+        <img
+          src={img}
+          alt=""
+          style={{ width: 80, height: 62, objectFit: "cover", borderRadius: 4, flexShrink: 0 }}
+          loading="lazy"
+        />
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: ACCENT, textTransform: "uppercase", marginBottom: 3 }}>
+        <p
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: ACCENT,
+            textTransform: "uppercase",
+            marginBottom: 3,
+          }}
+        >
           {(property.tipo || "Propiedad").toUpperCase()}
         </p>
-        <p style={{ fontSize: 12, fontWeight: 500, color: "#222", lineHeight: 1.35, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
+        <p
+          style={{
+            fontSize: 12,
+            fontWeight: 500,
+            color: "#222",
+            lineHeight: 1.35,
+            marginBottom: 5,
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical" as const,
+          }}
+        >
           {property.titulo || sanitizeBarrio(property.barrio) || "Sin título"}
         </p>
-        <p style={{ fontSize: 13, fontWeight: 600, color: ACCENT }}>{price}</p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: ACCENT }}>{price}</p>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              fontSize: 10,
+              color: "#888",
+              alignItems: "center",
+            }}
+          >
+            {(property.dormitorios ?? 0) > 0 && (
+              <span style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Bed style={{ width: 10, height: 10 }} />
+                {property.dormitorios}
+              </span>
+            )}
+            {property.superficie_total && (
+              <span style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Maximize2 style={{ width: 10, height: 10 }} />
+                {property.superficie_total}m²
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
+// ─── Map overlay button style ──────────────────────────────────────────────────
+const mapBtnStyle: React.CSSProperties = {
+  width: 36,
+  height: 36,
+  background: "#fff",
+  border: "1px solid #ddd",
+  borderRadius: 4,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+  color: "#333",
+  transition: "background .15s",
+};
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const Mapa = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [filters, setFilters] = useState<PropertyFilters>({
     operacion: searchParams.get("operacion") || undefined,
+    tipo: searchParams.get("tipo") || undefined,
+    dormitorios: searchParams.get("dormitorios")
+      ? Number(searchParams.get("dormitorios"))
+      : undefined,
+    precioMin: searchParams.get("precioMin")
+      ? Number(searchParams.get("precioMin"))
+      : undefined,
+    precioMax: searchParams.get("precioMax")
+      ? Number(searchParams.get("precioMax"))
+      : undefined,
     sort: "recientes",
   });
+
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [flyTarget, setFlyTarget] = useState<[number, number] | null>(null);
   const [mobileView, setMobileView] = useState<"map" | "list">("map");
   const [showFilters, setShowFilters] = useState(false);
+  const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
+  const [filterByBounds, setFilterByBounds] = useState(false);
+  const [fitBoundsTrigger, setFitBoundsTrigger] = useState(0);
 
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const { data: mapProperties } = useAllMapProperties(filters);
+  const { data: mapProperties, isLoading } = useAllMapProperties(filters);
   const markers = useMemo(() => mapProperties || [], [mapProperties]);
 
-  const handleMarkerClick = useCallback((p: Propiedad) => {
-    setSelectedId(p.id);
-    if (p.lat && p.lng) setFlyTarget([p.lat, p.lng]);
-    // Scroll sidebar to this card
-    const el = cardRefs.current.get(p.id);
-    if (el && sidebarRef.current) {
-      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  }, []);
+  // Sidebar list: optionally filtered by current map viewport
+  const visibleMarkers = useMemo(() => {
+    if (!filterByBounds || !mapBounds) return markers;
+    return markers.filter(
+      (p) => p.lat && p.lng && mapBounds.contains([p.lat, p.lng] as L.LatLngExpression)
+    );
+  }, [markers, mapBounds, filterByBounds]);
 
-  const handleCardSelect = useCallback((p: Propiedad) => {
-    setSelectedId(p.id);
-    if (p.lat && p.lng) setFlyTarget([p.lat, p.lng]);
-  }, []);
+  // Sync filters → URL
+  useEffect(() => {
+    const params: Record<string, string> = {};
+    if (filters.operacion) params.operacion = filters.operacion;
+    if (filters.tipo) params.tipo = filters.tipo;
+    if (filters.dormitorios) params.dormitorios = String(filters.dormitorios);
+    if (filters.precioMin) params.precioMin = String(filters.precioMin);
+    if (filters.precioMax) params.precioMax = String(filters.precioMax);
+    setSearchParams(params, { replace: true });
+  }, [filters, setSearchParams]);
 
-  // After flyTo is consumed, reset (so same marker can be clicked again)
+  // Reset flyTarget so same marker can be clicked again
   useEffect(() => {
     if (flyTarget) {
       const t = setTimeout(() => setFlyTarget(null), 800);
@@ -278,12 +458,58 @@ const Mapa = () => {
     }
   }, [flyTarget]);
 
+  const handleMarkerClick = useCallback(
+    (p: Propiedad) => {
+      setSelectedId(p.id);
+      if (p.lat && p.lng) setFlyTarget([p.lat, p.lng]);
+      const el = cardRefs.current.get(p.id);
+      if (el && sidebarRef.current) {
+        el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    },
+    []
+  );
+
+  const handleCardSelect = useCallback((p: Propiedad) => {
+    setSelectedId(p.id);
+    if (p.lat && p.lng) setFlyTarget([p.lat, p.lng]);
+  }, []);
+
+  const handleGeolocate = () => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setFlyTarget([pos.coords.latitude, pos.coords.longitude]),
+      () => {} // silently ignore errors
+    );
+  };
+
+  const handleFitAll = () => {
+    setFitBoundsTrigger((n) => n + 1);
+  };
+
+  const handleBoundsChange = useCallback((bounds: L.LatLngBounds) => {
+    setMapBounds(bounds);
+  }, []);
+
+  const sidebarCount = filterByBounds
+    ? `${visibleMarkers.length} de ${markers.length} propiedades`
+    : `${markers.length} propiedades`;
+
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <CustomCursor />
 
-      {/* Popup/Leaflet CSS overrides */}
+      {/* Global CSS overrides */}
       <style>{`
+        @keyframes shimmer {
+          0%   { background-position: -200% 0; }
+          100% { background-position:  200% 0; }
+        }
+        .skeleton-shimmer {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.4s infinite;
+        }
         .leaflet-popup-content-wrapper {
           border-radius: 10px !important;
           box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
@@ -306,9 +532,9 @@ const Mapa = () => {
           color: #333 !important;
           font-size: 16px !important;
         }
-        /* Smooth cluster hover */
         .leaflet-marker-icon:hover { transform: scale(1.08) !important; transition: transform .15s; }
         .map-sidebar-card:hover { background: #f7f9ff !important; }
+        .map-overlay-btn:hover { background: #f5f5f5 !important; }
       `}</style>
 
       {/* Navigation */}
@@ -316,18 +542,22 @@ const Mapa = () => {
 
       {/* Filter bar — desktop only */}
       <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT }}>
-        <PropertyFiltersBar filters={filters} onChange={setFilters} total={markers.length} showMapLink={false} />
+        <PropertyFiltersBar
+          filters={filters}
+          onChange={setFilters}
+          total={markers.length}
+          showMapLink={false}
+        />
       </div>
 
       {/* Main content */}
-      <div className="flex flex-1 overflow-hidden" style={{ marginTop: 0 }}>
+      <div className="flex flex-1 overflow-hidden">
 
-        {/* ── SIDEBAR (desktop: always visible | mobile: toggle) ── */}
+        {/* ── SIDEBAR ── */}
         <div
-          className={`
-            flex flex-col bg-white border-r border-gray-100
-            ${mobileView === "list" ? "flex" : "hidden md:flex"}
-          `}
+          className={`flex flex-col bg-white border-r border-gray-100 ${
+            mobileView === "list" ? "flex" : "hidden md:flex"
+          }`}
           style={{ width: "100%", maxWidth: 420, minWidth: 320, height: "100%" }}
         >
           {/* Sidebar header */}
@@ -335,12 +565,39 @@ const Mapa = () => {
             className="flex items-center justify-between px-4 py-3 border-b"
             style={{ background: "#fff", borderBottom: "1px solid #eee", flexShrink: 0 }}
           >
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#333" }}>
-              {markers.length} propiedades
-            </span>
+            <div className="flex items-center gap-2">
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#333" }}>
+                {isLoading ? "Cargando..." : sidebarCount}
+              </span>
+              {/* Bounds filter toggle */}
+              <button
+                onClick={() => setFilterByBounds((v) => !v)}
+                title={filterByBounds ? "Mostrando solo vista actual" : "Ver solo los visibles en el mapa"}
+                className="map-overlay-btn hidden md:flex items-center gap-1"
+                style={{
+                  padding: "3px 8px",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  borderRadius: 99,
+                  border: `1px solid ${filterByBounds ? ACCENT : "#ddd"}`,
+                  background: filterByBounds ? "#e8f0fe" : "#f5f5f5",
+                  color: filterByBounds ? ACCENT : "#888",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all .15s",
+                }}
+              >
+                {filterByBounds ? (
+                  <Eye style={{ width: 10, height: 10 }} />
+                ) : (
+                  <EyeOff style={{ width: 10, height: 10 }} />
+                )}
+                {filterByBounds ? "En vista" : "Todos"}
+              </button>
+            </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setShowFilters(v => !v)}
+                onClick={() => setShowFilters((v) => !v)}
                 className="md:hidden flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium"
                 style={{ background: "#f0f0f0", color: "#333" }}
               >
@@ -359,22 +616,55 @@ const Mapa = () => {
           {/* Mobile filters */}
           {showFilters && (
             <div className="md:hidden border-b">
-              <PropertyFiltersBar filters={filters} onChange={setFilters} total={markers.length} showMapLink={false} />
+              <PropertyFiltersBar
+                filters={filters}
+                onChange={setFilters}
+                total={markers.length}
+                showMapLink={false}
+              />
             </div>
           )}
 
           {/* Card list */}
-          <div ref={sidebarRef} className="flex-1 overflow-y-auto" style={{ overscrollBehavior: "contain" }}>
-            {markers.length === 0 ? (
+          <div
+            ref={sidebarRef}
+            className="flex-1 overflow-y-auto"
+            style={{ overscrollBehavior: "contain" }}
+          >
+            {isLoading ? (
+              // Skeleton loading
+              Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+            ) : visibleMarkers.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-40 text-gray-400">
                 <MapPin style={{ width: 32, height: 32, marginBottom: 8, opacity: 0.3 }} />
-                <p style={{ fontSize: 13 }}>Sin propiedades</p>
+                <p style={{ fontSize: 13 }}>
+                  {filterByBounds ? "Sin propiedades en esta zona" : "Sin propiedades"}
+                </p>
+                {filterByBounds && (
+                  <button
+                    onClick={() => setFilterByBounds(false)}
+                    style={{
+                      marginTop: 8,
+                      fontSize: 12,
+                      color: ACCENT,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    Ver todas
+                  </button>
+                )}
               </div>
             ) : (
-              markers.map((p) => (
+              visibleMarkers.map((p) => (
                 <div
                   key={p.id}
-                  ref={(el) => { if (el) cardRefs.current.set(p.id, el); else cardRefs.current.delete(p.id); }}
+                  ref={(el) => {
+                    if (el) cardRefs.current.set(p.id, el);
+                    else cardRefs.current.delete(p.id);
+                  }}
                 >
                   <SidebarCard
                     property={p}
@@ -389,7 +679,9 @@ const Mapa = () => {
 
         {/* ── MAP ── */}
         <div
-          className={`flex-1 relative ${mobileView === "map" ? "flex" : "hidden md:flex"} flex-col`}
+          className={`flex-1 relative ${
+            mobileView === "map" ? "flex" : "hidden md:flex"
+          } flex-col`}
           style={{ minWidth: 0 }}
         >
           {/* Mobile top bar */}
@@ -398,7 +690,7 @@ const Mapa = () => {
             style={{ flexShrink: 0 }}
           >
             <button
-              onClick={() => setShowFilters(v => !v)}
+              onClick={() => setShowFilters((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
               style={{ background: "#f0f0f0", color: "#333" }}
             >
@@ -417,10 +709,16 @@ const Mapa = () => {
           {/* Mobile filters */}
           {showFilters && (
             <div className="md:hidden border-b bg-white">
-              <PropertyFiltersBar filters={filters} onChange={setFilters} total={markers.length} showMapLink={false} />
+              <PropertyFiltersBar
+                filters={filters}
+                onChange={setFilters}
+                total={markers.length}
+                showMapLink={false}
+              />
             </div>
           )}
 
+          {/* Map */}
           <MapContainer
             center={MDP_CENTER}
             zoom={13}
@@ -437,6 +735,8 @@ const Mapa = () => {
             />
 
             <FlyTo position={flyTarget} />
+            <FitBoundsHelper markers={markers} trigger={fitBoundsTrigger} />
+            <MapBoundsWatcher onBoundsChange={handleBoundsChange} />
 
             <MarkerClusterGroup
               iconCreateFunction={createClusterIcon}
@@ -464,7 +764,36 @@ const Mapa = () => {
             </MarkerClusterGroup>
           </MapContainer>
 
-          {/* WhatsApp sobre el mapa */}
+          {/* Map overlay controls */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 90,
+              right: 12,
+              zIndex: 999,
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
+          >
+            <button
+              onClick={handleGeolocate}
+              title="Mi ubicación"
+              className="map-overlay-btn"
+              style={mapBtnStyle}
+            >
+              <Crosshair style={{ width: 16, height: 16 }} />
+            </button>
+            <button
+              onClick={handleFitAll}
+              title="Ver todas las propiedades"
+              className="map-overlay-btn"
+              style={mapBtnStyle}
+            >
+              <Maximize style={{ width: 16, height: 16 }} />
+            </button>
+          </div>
+
           <WhatsAppFAB />
         </div>
       </div>
