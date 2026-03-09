@@ -75,7 +75,7 @@ export function useAllMapProperties(filters: Omit<PropertyFilters, 'sort'>) {
     queryFn: async () => {
       let query = supabase
         .from("propiedades")
-        .select("id,titulo,barrio,precio,precio_texto,moneda,fotos,lat,lng,operacion,tipo")
+        .select("id,pixel_slug,titulo,barrio,ciudad,precio,precio_texto,moneda,fotos,lat,lng,operacion,tipo,superficie_total,dormitorios")
         .not("lat", "is", null)
         .not("lng", "is", null);
 
