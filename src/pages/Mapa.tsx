@@ -6,13 +6,13 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   ImageOff, MapPin, Bed, Maximize2, List, Map as MapIcon,
-  SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff,
+  SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff, X,
 } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
-import { useAllMapProperties } from "@/hooks/useProperties";
+import { useAllMapProperties, usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
 import { sanitizeBarrio } from "@/lib/utils";
@@ -382,6 +382,176 @@ const MapPopup = ({ property }: { property: Propiedad }) => {
   );
 };
 
+// ─── Compact single-row filter bar (map-specific) ────────────────────────────
+const MapFiltersBar = ({
+  filters,
+  onChange,
+  total,
+}: {
+  filters: PropertyFilters;
+  onChange: (f: PropertyFilters) => void;
+  total: number;
+}) => {
+  const { data: options } = usePropertyFilterOptions();
+  const update = (patch: Partial<PropertyFilters>) => onChange({ ...filters, ...patch });
+  const hasFilters =
+    filters.operacion || filters.tipo || filters.dormitorios || filters.precioMin || filters.precioMax;
+
+  const pillStyle = (active: boolean): React.CSSProperties => ({
+    padding: "4px 14px",
+    fontSize: 11,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    border: `1px solid ${active ? ACCENT : "#ddd"}`,
+    background: active ? ACCENT : "transparent",
+    color: active ? "#fff" : "#555",
+    borderRadius: 99,
+    cursor: "pointer",
+    whiteSpace: "nowrap" as const,
+    transition: "all .15s",
+    flexShrink: 0,
+  });
+
+  const selectStyle = (active: boolean): React.CSSProperties => ({
+    fontSize: 12,
+    border: `1px solid ${active ? ACCENT : "#ddd"}`,
+    padding: "5px 10px",
+    background: active ? "#e8f0fe" : "transparent",
+    color: active ? ACCENT : "#555",
+    borderRadius: 4,
+    outline: "none",
+    cursor: "pointer",
+    flexShrink: 0,
+    transition: "all .15s",
+  });
+
+  const numInputStyle: React.CSSProperties = {
+    fontSize: 12,
+    border: "1px solid #ddd",
+    padding: "5px 8px",
+    width: 100,
+    borderRadius: 4,
+    outline: "none",
+    background: "transparent",
+    color: "#333",
+    flexShrink: 0,
+  };
+
+  return (
+    <div
+      style={{
+        background: "#fff",
+        borderBottom: "1px solid #eee",
+        padding: "0 20px",
+        height: 52,
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        overflowX: "auto",
+        flexShrink: 0,
+        scrollbarWidth: "none",
+      }}
+    >
+      {/* Venta / Alquiler */}
+      {(["venta", "alquiler"] as const).map((op) => (
+        <button
+          key={op}
+          onClick={() => update({ operacion: filters.operacion === op ? undefined : op })}
+          style={pillStyle(filters.operacion === op)}
+        >
+          {op}
+        </button>
+      ))}
+
+      <div style={{ width: 1, height: 20, background: "#eee", flexShrink: 0 }} />
+
+      {/* Tipo */}
+      <select
+        value={filters.tipo || ""}
+        onChange={(e) => update({ tipo: e.target.value || undefined })}
+        style={selectStyle(!!filters.tipo)}
+      >
+        <option value="">Tipo</option>
+        {(options?.tipos || []).map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+
+      {/* Dormitorios */}
+      <select
+        value={filters.dormitorios || ""}
+        onChange={(e) =>
+          update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })
+        }
+        style={selectStyle(!!filters.dormitorios)}
+      >
+        <option value="">Dorm.</option>
+        {[1, 2, 3, 4, 5].map((n) => (
+          <option key={n} value={n}>{n}+</option>
+        ))}
+      </select>
+
+      <div style={{ width: 1, height: 20, background: "#eee", flexShrink: 0 }} />
+
+      {/* Price range */}
+      <input
+        type="number"
+        placeholder="Precio desde"
+        value={filters.precioMin || ""}
+        onChange={(e) =>
+          update({ precioMin: e.target.value ? Number(e.target.value) : undefined })
+        }
+        style={numInputStyle}
+      />
+      <span style={{ color: "#ccc", fontSize: 12, flexShrink: 0 }}>–</span>
+      <input
+        type="number"
+        placeholder="Precio hasta"
+        value={filters.precioMax || ""}
+        onChange={(e) =>
+          update({ precioMax: e.target.value ? Number(e.target.value) : undefined })
+        }
+        style={numInputStyle}
+      />
+
+      {/* Clear */}
+      {hasFilters && (
+        <button
+          onClick={() => onChange({ sort: "recientes" })}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            fontSize: 11,
+            color: "#999",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
+          <X style={{ width: 12, height: 12 }} /> Limpiar
+        </button>
+      )}
+
+      {/* Count */}
+      <span
+        style={{
+          marginLeft: "auto",
+          fontSize: 11,
+          color: "#aaa",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}
+      >
+        {total} prop.
+      </span>
+    </div>
+  );
+};
+
 // ─── Map overlay button style ──────────────────────────────────────────────────
 const mapBtnStyle: React.CSSProperties = {
   width: 36,
@@ -422,7 +592,7 @@ const Mapa = () => {
   const [mobileView, setMobileView] = useState<"map" | "list">("map");
   const [showFilters, setShowFilters] = useState(false);
   const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
-  const [filterByBounds, setFilterByBounds] = useState(false);
+  const [filterByBounds, setFilterByBounds] = useState(true);
   const [fitBoundsTrigger, setFitBoundsTrigger] = useState(0);
 
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
@@ -540,14 +710,9 @@ const Mapa = () => {
       {/* Navigation */}
       <Navigation />
 
-      {/* Filter bar — desktop only */}
+      {/* Filter bar — desktop only (compact single row) */}
       <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT }}>
-        <PropertyFiltersBar
-          filters={filters}
-          onChange={setFilters}
-          total={markers.length}
-          showMapLink={false}
-        />
+        <MapFiltersBar filters={filters} onChange={setFilters} total={markers.length} />
       </div>
 
       {/* Main content */}

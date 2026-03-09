@@ -147,9 +147,6 @@ const ValuationTool = () => {
   const [ambientes, setAmbientes] = useState("");
   const [estado, setEstado] = useState("");
   const [cochera, setCochera] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [direction, setDirection] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -165,38 +162,24 @@ const ValuationTool = () => {
     return Object.keys(e).length === 0;
   }, [zona, superficie]);
 
-  const validateStep3 = useCallback(() => {
-    const e: Record<string, string> = {};
-    if (!nombre.trim()) e.nombre = "Ingresá tu nombre";
-    const digits = whatsapp.replace(/\D/g, "");
-    if (digits.length < 8) e.whatsapp = "Ingresá un número válido (mín. 8 dígitos)";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }, [nombre, whatsapp]);
-
-  const handleStep2Next = () => {
-    if (validateStep2()) handleNext();
-  };
-
-  const buildMessage = () => {
-    const parts = [
-      `Hola Analía! Solicito tasación gratuita:`,
-      `• Tipo: ${selectedType}`,
-      `• Zona: ${zona}`,
-      direccion && `• Dirección: ${direccion}`,
-      `• Superficie: ${superficie} m²`,
-      ambientes && `• Ambientes: ${ambientes}`,
-      estado && `• Estado: ${estado}`,
-      `• Cochera: ${cochera ? "Sí" : "No"}`,
-      `• Nombre: ${nombre}`,
-      `• WhatsApp: ${whatsapp}`,
-      email && `• Email: ${email}`,
-    ].filter(Boolean);
-    return parts.join("\n");
-  };
+  const buildMessage = useCallback(() => {
+    const lines = [
+      `Hola Analía! 👋 Quiero tasar mi *${selectedType}*.`,
+      ``,
+      `📍 Zona: ${zona}`,
+      direccion ? `🗺️ Dirección: ${direccion}` : null,
+      `📐 Superficie: ${superficie} m²`,
+      ambientes ? `🚪 Ambientes: ${ambientes}` : null,
+      estado ? `✨ Estado: ${estado}` : null,
+      `🚗 Cochera: ${cochera ? "Sí" : "No"}`,
+      ``,
+      `¿Me podés hacer una tasación gratuita? ¡Muchas gracias!`,
+    ].filter((l) => l !== null);
+    return lines.join("\n");
+  }, [selectedType, zona, direccion, superficie, ambientes, estado, cochera]);
 
   const handleSendWhatsApp = () => {
-    if (!validateStep3()) return;
+    if (!validateStep2()) return;
     const url = whatsappLink(buildMessage());
     window.open(url, "_blank");
     setSubmitted(true);
@@ -211,15 +194,11 @@ const ValuationTool = () => {
     setAmbientes("");
     setEstado("");
     setCochera(false);
-    setNombre("");
-    setWhatsapp("");
-    setEmail("");
     setSubmitted(false);
     setErrors({});
   };
 
-  const progress = step === 1 ? 33 : step === 2 ? 66 : 100;
-  const step3Valid = nombre.trim().length > 0 && whatsapp.replace(/\D/g, "").length >= 8;
+  const progress = step === 1 ? 50 : 100;
 
   const slideVariants = {
     enter: (d: number) => ({ x: d > 0 ? 50 : -50, opacity: 0 }),
@@ -270,7 +249,7 @@ const ValuationTool = () => {
 
             {/* Step dots */}
             <div className="flex items-center justify-center gap-3 pt-6 pb-2">
-              {[1, 2, 3].map((s) => (
+              {[1, 2].map((s) => (
                 <div
                   key={s}
                   className="w-2 h-2 rounded-full transition-all duration-300"
@@ -353,7 +332,7 @@ const ValuationTool = () => {
                         <p className="font-body text-primary mb-6" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
                           Ubicación y características
                         </p>
-                        <div className="space-y-7 mb-auto">
+                        <div className="space-y-7">
                           <FloatingField
                             label="Zona / Barrio"
                             placeholder="Ej: Playa Grande, Centro..."
@@ -380,35 +359,9 @@ const ValuationTool = () => {
                           <PillSelector label="Estado" options={estadoOptions} value={estado} onChange={setEstado} />
                           <PillToggle value={cochera} onChange={setCochera} />
                         </div>
-                        <div className="flex items-center justify-between mt-8">
-                          <button
-                            type="button"
-                            onClick={handleBack}
-                            className="font-body text-sm text-text-muted hover:text-primary transition-colors"
-                          >
-                            ← Volver
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleStep2Next}
-                            className="font-body text-sm uppercase tracking-wider py-3 px-8"
-                            style={{ backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
-                          >
-                            Siguiente →
-                          </button>
-                        </div>
-                      </>
-                    )}
 
-                    {/* ── STEP 3: Contact + summary ── */}
-                    {step === 3 && (
-                      <>
-                        <p className="font-body text-primary mb-4" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-                          Tus datos de contacto
-                        </p>
-
-                        {/* Enriched summary */}
-                        <div className="mb-6 p-4" style={{ background: "hsl(var(--bg-surface))", border: "1px solid hsl(var(--border))" }}>
+                        {/* Summary preview */}
+                        <div className="mt-6 p-4" style={{ background: "hsl(var(--bg-surface))", border: "1px solid hsl(var(--border))" }}>
                           <p className="font-body text-xs text-text-muted mb-3">Resumen de tu propiedad:</p>
                           <div className="flex flex-wrap gap-2">
                             {selectedType && <SummaryChip icon={Home} text={selectedType} />}
@@ -420,29 +373,7 @@ const ValuationTool = () => {
                           </div>
                         </div>
 
-                        <div className="space-y-7 mb-auto">
-                          <FloatingField
-                            label="Nombre completo"
-                            value={nombre}
-                            onChange={(v) => { setNombre(v); setErrors((e) => ({ ...e, nombre: "" })); }}
-                            error={errors.nombre}
-                          />
-                          <div className="relative">
-                            <span className="absolute left-0 top-2 font-body text-sm text-text-muted">🇦🇷 +54</span>
-                            <div className="pl-16">
-                              <FloatingField
-                                label="WhatsApp"
-                                type="tel"
-                                value={whatsapp}
-                                onChange={(v) => { setWhatsapp(v); setErrors((e) => ({ ...e, whatsapp: "" })); }}
-                                error={errors.whatsapp}
-                              />
-                            </div>
-                          </div>
-                          <FloatingField label="Email" type="email" value={email} onChange={setEmail} optional />
-                        </div>
-
-                        <div className="flex items-center justify-between mt-8">
+                        <div className="flex items-center justify-between mt-6">
                           <button
                             type="button"
                             onClick={handleBack}
@@ -450,22 +381,16 @@ const ValuationTool = () => {
                           >
                             ← Volver
                           </button>
-
-                          {/* WhatsApp send button */}
                           <motion.button
                             type="button"
                             onClick={handleSendWhatsApp}
-                            className="font-body text-sm uppercase tracking-wider py-3 px-6 flex items-center gap-2 transition-all"
-                            style={{
-                              backgroundColor: step3Valid ? "hsl(var(--whatsapp))" : "hsl(var(--muted))",
-                              color: step3Valid ? "#fff" : "hsl(var(--text-muted))",
-                              cursor: step3Valid ? "pointer" : "default",
-                            }}
-                            animate={step3Valid ? { scale: [1, 1.02, 1] } : {}}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="font-body text-sm uppercase tracking-wider py-3 px-6 flex items-center gap-2"
+                            style={{ backgroundColor: "hsl(var(--whatsapp))", color: "#fff", cursor: "pointer" }}
+                            animate={{ scale: [1, 1.02, 1] }}
+                            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                           >
                             <MessageCircle className="w-4 h-4" />
-                            Enviar por WhatsApp
+                            Solicitar tasación
                           </motion.button>
                         </div>
                       </>
@@ -526,7 +451,7 @@ const ValuationTool = () => {
           </motion.div>
 
           <p className="text-center mt-6 font-body text-text-muted" style={{ fontSize: 11 }}>
-            🔒 Tus datos son confidenciales. Solo los usa Analía para contactarte.
+            Sin formularios. Tu consulta va directo al WhatsApp de Analía.
           </p>
         </div>
       </section>
