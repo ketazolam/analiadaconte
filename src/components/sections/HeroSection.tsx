@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
+import HeroSearchBar from "../HeroSearchBar";
 import GoogleLogo from "@/components/GoogleLogo";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
