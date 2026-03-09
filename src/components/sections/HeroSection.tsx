@@ -20,14 +20,14 @@ const HeroSection = () => {
   const bgTextY = useTransform(scrollYProgress, [0, 1], disableParallax ? ["0%", "0%"] : ["0%", "20%"]);
 
   return (
-    <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center">
+    <section ref={ref} className="relative h-screen overflow-hidden flex items-start pt-[28vh] md:items-center md:pt-0 justify-center">
       {/* Background photo */}
       <motion.div
         className="absolute inset-0"
         style={{
           y: bgY,
           backgroundImage: `
-            linear-gradient(to bottom, rgba(12,11,15,0.55) 0%, rgba(12,11,15,0.65) 50%, rgba(12,11,15,0.88) 100%),
+            linear-gradient(to bottom, rgba(12,11,15,0.3) 0%, rgba(12,11,15,0.7) 50%, rgba(12,11,15,0.92) 100%),
             url('/images/mdp-aerial-hero.jpg')
           `,
           backgroundSize: "cover",
