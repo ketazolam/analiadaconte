@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard, Bath } from "lucide-react";
+import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters as Filters } from "@/lib/types";
@@ -34,9 +34,9 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
   }, [searchInput]);
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.banos || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
+  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
-  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.banos, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
+  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
 
   const selectClass =
     "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))] w-auto shrink-0";
@@ -99,12 +99,6 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
     </select>
   );
 
-  const banosSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.banos || ""} onChange={(e) => update({ banos: e.target.value ? Number(e.target.value) : undefined })}>
-      <option value="">Baños</option>
-      {[1, 2, 3, 4].map((n) => (<option key={n} value={n}>{n}+</option>))}
-    </select>
-  );
 
   const amenityToggle = (
     field: "cochera" | "aptoCreditico" | "aceptaMascotas",
@@ -193,7 +187,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           {tipoSelect()}
           {barrioSelect()}
           {dormSelect()}
-          {banosSelect()}
+          
           {sortSelect()}
 
           {hasFilters && (
@@ -249,7 +243,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
                 {tipoSelect("w-full")}
                 {barrioSelect("w-full")}
                 {dormSelect("w-full")}
-                {banosSelect("w-full")}
+                
 
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>

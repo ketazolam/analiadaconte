@@ -36,7 +36,6 @@ export interface PropertyFilters {
   operacion?: string;
   tipo?: string;
   dormitorios?: number;
-  banos?: number;
   precioMin?: number;
   precioMax?: number;
   barrio?: string;

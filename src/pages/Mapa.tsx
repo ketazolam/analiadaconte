@@ -72,7 +72,7 @@ function createPropertyIcon(tipo: string | null, selected = false): L.Icon {
 }
 
 // ─── Cluster Icon ─────────────────────────────────────────────────────────────
-const createClusterIcon = (cluster: L.MarkerCluster) => {
+const createClusterIcon = (cluster: any) => {
   const count = cluster.getChildCount();
   const size = count >= 100 ? 40 : count >= 20 ? 35 : 30;
   return L.divIcon({
