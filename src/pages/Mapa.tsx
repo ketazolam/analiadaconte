@@ -191,7 +191,7 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
   return (
     <div
       onClick={onSelect}
-      className="map-sidebar-card flex overflow-hidden cursor-pointer transition-all duration-200"
+      className="map-sidebar-card flex overflow-hidden cursor-pointer transition-colors duration-150"
       style={{
         borderBottom: "1px solid #f0f0f0",
         background: selected ? "#f0f6ff" : "#fff",
@@ -715,7 +715,6 @@ const Mapa = () => {
           color: #333 !important;
           font-size: 16px !important;
         }
-        .leaflet-marker-icon:hover { transform: scale(1.08) !important; transition: transform .15s; }
         .map-sidebar-card:hover { background: #f7f9ff !important; }
         .map-overlay-btn:hover { background: #f5f5f5 !important; }
       `}</style>

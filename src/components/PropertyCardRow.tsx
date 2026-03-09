@@ -51,7 +51,7 @@ const PropertyCardRow = forwardRef<HTMLDivElement, Props>(({ property, className
   return (
     <div
       ref={ref}
-      className={`group relative flex overflow-hidden transition-all duration-300 hover:scale-[1.005] ${className}`}
+      className={`group relative flex overflow-hidden transition-[box-shadow,border-color,opacity] duration-200 ${className}`}
       style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
     >
       <Link to={`/propiedad/${slug}`} className="flex w-full">

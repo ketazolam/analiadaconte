@@ -73,7 +73,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
     return (
       <div
         ref={ref}
-        className={`group relative overflow-hidden transition-all duration-300 hover:scale-[1.01] ${className}`}
+        className={`group relative overflow-hidden transition-[box-shadow,border-color,opacity] duration-200 ${className}`}
         style={{
           background: "hsl(var(--card))",
           border: "1px solid hsl(var(--border))",
