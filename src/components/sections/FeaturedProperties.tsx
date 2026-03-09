@@ -11,6 +11,7 @@ const FeaturedProperties = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const { data: properties, isLoading } = useFeaturedProperties(6);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   return (
     <section id="propiedades" ref={ref} className="section-lazy section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
