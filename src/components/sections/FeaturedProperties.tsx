@@ -5,11 +5,13 @@ import { Link } from "react-router-dom";
 import { EASE } from "@/lib/constants";
 import { useFeaturedProperties } from "@/hooks/useProperties";
 import PropertyCard from "@/components/PropertyCard";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const FeaturedProperties = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const { data: properties, isLoading } = useFeaturedProperties(6);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   return (
     <section id="propiedades" ref={ref} className="section-lazy section-padding overflow-hidden noise-overlay" style={{ backgroundColor: "#0C0B0F", contain: "content" }}>
@@ -63,7 +65,7 @@ const FeaturedProperties = () => {
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
               >
-                <PropertyCard property={prop} />
+                <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
               </motion.div>
             ))}
           </div>

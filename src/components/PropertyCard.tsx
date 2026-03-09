@@ -1,12 +1,14 @@
 import { forwardRef, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Bed, Bath, Maximize, Car, ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { MapPin, Bed, Bath, Maximize, Car, ChevronLeft, ChevronRight, ImageOff, Heart } from "lucide-react";
 import type { Propiedad } from "@/lib/types";
 import { sanitizeBarrio } from "@/lib/utils";
 
 interface PropertyCardProps {
   property: Propiedad;
   className?: string;
+  isFavorite?: boolean;
+  onToggleFavorite?: (id: number) => void;
 }
 
 function getAllImages(fotos: unknown): string[] {
@@ -22,7 +24,7 @@ function getAllImages(fotos: unknown): string[] {
 }
 
 const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
-  ({ property, className = "" }, ref) => {
+  ({ property, className = "", isFavorite = false, onToggleFavorite }, ref) => {
     const [imgError, setImgError] = useState(false);
     const [imgLoaded, setImgLoaded] = useState(false);
     const [currentImg, setCurrentImg] = useState(0);
@@ -68,6 +70,12 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
       setImgLoaded(false);
       setImgError(false);
       setCurrentImg((c) => (c + 1) % images.length);
+    };
+
+    const handleFavorite = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onToggleFavorite?.(property.id);
     };
 
     return (
@@ -120,6 +128,23 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
                   {currentImg + 1}/{images.length}
                 </span>
               </>
+            )}
+
+            {/* Favorite button */}
+            {onToggleFavorite && (
+              <button
+                onClick={handleFavorite}
+                className="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
+                style={{
+                  backgroundColor: isFavorite ? "hsl(var(--primary))" : "rgba(0,0,0,0.4)",
+                  backdropFilter: "blur(8px)",
+                }}
+                aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+              >
+                <Heart
+                  className={`w-4 h-4 transition-colors ${isFavorite ? "text-primary-foreground fill-primary-foreground" : "text-white"}`}
+                />
+              </button>
             )}
 
             {/* Badge */}

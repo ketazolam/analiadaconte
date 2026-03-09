@@ -11,6 +11,7 @@ import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
 import { useProperties } from "@/hooks/useProperties";
+import { useFavorites } from "@/hooks/useFavorites";
 import type { PropertyFilters } from "@/lib/types";
 import type { Propiedad } from "@/lib/types";
 import { EASE } from "@/lib/constants";
@@ -54,6 +55,7 @@ const Propiedades = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [filters, setFilters] = useState<PropertyFilters>(() => filtersFromParams(searchParams));
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
@@ -166,7 +168,7 @@ const Propiedades = () => {
                     {viewMode === "list" ? (
                       <PropertyCardRow property={prop} />
                     ) : (
-                      <PropertyCard property={prop} />
+                      <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
                     )}
                   </motion.div>
                 );

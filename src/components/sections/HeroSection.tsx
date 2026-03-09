@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import ParticleField from "../ParticleField";
 import MagneticButton from "../MagneticButton";
+import HeroSearchBar from "../HeroSearchBar";
 import GoogleLogo from "@/components/GoogleLogo";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -91,6 +92,16 @@ const HeroSection = () => {
         >
           <MagneticButton variant="filled" onClick={() => navigate("/propiedades")}>Quiero comprar</MagneticButton>
           <MagneticButton variant="outline" onClick={() => navigate("/tasaciones")}>Quiero vender</MagneticButton>
+        </motion.div>
+
+        {/* Quick Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: EASE, delay: 1.1 }}
+          className="hidden sm:block"
+        >
+          <HeroSearchBar />
         </motion.div>
 
         {/* Google rating badge */}
