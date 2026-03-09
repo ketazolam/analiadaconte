@@ -36,11 +36,15 @@ export interface PropertyFilters {
   operacion?: string;
   tipo?: string;
   dormitorios?: number;
+  banos?: number;
   precioMin?: number;
   precioMax?: number;
   barrio?: string;
   superficieMin?: number;
   superficieMax?: number;
+  cochera?: boolean;
+  aptoCreditico?: boolean;
+  aceptaMascotas?: boolean;
   destacada?: boolean;
   sort?: "precio_asc" | "precio_desc" | "recientes";
   searchText?: string;

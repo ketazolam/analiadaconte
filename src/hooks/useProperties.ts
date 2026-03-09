@@ -4,6 +4,20 @@ import type { Propiedad, PropertyFilters } from "@/lib/types";
 
 const PAGE_SIZE = 21;
 
+function applyCommonFilters(query: any, filters: Omit<PropertyFilters, "sort" | "searchText" | "superficieMin" | "superficieMax" | "destacada">) {
+  if (filters.operacion) query = query.eq("operacion", filters.operacion);
+  if (filters.tipo) query = query.eq("tipo", filters.tipo);
+  if (filters.barrio) query = query.eq("barrio", filters.barrio);
+  if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
+  if (filters.banos) query = query.gte("banos", filters.banos);
+  if (filters.precioMin) query = query.gte("precio", filters.precioMin);
+  if (filters.precioMax) query = query.lte("precio", filters.precioMax);
+  if (filters.cochera) query = query.eq("cochera", true);
+  if (filters.aptoCreditico) query = query.eq("apto_credito", true);
+  if (filters.aceptaMascotas) query = query.eq("acepta_mascotas", true);
+  return query;
+}
+
 export function useProperties(filters: PropertyFilters, page = 0) {
   return useQuery({
     queryKey: ["propiedades", filters, page],
@@ -12,19 +26,16 @@ export function useProperties(filters: PropertyFilters, page = 0) {
         .from("propiedades")
         .select("*", { count: "exact" });
 
-      if (filters.operacion) query = query.eq("operacion", filters.operacion);
-      if (filters.tipo) query = query.eq("tipo", filters.tipo);
-      if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
-      if (filters.precioMin) query = query.gte("precio", filters.precioMin);
-      if (filters.precioMax) query = query.lte("precio", filters.precioMax);
+      query = applyCommonFilters(query, filters);
+
       if (filters.superficieMin) query = query.gte("superficie_total", filters.superficieMin);
       if (filters.superficieMax) query = query.lte("superficie_total", filters.superficieMax);
       if (filters.destacada) query = query.eq("destacada", true);
 
-      // Text search across titulo and direccion
+      // Text search across titulo, direccion and barrio
       if (filters.searchText) {
         const term = `%${filters.searchText}%`;
-        query = query.or(`titulo.ilike.${term},direccion.ilike.${term}`);
+        query = query.or(`titulo.ilike.${term},direccion.ilike.${term},barrio.ilike.${term}`);
       }
 
       // Sort
@@ -40,7 +51,6 @@ export function useProperties(filters: PropertyFilters, page = 0) {
       query = query.range(from, from + PAGE_SIZE - 1);
 
       const { data, error, count } = await query;
-
       if (error) throw error;
 
       return {
@@ -69,21 +79,17 @@ export function useFeaturedProperties(limit = 6) {
   });
 }
 
-export function useAllMapProperties(filters: Omit<PropertyFilters, 'sort'>) {
+export function useAllMapProperties(filters: Omit<PropertyFilters, "sort">) {
   return useQuery({
     queryKey: ["propiedades-mapa", filters],
     queryFn: async () => {
       let query = supabase
         .from("propiedades")
-        .select("id,pixel_slug,titulo,barrio,ciudad,precio,precio_texto,moneda,fotos,lat,lng,operacion,tipo,superficie_total,dormitorios")
+        .select("id,pixel_slug,titulo,barrio,ciudad,precio,precio_texto,moneda,fotos,lat,lng,operacion,tipo,superficie_total,dormitorios,banos,cochera,apto_credito,acepta_mascotas")
         .not("lat", "is", null)
         .not("lng", "is", null);
 
-      if (filters.operacion) query = query.eq("operacion", filters.operacion);
-      if (filters.tipo) query = query.eq("tipo", filters.tipo);
-      if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
-      if (filters.precioMin) query = query.gte("precio", filters.precioMin);
-      if (filters.precioMax) query = query.lte("precio", filters.precioMax);
+      query = applyCommonFilters(query, filters);
 
       // Fetch up to 1000 (Supabase default max)
       query = query.limit(1000);
@@ -100,13 +106,15 @@ export function usePropertyFilterOptions() {
   return useQuery({
     queryKey: ["property-filter-options"],
     queryFn: async () => {
-      const [tipos] = await Promise.all([
+      const [tipos, barrios] = await Promise.all([
         supabase.from("propiedades").select("tipo").not("tipo", "is", null),
+        supabase.from("propiedades").select("barrio").not("barrio", "is", null),
       ]);
 
-      const uniqueTipos = [...new Set((tipos.data || []).map((r: any) => r.tipo))].filter(Boolean).sort();
+      const uniqueTipos = [...new Set((tipos.data || []).map((r: any) => r.tipo))].filter(Boolean).sort() as string[];
+      const uniqueBarrios = [...new Set((barrios.data || []).map((r: any) => r.barrio))].filter(Boolean).sort() as string[];
 
-      return { tipos: uniqueTipos as string[] };
+      return { tipos: uniqueTipos, barrios: uniqueBarrios };
     },
     staleTime: 5 * 60 * 1000,
   });

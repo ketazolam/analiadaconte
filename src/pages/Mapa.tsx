@@ -400,7 +400,8 @@ const MapFiltersBar = ({
   const { data: options } = usePropertyFilterOptions();
   const update = (patch: Partial<PropertyFilters>) => onChange({ ...filters, ...patch });
   const hasFilters =
-    filters.operacion || filters.tipo || filters.dormitorios || filters.precioMin || filters.precioMax;
+    filters.operacion || filters.tipo || filters.barrio || filters.dormitorios ||
+    filters.precioMin || filters.precioMax || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
   const pillStyle = (active: boolean): React.CSSProperties => ({
     padding: "4px 14px",
@@ -483,6 +484,18 @@ const MapFiltersBar = ({
         ))}
       </select>
 
+      {/* Barrio */}
+      <select
+        value={filters.barrio || ""}
+        onChange={(e) => update({ barrio: e.target.value || undefined })}
+        style={selectStyle(!!filters.barrio)}
+      >
+        <option value="">Barrio</option>
+        {(options?.barrios || []).map((b) => (
+          <option key={b} value={b}>{b}</option>
+        ))}
+      </select>
+
       {/* Dormitorios */}
       <select
         value={filters.dormitorios || ""}
@@ -496,6 +509,20 @@ const MapFiltersBar = ({
           <option key={n} value={n}>{n}+</option>
         ))}
       </select>
+
+      {/* Amenity toggles */}
+      {(["cochera", "aptoCreditico", "aceptaMascotas"] as const).map((field) => {
+        const labels: Record<string, string> = { cochera: "Cochera", aptoCreditico: "Crédito", aceptaMascotas: "Mascotas" };
+        return (
+          <button
+            key={field}
+            onClick={() => update({ [field]: filters[field] ? undefined : true })}
+            style={pillStyle(!!filters[field])}
+          >
+            {labels[field]}
+          </button>
+        );
+      })}
 
       <div style={{ width: 1, height: 20, background: "#eee", flexShrink: 0 }} />
 

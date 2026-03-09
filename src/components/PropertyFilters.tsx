@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star } from "lucide-react";
+import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard, Bath } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters as Filters } from "@/lib/types";
@@ -34,9 +34,9 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
   }, [searchInput]);
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText;
+  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.banos || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
-  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada].filter(Boolean).length;
+  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.banos, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
 
   const selectClass =
     "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))] w-auto shrink-0";
@@ -90,6 +90,38 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
       <option value="">Dormitorios</option>
       {[1, 2, 3, 4, 5].map((n) => (<option key={n} value={n}>{n}+</option>))}
     </select>
+  );
+
+  const barrioSelect = (className = "") => (
+    <select className={`${selectClass} ${className}`} value={filters.barrio || ""} onChange={(e) => update({ barrio: e.target.value || undefined })}>
+      <option value="">Ubicación</option>
+      {(options?.barrios || []).map((b) => (<option key={b} value={b}>{b}</option>))}
+    </select>
+  );
+
+  const banosSelect = (className = "") => (
+    <select className={`${selectClass} ${className}`} value={filters.banos || ""} onChange={(e) => update({ banos: e.target.value ? Number(e.target.value) : undefined })}>
+      <option value="">Baños</option>
+      {[1, 2, 3, 4].map((n) => (<option key={n} value={n}>{n}+</option>))}
+    </select>
+  );
+
+  const amenityToggle = (
+    field: "cochera" | "aptoCreditico" | "aceptaMascotas",
+    label: string,
+    Icon: React.ElementType,
+    className = ""
+  ) => (
+    <button
+      onClick={() => update({ [field]: filters[field] ? undefined : true })}
+      className={`flex items-center gap-1.5 font-body text-xs uppercase tracking-wider px-3 py-2.5 transition-colors border ${
+        filters[field]
+          ? "bg-primary text-primary-foreground border-primary"
+          : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
+      } ${className}`}
+    >
+      <Icon className="w-3 h-3" /> {label}
+    </button>
   );
 
   const sortSelect = (className = "") => (
@@ -158,9 +190,10 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           </div>
 
           {operacionPills()}
-          {destacadaToggle()}
           {tipoSelect()}
+          {barrioSelect()}
           {dormSelect()}
+          {banosSelect()}
           {sortSelect()}
 
           {hasFilters && (
@@ -170,12 +203,18 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           )}
         </div>
 
-        {/* Desktop row 2: advanced filters */}
+        {/* Desktop row 2: ranges + amenities */}
         <div className="hidden md:flex flex-wrap items-center gap-3 mt-3">
           <span className="font-body text-[10px] uppercase tracking-wider text-text-muted">Precio</span>
           {priceRange()}
           <span className="font-body text-[10px] uppercase tracking-wider text-text-muted ml-2">Superficie</span>
           {surfaceRange()}
+          <div className="ml-2 flex gap-1.5">
+            {amenityToggle("cochera", "Cochera", Car)}
+            {amenityToggle("aptoCreditico", "Apto crédito", CreditCard)}
+            {amenityToggle("aceptaMascotas", "Mascotas", PawPrint)}
+            {destacadaToggle()}
+          </div>
         </div>
 
         {/* Mobile: search + drawer */}
@@ -207,9 +246,10 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
                 <p className="font-display text-lg text-foreground">Filtros</p>
 
                 {operacionPills("flex-1")}
-                {destacadaToggle("w-full justify-center")}
                 {tipoSelect("w-full")}
+                {barrioSelect("w-full")}
                 {dormSelect("w-full")}
+                {banosSelect("w-full")}
 
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>
@@ -218,6 +258,13 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Superficie (m²)</p>
                   {surfaceRange("w-full")}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {amenityToggle("cochera", "Cochera", Car)}
+                  {amenityToggle("aptoCreditico", "Apto crédito", CreditCard)}
+                  {amenityToggle("aceptaMascotas", "Mascotas", PawPrint)}
+                  {destacadaToggle()}
                 </div>
 
                 {sortSelect("w-full")}
