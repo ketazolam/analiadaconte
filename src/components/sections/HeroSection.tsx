@@ -55,7 +55,7 @@ const HeroSection = () => {
         style={{ y: textY, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}
       >
         <motion.p
-          className="label-eyebrow text-primary mb-8" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+          className="label-eyebrow text-primary mb-4 md:mb-8 hidden sm:block" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
