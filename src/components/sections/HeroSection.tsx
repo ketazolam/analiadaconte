@@ -121,7 +121,7 @@ const HeroSection = () => {
       <div className="absolute bottom-0 left-0 right-0">
         <div className="h-px" style={{ background: "rgba(196,154,60,0.3)" }} />
         <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
@@ -133,7 +133,7 @@ const HeroSection = () => {
               animation: "scroll-pulse 2s ease-in-out infinite",
             }}
           />
-          <span className="label-accent text-text-muted" style={{ fontSize: 9 }}>
+          <span className="label-accent text-text-muted" style={{ fontSize: 10 }}>
             Scroll
           </span>
         </motion.div>
