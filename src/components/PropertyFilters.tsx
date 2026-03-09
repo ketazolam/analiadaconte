@@ -187,7 +187,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           {tipoSelect()}
           {barrioSelect()}
           {dormSelect()}
-          {banosSelect()}
+          
           {sortSelect()}
 
           {hasFilters && (
