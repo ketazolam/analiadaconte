@@ -5,7 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
-  ImageOff, MapPin, Bed, Maximize2, List, Map,
+  ImageOff, MapPin, Bed, Maximize2, List, Map as MapIcon,
   SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff,
 } from "lucide-react";
 import CustomCursor from "@/components/CustomCursor";
@@ -608,7 +608,7 @@ const Mapa = () => {
                 className="md:hidden flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium"
                 style={{ background: ACCENT, color: "#fff" }}
               >
-                <Map style={{ width: 12, height: 12 }} /> Mapa
+                <MapIcon style={{ width: 12, height: 12 }} /> Mapa
               </button>
             </div>
           </div>
