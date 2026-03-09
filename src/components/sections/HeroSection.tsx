@@ -112,7 +112,7 @@ const HeroSection = () => {
             ))}
           </div>
           <span className="font-body text-[12px] text-foreground/70 underline underline-offset-2 decoration-foreground/30" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.7)" }}>
-            4.9 en Google
+            4.5 en Google
           </span>
         </motion.a>
       </motion.div>
