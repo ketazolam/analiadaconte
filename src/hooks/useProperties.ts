@@ -9,7 +9,6 @@ function applyCommonFilters(query: any, filters: Omit<PropertyFilters, "sort" | 
   if (filters.tipo) query = query.eq("tipo", filters.tipo);
   if (filters.barrio) query = query.eq("barrio", filters.barrio);
   if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
-  if (filters.banos) query = query.gte("banos", filters.banos);
   if (filters.precioMin) query = query.gte("precio", filters.precioMin);
   if (filters.precioMax) query = query.lte("precio", filters.precioMax);
   if (filters.cochera) query = query.eq("cochera", true);

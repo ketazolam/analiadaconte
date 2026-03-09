@@ -99,12 +99,6 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
     </select>
   );
 
-  const banosSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.banos || ""} onChange={(e) => update({ banos: e.target.value ? Number(e.target.value) : undefined })}>
-      <option value="">Baños</option>
-      {[1, 2, 3, 4].map((n) => (<option key={n} value={n}>{n}+</option>))}
-    </select>
-  );
 
   const amenityToggle = (
     field: "cochera" | "aptoCreditico" | "aceptaMascotas",
