@@ -1,81 +1,41 @@
 
+He analizado exhaustivamente la página principal de **Vanzini Propiedades** y la he comparado con nuestra estructura actual. La web de Vanzini destaca por ser muy funcional, orientada a la conversión rápida y a la retención del usuario.
 
-# Visual & Legibility Audit — Home Page
+Nuestra web actual tiene un diseño visualmente más moderno e impactante (con el estilo editorial y oscuro), pero **podemos incorporar varias estrategias funcionales de Vanzini** para mejorar la conversión y la experiencia de usuario (UX).
 
-## Problem Analysis (from the screenshot)
+Aquí están las propuestas de mejora divididas por secciones y funcionalidades:
 
-The screenshot reveals the core issue clearly: **the hero text is fighting a losing battle against the busy aerial photo**. The ocean, buildings, and bright sky create visual noise that makes "Encontrá tu próxima propiedad" and especially the subtitle nearly invisible. The navigation links at the top also disappear against the bright blue sky.
+### 1. Buscador Rápido en el Hero Section (Impacto Alto)
+- **Vanzini:** Tienen un buscador directo en el centro de su foto principal (`Operación` | `Tipología` | `Dormitorios` | `Buscar`).
+- **Nuestra web:** Actualmente tenemos dos botones (`Quiero comprar` y `Quiero vender`). 
+- **Mejora propuesta:** Implementar una "Quick Search Bar" minimalista y elegante debajo del título en el `HeroSection`. Al darle a "Buscar", el usuario es redirigido a `/propiedades` con esos filtros ya aplicados. Esto acorta los pasos para que el usuario empiece a ver el catálogo.
 
-This isn't just the hero — there are legibility and visual hierarchy issues throughout the home.
+### 2. Ampliar las "Intenciones" de búsqueda (Más allá de Comprar/Vender)
+- **Vanzini:** Divide las intenciones claramente en 4 pilares: *Comprar, Vender, Inversiones y Alquileres*.
+- **Nuestra web:** Tenemos el `DualPathSection` enorme dividido en dos (Compradores y Vendedores).
+- **Mejora propuesta:** Si el catálogo lo permite, podríamos rediseñar esta sección (o agregar una nueva) para incluir **Alquileres** e **Inversiones (Desarrollos desde pozo)**. Las tarjetas tipo "Grid" (como tiene Vanzini) permiten al usuario identificar su necesidad de forma más ágil sin tener que hacer tanto scroll.
 
----
+### 3. Sección exclusiva de "Desarrollos / Oportunidades de Inversión"
+- **Vanzini:** Tienen un carrusel separado para "Desarrollos inmobiliarios", destacando proyectos nuevos o de pozo.
+- **Nuestra web:** Solo tenemos "Propiedades destacadas".
+- **Mejora propuesta:** Crear un carrusel específico en el Home llamado *"Oportunidades de Inversión"* o *"Desarrollos"*. Esto atrae a un perfil de cliente diferente (el inversor) y le da un status más corporativo a la inmobiliaria.
 
-## Issues & Fixes
+### 4. Sistema de Favoritos (Retención de usuarios)
+- **Vanzini:** Tienen un banner fijo (sticky) y notificaciones constantes invitando a "Crear una cuenta" para guardar propiedades.
+- **Nuestra web:** Actualmente no se pueden guardar propiedades.
+- **Mejora propuesta:** Implementar un sistema de **"Favoritos"** (icono de corazón en cada property card). Podemos hacerlo sin necesidad de que se registren inicialmente (guardándolo en el almacenamiento local del navegador) o integrar un sistema de inicio de sesión simple. Esto hace que el usuario vuelva a la web para ver sus propiedades guardadas.
 
-### 1. Hero — Weak Overlay Gradient (Critical)
-The current gradient is `rgba(12,11,15,0.3)` at top → `0.5` at center → `0.85` at bottom. The top half is nearly transparent, making the nav and eyebrow text invisible against the bright sky.
-
-**Fix**: Strengthen the gradient significantly — `0.55` at top, `0.65` at center, `0.88` at bottom. This darkens the sky/buildings enough for white text to pop while still showing the photo through.
-
-### 2. Hero — Background Position
-The photo is centered, showing mostly buildings and parking lots in the middle. The ocean/coastline (the emotional hook) is pushed to the top edge.
-
-**Fix**: Shift `backgroundPosition` to `center 30%` so the coastline is more prominent behind the text, and the less interesting parking area is cropped out at the bottom.
-
-### 3. Navigation — Invisible Against Bright Sky
-When not scrolled, the nav has `bg-transparent` — links vanish against the bright sky. Even the logo "AD" is hard to see.
-
-**Fix**: Add a subtle top-to-bottom gradient behind the nav (even when not scrolled): `linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, transparent 100%)` as a pseudo-element or inline style. This creates a natural vignette without looking like a bar.
-
-### 4. Hero — Subtitle Too Dim
-"25 años construyendo confianza en Mar del Plata" uses `text-text-secondary` which is `hsl(30, 3%, 52%)` — a mid-gray that's nearly invisible over a photo. 
-
-**Fix**: Bump to `text-foreground/70` or `rgba(242,239,232,0.7)` — still secondary but legible.
-
-### 5. Hero — "Quiero Vender" Outline Button Hard to See
-The outline variant uses `border border-primary text-primary` — a thin 1px gold border over a photo background barely registers visually.
-
-**Fix**: Increase border to `border-2` and add a subtle backdrop: `bg-white/5 backdrop-blur-sm` to give the outline button a frosted-glass base.
-
-### 6. Hero — Eyebrow Text Too Small
-`label-eyebrow` is 10px with 3px letter-spacing. At that size on a photo background, it's invisible.
-
-**Fix**: Bump to 12px and add a subtle text-shadow: `0 1px 8px rgba(0,0,0,0.5)`.
-
-### 7. Hero — Add Text Shadow to All Hero Text
-Every text element in the hero sits over a photo. Even with a stronger gradient, a subtle `text-shadow` on the h1 and subtitle dramatically improves legibility without changing the aesthetic.
-
-**Fix**: Add `textShadow: "0 2px 20px rgba(0,0,0,0.4)"` to the hero content wrapper.
-
-### 8. DualPath — Overlay Too Dark
-Both panels use `rgba(12,11,15,0.75)` overlay. The photos are almost invisible — defeats the purpose of having them.
-
-**Fix**: Reduce to `0.65` and add a gradient (darker at bottom where text sits, lighter at top where photo shows).
-
-### 9. Property Cards — "Consultar" Button Always Hidden
-The WhatsApp "Consultar" button only appears on hover (`opacity-0 group-hover:opacity-100`). On mobile there's no hover — the button is permanently invisible.
-
-**Fix**: On mobile, always show the button. Use `opacity-100 md:opacity-0 md:group-hover:opacity-100`.
-
-### 10. StatsBar — Numbers Need More Visual Weight
-The counters blend with the section. They need a stronger visual separation.
-
-**Fix**: Add a subtle `textShadow: "0 0 30px rgba(196,154,60,0.3)"` to the gold numbers for a glow effect that reinforces the premium feel.
-
-### 11. Section Backgrounds — Monotone Dark
-Every section alternates between `#0C0B0F` and `#111015` — the difference is nearly imperceptible. The page feels like one continuous dark block.
-
-**Fix**: Alternate more noticeably: keep `#0C0B0F` for primary sections, use `#151320` (slightly warmer/violet-tinted) for alternate sections. This creates visual rhythm without breaking the dark theme.
+### 5. Captación de Leads "Pasiva" (Newsletter / Alertas)
+- **Vanzini:** Capturan mails en el footer y en modales.
+- **Nuestra web:** Nuestra única vía de contacto es el botón de WhatsApp y la página de tasación.
+- **Mejora propuesta:** Agregar una sección limpia antes del Footer que diga *"Recibí oportunidades antes que nadie"*, con un simple campo de Email. Hay muchos usuarios que están en fase exploratoria y no quieren abrir un chat de WhatsApp todavía, pero sí dejarían su email.
 
 ---
 
-## Files to Modify
+### Resumen de Recomendaciones a Implementar:
+1. **Agregar la barra de búsqueda rápida** en el Hero.
+2. **Implementar el sistema de "Favoritos"** en las tarjetas de propiedades.
+3. **Añadir una sección de "Suscripción / Newsletter"** para captar emails.
+4. *(Opcional)* Modificar el DualPath para incluir "Inversiones/Pozo" y "Alquileres".
 
-1. **HeroSection.tsx** — stronger gradient, background position, text shadows, eyebrow size
-2. **Navigation.tsx** — add gradient overlay behind nav when not scrolled
-3. **MagneticButton.tsx** — outline variant gets `border-2` + frosted glass
-4. **DualPathSection.tsx** — lighter overlay with gradient
-5. **FeaturedProperties.tsx** — mobile-visible Consultar button
-6. **StatsBar.tsx** — gold glow on numbers
-7. **src/index.css** — alternate section background token, eyebrow size bump
-
+¿Por cuál de estas mejoras te gustaría que empecemos?
