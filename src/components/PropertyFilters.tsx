@@ -243,7 +243,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
                 {tipoSelect("w-full")}
                 {barrioSelect("w-full")}
                 {dormSelect("w-full")}
-                {banosSelect("w-full")}
+                
 
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>
