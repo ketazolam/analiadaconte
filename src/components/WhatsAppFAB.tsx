@@ -102,7 +102,10 @@ const WhatsAppFAB = () => {
   const currentMsg = TOOLTIP_MESSAGES[messageIndex];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3">
+    <div
+      className="fixed right-6 z-50 flex items-end gap-3"
+      style={{ bottom: "calc(1.5rem + env(safe-area-inset-bottom, 0px))" }}
+    >
       <AnimatePresence>
         {showTooltip && (
           <motion.div

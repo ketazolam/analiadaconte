@@ -83,6 +83,65 @@ const createClusterIcon = (cluster: any) => {
   });
 };
 
+// ─── Cluster touch coverage (mobile: muestra polígono azul al tocar un cluster) ─
+const ClusterTouchCoverage = () => {
+  const map = useMap();
+  useEffect(() => {
+    // Solo activar en touch devices
+    const isTouch = window.matchMedia?.("(hover: none)").matches ?? false;
+    if (!isTouch) return;
+
+    let polygon: L.Polygon | null = null;
+    let clusterGroup: any = null;
+
+    const removePoly = () => {
+      if (polygon) {
+        try { map.removeLayer(polygon); } catch { /* ya fue removido */ }
+        polygon = null;
+      }
+    };
+
+    const onClusterClick = (e: any) => {
+      removePoly();
+      const children = e.layer?.getAllChildMarkers?.();
+      if (!children || children.length < 2) return;
+      const latlngs: L.LatLng[] = children.map((m: any) => m.getLatLng());
+      polygon = L.polygon(latlngs, {
+        fillColor: ACCENT,
+        color: ACCENT,
+        weight: 2,
+        opacity: 0.75,
+        fillOpacity: 0.13,
+        smoothFactor: 2,
+      }).addTo(map);
+    };
+
+    const attach = () => {
+      if (clusterGroup) return;
+      map.eachLayer((layer: any) => {
+        if (!clusterGroup && layer.options?.iconCreateFunction) {
+          clusterGroup = layer;
+          clusterGroup.on("clusterclick", onClusterClick);
+        }
+      });
+    };
+
+    attach();
+    const timer = setTimeout(attach, 300);
+    map.on("click", removePoly);
+    map.on("zoomstart", removePoly);
+
+    return () => {
+      clearTimeout(timer);
+      if (clusterGroup) clusterGroup.off("clusterclick", onClusterClick);
+      map.off("click", removePoly);
+      map.off("zoomstart", removePoly);
+      removePoly();
+    };
+  }, [map]);
+  return null;
+};
+
 // ─── Map helpers (must be children of MapContainer) ───────────────────────────
 const FlyTo = ({ position }: { position: [number, number] | null }) => {
   const map = useMap();
@@ -446,6 +505,7 @@ const MapFiltersBar = ({
 
   return (
     <div
+      className="map-filter-bar"
       style={{
         background: "#fff",
         borderBottom: "1px solid #eee",
@@ -457,6 +517,7 @@ const MapFiltersBar = ({
         overflowX: "auto",
         flexShrink: 0,
         scrollbarWidth: "none",
+        WebkitOverflowScrolling: "touch" as const,
       }}
     >
       {/* Venta / Alquiler */}
@@ -767,6 +828,11 @@ const Mapa = () => {
         button { -webkit-tap-highlight-color: transparent; }
         /* Mapa ocupa bien el espacio en iOS */
         .leaflet-container { touch-action: pan-x pan-y; }
+        /* Ocultar scrollbar webkit en filter bar horizontal */
+        .map-filter-bar::-webkit-scrollbar { display: none; }
+        /* Zoom control — no overlap con safe area */
+        .leaflet-top { padding-top: env(safe-area-inset-top, 0px); }
+        .leaflet-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
       `}</style>
 
       {/* Navigation */}
@@ -867,7 +933,11 @@ const Mapa = () => {
           <div
             ref={sidebarRef}
             className="flex-1 overflow-y-auto"
-            style={{ overscrollBehavior: "contain" }}
+            style={{
+              overscrollBehavior: "contain",
+              paddingBottom: "env(safe-area-inset-bottom, 0px)",
+              WebkitOverflowScrolling: "touch" as const,
+            }}
           >
             {isLoading ? (
               // Skeleton loading
@@ -985,6 +1055,7 @@ const Mapa = () => {
             <FlyTo position={flyTarget} />
             <FitBoundsHelper markers={markers} trigger={fitBoundsTrigger} />
             <MapBoundsWatcher onBoundsChange={handleBoundsChange} />
+            <ClusterTouchCoverage />
 
             <MarkerClusterGroup
               iconCreateFunction={createClusterIcon}
@@ -1024,7 +1095,7 @@ const Mapa = () => {
           <div
             style={{
               position: "absolute",
-              bottom: 90,
+              bottom: "calc(90px + env(safe-area-inset-bottom, 0px))",
               right: 12,
               zIndex: 999,
               display: "flex",
