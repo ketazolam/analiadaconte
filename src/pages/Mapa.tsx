@@ -319,7 +319,7 @@ const MapPopup = ({ property }: { property: Propiedad }) => {
 
   return (
     <div
-      style={{ display: "flex", gap: 12, padding: "10px 12px", width: 300, cursor: "pointer" }}
+      style={{ display: "flex", gap: 12, padding: "10px 12px", width: "min(300px, calc(100vw - 48px))", cursor: "pointer" }}
       onClick={() => navigate(`/propiedad/${slug}`)}
     >
       {img && (
@@ -720,19 +720,29 @@ const Mapa = () => {
           background-size: 200% 100%;
           animation: shimmer 1.4s infinite;
         }
+        /* Popup */
         .leaflet-popup-content-wrapper {
           border-radius: 10px !important;
           box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
           padding: 0 !important;
           overflow: hidden;
           border: 1px solid #e8e8e8;
+          max-width: calc(100vw - 48px) !important;
         }
-        .leaflet-popup-content { margin: 0 !important; width: auto !important; }
+        .leaflet-popup-content {
+          margin: 0 !important;
+          width: auto !important;
+          max-width: calc(100vw - 48px) !important;
+        }
         .leaflet-popup-tip-container { display: none; }
         .leaflet-popup-close-button {
-          color: #aaa !important; font-size: 16px !important;
-          top: 4px !important; right: 6px !important; z-index: 10;
+          color: #aaa !important; font-size: 18px !important;
+          top: 6px !important; right: 8px !important; z-index: 10;
+          width: 28px !important; height: 28px !important;
+          display: flex !important; align-items: center !important;
+          justify-content: center !important;
         }
+        /* Zoom controls */
         .leaflet-control-zoom {
           border: none !important;
           box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
@@ -741,9 +751,22 @@ const Mapa = () => {
           border-radius: 4px !important;
           color: #333 !important;
           font-size: 16px !important;
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
         }
+        /* Cluster coverage polygon — smooth transition */
+        .leaflet-cluster-anim .leaflet-marker-icon,
+        .leaflet-cluster-anim .leaflet-marker-shadow {
+          transition: transform 0.3s ease-out, opacity 0.3s ease-out !important;
+        }
+        /* Cards */
         .map-sidebar-card:hover { background: #f7f9ff !important; }
         .map-overlay-btn:hover { background: #f5f5f5 !important; }
+        /* Touch: evitar el highlight azul en tap */
+        button { -webkit-tap-highlight-color: transparent; }
+        /* Mapa ocupa bien el espacio en iOS */
+        .leaflet-container { touch-action: pan-x pan-y; }
       `}</style>
 
       {/* Navigation */}
@@ -965,12 +988,20 @@ const Mapa = () => {
 
             <MarkerClusterGroup
               iconCreateFunction={createClusterIcon}
-              showCoverageOnHover={false}
+              showCoverageOnHover={true}
+              polygonOptions={{
+                fillColor: ACCENT,
+                color: ACCENT,
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.12,
+              }}
               spiderfyOnMaxZoom={true}
               disableClusteringAtZoom={17}
               maxClusterRadius={60}
-              animate={false}
+              animate={true}
               animateAddingMarkers={false}
+              chunkedLoading={true}
             >
               {markers.map((p) =>
                 p.lat && p.lng ? (
