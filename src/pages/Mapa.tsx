@@ -6,7 +6,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   ImageOff, MapPin, Bed, Maximize2, List, Map as MapIcon,
-  SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff, X,
+  SlidersHorizontal, Crosshair, Maximize, Eye, EyeOff, X, ArrowLeft,
 } from "lucide-react";
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
@@ -749,6 +749,9 @@ const Mapa = () => {
       {/* Navigation */}
       <Navigation />
 
+      {/* Spacer mobile: Navigation es fixed, este div empuja el contenido debajo de ella */}
+      <div className="md:hidden" style={{ height: NAV_HEIGHT, flexShrink: 0 }} />
+
       {/* Filter bar — desktop only (compact single row) */}
       <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT }}>
         <MapFiltersBar filters={filters} onChange={setFilters} total={markers.length} />
@@ -799,7 +802,15 @@ const Mapa = () => {
                 {filterByBounds ? "En vista" : "Todos"}
               </button>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => navigate(-1)}
+                className="md:hidden flex items-center justify-center rounded-full"
+                style={{ width: 32, height: 32, background: "#f0f0f0", color: "#333", border: "none", cursor: "pointer", flexShrink: 0 }}
+                aria-label="Volver"
+              >
+                <ArrowLeft style={{ width: 14, height: 14 }} />
+              </button>
               <button
                 onClick={() => setShowFilters((v) => !v)}
                 className="md:hidden flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium"
@@ -893,13 +904,23 @@ const Mapa = () => {
             className="md:hidden flex items-center justify-between px-3 py-2 border-b bg-white"
             style={{ flexShrink: 0 }}
           >
-            <button
-              onClick={() => setShowFilters((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
-              style={{ background: "#f0f0f0", color: "#333" }}
-            >
-              <SlidersHorizontal style={{ width: 12, height: 12 }} /> Filtros
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center justify-center rounded-full"
+                style={{ width: 32, height: 32, background: "#f0f0f0", color: "#333", border: "none", cursor: "pointer" }}
+                aria-label="Volver"
+              >
+                <ArrowLeft style={{ width: 14, height: 14 }} />
+              </button>
+              <button
+                onClick={() => setShowFilters((v) => !v)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                style={{ background: "#f0f0f0", color: "#333" }}
+              >
+                <SlidersHorizontal style={{ width: 12, height: 12 }} /> Filtros
+              </button>
+            </div>
             <span style={{ fontSize: 12, color: "#888" }}>{markers.length} propiedades</span>
             <button
               onClick={() => setMobileView("list")}
