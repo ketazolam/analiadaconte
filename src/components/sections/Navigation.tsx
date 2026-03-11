@@ -107,7 +107,7 @@ const Navigation = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="fixed inset-0 z-[60] flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[1350] flex flex-col items-center justify-center"
             style={{ backgroundColor: "#fcfcfc" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

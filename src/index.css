@@ -70,6 +70,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip; /* evita scroll horizontal sin romper position:fixed */
   }
 
   * {
