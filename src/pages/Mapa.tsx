@@ -235,6 +235,7 @@ interface SidebarCardProps {
 
 const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
   const navigate = useNavigate();
+  const [imgError, setImgError] = useState(false);
   const img = getFirstImage(property.fotos);
   const slug = property.pixel_slug || String(property.id);
   const price =
@@ -259,12 +260,16 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
     >
       {/* Thumbnail */}
       <div className="relative flex-shrink-0" style={{ width: 140, height: 105 }}>
-        {img ? (
+        {img && !imgError ? (
           <img
             src={img}
             alt=""
+            width={140}
+            height={105}
             style={{ width: 140, height: 105, objectFit: "cover", display: "block" }}
-            loading="lazy"
+            loading="eager"
+            decoding="async"
+            onError={() => setImgError(true)}
           />
         ) : (
           <div
@@ -368,6 +373,7 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
 // ─── Map popup ────────────────────────────────────────────────────────────────
 const MapPopup = ({ property }: { property: Propiedad }) => {
   const navigate = useNavigate();
+  const [imgError, setImgError] = useState(false);
   const img = getFirstImage(property.fotos);
   const slug = property.pixel_slug || String(property.id);
   const price =
@@ -381,12 +387,16 @@ const MapPopup = ({ property }: { property: Propiedad }) => {
       style={{ display: "flex", gap: 12, padding: "10px 12px", width: "min(300px, calc(100vw - 48px))", cursor: "pointer" }}
       onClick={() => navigate(`/propiedad/${slug}`)}
     >
-      {img && (
+      {img && !imgError && (
         <img
           src={img}
           alt=""
+          width={80}
+          height={62}
           style={{ width: 80, height: 62, objectFit: "cover", borderRadius: 4, flexShrink: 0 }}
-          loading="lazy"
+          loading="eager"
+          decoding="async"
+          onError={() => setImgError(true)}
         />
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -830,6 +840,10 @@ const Mapa = () => {
         button { -webkit-tap-highlight-color: transparent; }
         /* Mapa ocupa bien el espacio en iOS */
         .leaflet-container { touch-action: pan-x pan-y; }
+        /* Aislar el stacking context de Leaflet para que Navigation y Drawer
+           queden siempre por encima (z-index de controles internos de Leaflet
+           no compiten en el root stacking context) */
+        .leaflet-container { position: relative; z-index: 0 !important; }
         /* Ocultar scrollbar webkit en filter bar horizontal */
         .map-filter-bar::-webkit-scrollbar { display: none; }
         /* Zoom control — no overlap con safe area */

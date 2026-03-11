@@ -53,7 +53,7 @@ const Navigation = () => {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[1300] flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
           scrolled ? "backdrop-blur-xl" : ""
         }`}
         style={
