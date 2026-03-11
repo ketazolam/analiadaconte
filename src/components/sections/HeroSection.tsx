@@ -49,7 +49,7 @@ const HeroSection = () => {
         style={{ y: textY }}
       >
         <motion.h1 className="font-display text-[clamp(48px,7vw,100px)] leading-[1.0] mb-8">
-          {["Tu hogar,", "nuestra pasión"].map((line, i) => (
+          {["Expertos en", "Mar del Plata"].map((line, i) => (
             <motion.span
               key={line}
               className={`block ${i === 1 ? "italic" : "font-light"}`}
@@ -73,7 +73,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.9 }}
         >
-          28 años eligiendo las mejores propiedades de Mar del Plata
+          28 años convirtiendo decisiones en hogares
         </motion.p>
 
         {/* Search bar — visible en mobile también */}
