@@ -4,12 +4,6 @@ import { Ruler, Camera, Megaphone, CheckCircle } from "lucide-react";
 import MagneticButton from "../MagneticButton";
 import { whatsappLink, EASE as ease } from "@/lib/constants";
 
-const miniStats = [
-  { value: "60 días", label: "promedio de venta" },
-  { value: "100%", label: "gestión profesional" },
-  { value: "0$", label: "tasación sin cargo" },
-];
-
 const steps = [
   { num: "01", icon: Ruler, title: "Tasación", desc: "Evaluamos tu propiedad y te damos un precio de mercado real" },
   { num: "02", icon: Camera, title: "Producción", desc: "Fotografía profesional, drone, recorrido 360° y video" },
@@ -69,7 +63,7 @@ const SellProposal = () => {
             </motion.h2>
 
             <motion.p
-              className="font-body text-base mb-12 max-w-lg mx-auto"
+              className="font-body text-base mb-16 max-w-lg mx-auto"
               style={{ color: "rgba(255,255,255,0.88)" }}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -78,24 +72,6 @@ const SellProposal = () => {
               Vendemos 1 de cada 3 propiedades en menos de 60 días. No es suerte — es método.
             </motion.p>
 
-            <motion.div
-              className="flex flex-col sm:flex-row items-center justify-center gap-0 mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease, delay: 0.3 }}
-            >
-              {miniStats.map((s, i) => (
-                <div key={s.label} className="flex sm:items-center w-full sm:w-auto">
-                  <div className="flex flex-col items-center px-6 md:px-10 py-4 sm:py-0 w-full sm:w-auto border-b border-white/10 sm:border-b-0 last:border-b-0">
-                    <span className="font-display text-[clamp(28px,3vw,36px)] leading-none" style={{ color: "rgba(220,180,255,1)" }}>{s.value}</span>
-                    <span className="label-accent mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>{s.label}</span>
-                  </div>
-                  {i < miniStats.length - 1 && (
-                    <div className="hidden sm:block w-px h-10" style={{ backgroundColor: "rgba(255,255,255,0.20)" }} />
-                  )}
-                </div>
-              ))}
-            </motion.div>
           </div>
 
           <div className="max-w-4xl mx-auto mb-16">
