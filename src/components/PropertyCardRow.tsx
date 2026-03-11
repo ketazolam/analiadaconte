@@ -62,14 +62,22 @@ const PropertyCardRow = forwardRef<HTMLDivElement, Props>(({ property, className
               <ImageOff className="w-8 h-8 text-muted-foreground/40" />
             </div>
           ) : (
-            <img
-              src={images[currentImg]}
-              alt={property.titulo || "Propiedad"}
-              className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-              loading="lazy"
-              onError={() => setImgError(true)}
-              onLoad={() => setImgLoaded(true)}
-            />
+            <>
+              <img
+                src={images[currentImg]}
+                alt={property.titulo || "Propiedad"}
+                className={`w-full h-full object-cover transition-[opacity,transform] duration-200 group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+                loading="lazy"
+                onError={() => setImgError(true)}
+                onLoad={() => setImgLoaded(true)}
+              />
+              {images.length > 1 && (
+                <>
+                  <img key={`pre-next-${(currentImg + 1) % images.length}`} src={images[(currentImg + 1) % images.length]} aria-hidden alt="" className="hidden" loading="eager" decoding="async" />
+                  <img key={`pre-prev-${(currentImg - 1 + images.length) % images.length}`} src={images[(currentImg - 1 + images.length) % images.length]} aria-hidden alt="" className="hidden" loading="eager" decoding="async" />
+                </>
+              )}
+            </>
           )}
 
           {images.length > 1 && (

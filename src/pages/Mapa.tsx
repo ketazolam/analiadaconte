@@ -509,8 +509,8 @@ const MapFiltersBar = ({
       style={{
         background: "#fff",
         borderBottom: "1px solid #eee",
-        padding: "0 20px",
-        height: 52,
+        padding: "14px 20px",
+        minHeight: 56,
         display: "flex",
         alignItems: "center",
         gap: 8,
@@ -687,6 +687,8 @@ const Mapa = () => {
   const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
   const [filterByBounds, setFilterByBounds] = useState(true);
   const [fitBoundsTrigger, setFitBoundsTrigger] = useState(0);
+
+  const navigate = useNavigate();
 
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const sidebarRef = useRef<HTMLDivElement>(null);
