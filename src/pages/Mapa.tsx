@@ -855,10 +855,10 @@ const Mapa = () => {
       <Navigation />
 
       {/* Spacer mobile: Navigation es fixed, este div empuja el contenido debajo de ella */}
-      <div className="md:hidden" style={{ height: NAV_HEIGHT, flexShrink: 0 }} />
+      <div className="md:hidden" style={{ height: NAV_HEIGHT + 10, flexShrink: 0 }} />
 
       {/* Filter bar — desktop only (compact single row) */}
-      <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT }}>
+      <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT + 12 }}>
         <MapFiltersBar filters={filters} onChange={setFilters} total={markers.length} />
       </div>
 
