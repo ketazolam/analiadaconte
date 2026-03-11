@@ -56,7 +56,7 @@ const CustomCursor = () => {
           x: trailX,
           y: trailY,
           opacity: trailOpacity,
-          backgroundColor: "hsl(38, 54%, 50%)",
+          backgroundColor: "hsl(275, 55%, 54%)",
           willChange: "transform",
         }}
       />
@@ -67,7 +67,7 @@ const CustomCursor = () => {
           x: cursorX,
           y: cursorY,
           opacity,
-          backgroundColor: "hsl(38, 54%, 50%)",
+          backgroundColor: "hsl(275, 55%, 54%)",
           willChange: "transform",
         }}
       />

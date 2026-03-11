@@ -62,33 +62,47 @@ const Contacto = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Header */}
-      <div
-        className="pt-28 pb-10 px-6 md:px-12 lg:px-20 noise-overlay"
-        style={{ backgroundColor: "hsl(var(--bg-secondary))" }}
-      >
-        <div className="max-w-7xl mx-auto">
+      {/* Hero header */}
+      <div className="relative pt-32 pb-12 px-6 md:px-12 lg:px-20 overflow-hidden noise-overlay">
+        <img
+          src="/images/private-office.jpg"
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to right, rgba(5,2,10,0.92) 0%, rgba(5,2,10,0.72) 55%, rgba(5,2,10,0.35) 100%)",
+            zIndex: 1,
+          }}
+        />
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.p
-            className="label-eyebrow text-primary mb-3"
-            initial={{ opacity: 0, y: 12 }}
+            className="label-eyebrow mb-5"
+            style={{ color: "rgba(200,160,255,0.85)" }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             Contacto
           </motion.p>
           <motion.h1
-            className="font-display text-[clamp(36px,5vw,56px)] text-foreground leading-tight"
-            initial={{ opacity: 0, y: 16 }}
+            className="font-display text-[clamp(40px,5vw,68px)] leading-[1.0] mb-5"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.05 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
           >
-            Hablemos
+            <span style={{ color: "white" }}>Hablemos</span>
           </motion.h1>
           <motion.p
-            className="font-body text-sm text-text-secondary mt-3 max-w-md"
-            initial={{ opacity: 0, y: 12 }}
+            className="font-body text-base max-w-md"
+            style={{ color: "rgba(255,255,255,0.80)" }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.2 }}
           >
             Respondemos por WhatsApp en menos de 2 horas.
           </motion.p>

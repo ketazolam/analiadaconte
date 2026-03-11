@@ -23,7 +23,7 @@ const Counter = ({ value, prefix, suffix }: { value: number; prefix: string; suf
   }, [inView, value]);
 
   return (
-    <span ref={ref} className="font-display text-[clamp(42px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(196,154,60,0.3)" }}>
+    <span ref={ref} className="font-display text-[clamp(42px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(100,30,160,0.3)" }}>
       {`${prefix}${count}${suffix}`}
     </span>
   );
@@ -38,9 +38,9 @@ const StatsBar = () => {
       ref={ref}
       className="section-lazy relative noise-overlay"
       style={{
-        background: "radial-gradient(ellipse at center, #1e1b28 0%, #18161E 70%)",
-        borderTop: "1px solid rgba(196,154,60,0.15)",
-        borderBottom: "1px solid rgba(196,154,60,0.15)",
+        background: "hsl(270 25% 96%)",
+        borderTop: "1px solid rgba(100,30,160,0.15)",
+        borderBottom: "1px solid rgba(100,30,160,0.15)",
       }}
     >
       <motion.div
@@ -54,7 +54,7 @@ const StatsBar = () => {
           <motion.div
             key={stat.label}
             className="flex flex-col items-center py-10 sm:py-20 px-4 border-b sm:border-b-0 last:border-b-0"
-            style={{ borderColor: "rgba(196,154,60,0.15)" }}
+            style={{ borderColor: "rgba(100,30,160,0.15)" }}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] }}

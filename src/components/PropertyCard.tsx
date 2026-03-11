@@ -32,6 +32,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
     const images = getAllImages(property.fotos);
     const showPlaceholder = images.length === 0 || imgError;
     const slug = property.pixel_slug || String(property.id);
+
     const barrio = sanitizeBarrio(property.barrio);
 
     // Touch swipe for mobile
@@ -95,23 +96,32 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
                 <ImageOff className="w-10 h-10 text-muted-foreground/40" />
               </div>
             ) : (
-              <img
-                src={images[currentImg]}
-                alt={property.titulo || "Propiedad"}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                  imgLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                loading="lazy"
-                decoding="async"
-                width={400}
-                height={240}
-                onError={handleImgError}
-                onLoad={handleImgLoad}
-              />
+              <>
+                <img
+                  src={images[currentImg]}
+                  alt={property.titulo || "Propiedad"}
+                  className={`w-full h-full object-cover transition-[opacity,transform] duration-200 group-hover:scale-105 ${
+                    imgLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  loading="lazy"
+                  decoding="async"
+                  width={400}
+                  height={240}
+                  onError={handleImgError}
+                  onLoad={handleImgLoad}
+                />
+                {/* Precargar anterior y siguiente para navegación instantánea */}
+                {images.length > 1 && (
+                  <>
+                    <img key={`pre-next-${(currentImg + 1) % images.length}`} src={images[(currentImg + 1) % images.length]} aria-hidden alt="" className="hidden" loading="eager" decoding="async" />
+                    <img key={`pre-prev-${(currentImg - 1 + images.length) % images.length}`} src={images[(currentImg - 1 + images.length) % images.length]} aria-hidden alt="" className="hidden" loading="eager" decoding="async" />
+                  </>
+                )}
+              </>
             )}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 60%)" }}
+              style={{ background: "linear-gradient(to top, rgba(252,252,252,0.88) 0%, rgba(252,252,252,0.20) 38%, transparent 55%)" }}
             />
 
             {/* Navigation arrows */}
@@ -163,7 +173,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
 
             {/* Price overlay */}
             <div className="absolute bottom-3 left-4 z-10">
-              <p className="font-display text-[26px] text-primary leading-none">{priceDisplay}</p>
+              <p className="font-display text-[clamp(20px,4vw,26px)] text-primary leading-none">{priceDisplay}</p>
             </div>
 
             {/* Surface overlay */}

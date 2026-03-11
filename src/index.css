@@ -4,63 +4,66 @@
 
 @layer base {
   :root {
-    --background: 260 15% 5%;
-    --foreground: 36 16% 93%;
+    /* Brand purple — extraído del logo oficial de Analía Daconte */
+    --background: 0 0% 99%;
+    --foreground: 270 15% 10%;
 
-    --card: 260 14% 8%;
-    --card-foreground: 36 16% 93%;
+    --card: 270 20% 97%;
+    --card-foreground: 270 15% 10%;
 
-    --popover: 260 12% 9%;
-    --popover-foreground: 36 16% 93%;
+    --popover: 270 20% 97%;
+    --popover-foreground: 270 15% 10%;
 
-    --primary: 38 54% 50%;
-    --primary-foreground: 260 15% 5%;
+    --primary: 275 62% 38%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 14% 8%;
-    --secondary-foreground: 36 16% 93%;
+    --secondary: 270 20% 95%;
+    --secondary-foreground: 270 15% 10%;
 
-    --muted: 260 12% 9%;
-    --muted-foreground: 30 4% 28%;
+    --muted: 270 18% 95%;
+    --muted-foreground: 270 10% 45%;
 
-    --accent: 42 76% 66%;
-    --accent-foreground: 260 15% 5%;
+    --accent: 275 55% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 100% / 0.06;
-    --input: 0 0% 100% / 0.06;
-    --ring: 38 54% 50%;
+    --border: 270 20% 88%;
+    --input: 270 20% 88%;
+    --ring: 275 62% 38%;
 
     --radius: 2px;
 
-    /* Custom tokens */
-    --gold: 38 54% 50%;
-    --gold-light: 42 76% 66%;
-    --gold-muted: 42 74% 31%;
-    --gold-dim: 38 54% 50% / 0.15;
-    --text-primary: 36 16% 93%;
-    --text-secondary: 30 3% 52%;
-    --text-muted: 30 3% 28%;
-    --bg-primary: 260 15% 5%;
-    --bg-secondary: 260 10% 7%;
-    --bg-surface: 260 14% 10%;
+    /* Custom tokens — purple brand palette */
+    --gold: 275 62% 38%;
+    --gold-light: 275 55% 54%;
+    --gold-muted: 275 65% 25%;
+    --gold-dim: 275 62% 38% / 0.08;
+    --text-primary: 270 15% 10%;
+    --text-secondary: 270 8% 38%;
+    --text-muted: 270 6% 58%;
+    --bg-primary: 0 0% 99%;
+    --bg-secondary: 0 0% 96%;
+    --bg-surface: 0 0% 98%;
 
-    /* Violet — micro-accent only */
-    --violet: 274 69% 40%;
-    --violet-deep: 274 72% 22%;
-    --violet-mid: 263 70% 58%;
+    /* Purple palette */
+    --violet: 275 62% 38%;
+    --violet-deep: 275 70% 22%;
+    --violet-mid: 275 55% 54%;
+    --primary-light: 275 55% 54%;
+    --primary-deep: 275 70% 22%;
 
     --whatsapp: 142 70% 49%;
 
-    --sidebar-background: 260 14% 8%;
-    --sidebar-foreground: 36 16% 93%;
-    --sidebar-primary: 38 54% 50%;
-    --sidebar-primary-foreground: 260 15% 5%;
-    --sidebar-accent: 260 12% 9%;
-    --sidebar-accent-foreground: 36 16% 93%;
-    --sidebar-border: 0 0% 100% / 0.06;
-    --sidebar-ring: 38 54% 50%;
+    --sidebar-background: 270 20% 97%;
+    --sidebar-foreground: 270 15% 10%;
+    --sidebar-primary: 275 62% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 270 18% 95%;
+    --sidebar-accent-foreground: 270 15% 10%;
+    --sidebar-border: 270 20% 88%;
+    --sidebar-ring: 275 62% 38%;
   }
 }
 
@@ -125,7 +128,7 @@
   }
 
   .gold-gradient-text {
-    background: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-light)));
+    background: linear-gradient(135deg, hsl(275 62% 38%), hsl(290 65% 55%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -165,11 +168,11 @@
   .section-divider {
     height: 1px;
     width: 100%;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(196,154,60,0.2) 30%, 
-      rgba(196,154,60,0.3) 50%,
-      rgba(196,154,60,0.2) 70%,
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(100,30,160,0.18) 30%,
+      rgba(100,30,160,0.28) 50%,
+      rgba(100,30,160,0.18) 70%,
       transparent 100%);
   }
 }

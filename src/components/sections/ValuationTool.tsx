@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Home, Building2, Warehouse, LandPlot, Store, HelpCircle, Check, MapPin, Ruler, DoorOpen, Sparkles, Car, MessageCircle, RotateCcw } from "lucide-react";
 import { whatsappLink, EASE } from "@/lib/constants";
@@ -15,7 +16,7 @@ const propertyTypes = [
 const ambientesOptions = ["1", "2", "3", "4", "5+"];
 const estadoOptions = ["Excelente", "Muy bueno", "Bueno", "A reciclar"];
 
-/* ── Floating input field ── */
+/* ── Static-label input field ── */
 const FloatingField = ({
   label, type = "text", placeholder = "", value, onChange, suffix, optional, error,
 }: {
@@ -23,46 +24,46 @@ const FloatingField = ({
   onChange: (v: string) => void; suffix?: string; optional?: boolean; error?: string;
 }) => {
   const [focused, setFocused] = useState(false);
-  const active = focused || value.length > 0;
 
   return (
-    <div className="relative">
-      <motion.label
-        className="absolute left-0 font-body pointer-events-none origin-left"
-        style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}
-        animate={{
-          y: active ? -20 : 0,
-          scale: active ? 0.85 : 1,
+    <div>
+      <label
+        className="font-body block mb-2"
+        style={{
+          fontSize: 11,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
           color: error ? "hsl(0,84%,60%)" : focused ? "hsl(var(--primary))" : "hsl(var(--text-muted))",
+          transition: "color 0.15s",
         }}
-        transition={{ duration: 0.2 }}
       >
-        {label}{optional && " (opcional)"}
-      </motion.label>
-      <div className="flex items-center">
+        {label}{optional && <span style={{ opacity: 0.6 }}> (opcional)</span>}
+      </label>
+      <div className="flex items-center gap-2">
         <input
           type={type}
-          placeholder={focused ? placeholder : ""}
-          className="w-full bg-transparent outline-none font-body text-sm text-foreground py-2"
+          placeholder={placeholder}
+          className="w-full bg-transparent outline-none font-body text-base text-foreground py-3"
           style={{
             borderBottom: error
               ? "1px solid hsl(0,84%,60%)"
               : focused
                 ? "1px solid hsl(var(--primary))"
                 : "1px solid hsl(var(--border))",
+            transition: "border-color 0.15s",
           }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
-        {suffix && <span className="font-body text-sm text-text-muted ml-1">{suffix}</span>}
+        {suffix && <span className="font-body text-base text-text-muted shrink-0">{suffix}</span>}
       </div>
       {error && (
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="font-body text-xs mt-1"
+          className="font-body text-xs mt-1.5"
           style={{ color: "hsl(0,84%,60%)" }}
         >
           {error}
@@ -77,7 +78,7 @@ const PillSelector = ({
   label, options, value, onChange,
 }: { label: string; options: string[]; value: string; onChange: (v: string) => void }) => (
   <div>
-    <p className="font-body text-text-muted mb-3" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+    <p className="font-body mb-3" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "hsl(var(--text-muted))" }}>
       {label}
     </p>
     <div className="flex flex-wrap gap-2">
@@ -85,7 +86,7 @@ const PillSelector = ({
         <button
           key={o}
           type="button"
-          className="font-body text-sm px-4 py-2 transition-all"
+          className="font-body text-sm px-5 py-2.5 transition-all"
           style={{
             backgroundColor: value === o ? "hsl(var(--primary))" : "transparent",
             color: value === o ? "hsl(var(--primary-foreground))" : "hsl(var(--text-secondary))",
@@ -103,15 +104,15 @@ const PillSelector = ({
 /* ── Cochera toggle ── */
 const PillToggle = ({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) => (
   <div>
-    <p className="font-body text-text-muted mb-3" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+    <p className="font-body mb-3" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "hsl(var(--text-muted))" }}>
       ¿Tiene cochera?
     </p>
-    <div className="flex gap-0">
+    <div className="flex">
       {[false, true].map((v) => (
         <button
           key={String(v)}
           type="button"
-          className="font-body text-sm px-6 py-2 transition-all"
+          className="font-body text-sm px-8 py-2.5 transition-all"
           style={{
             backgroundColor: value === v ? (v ? "hsl(var(--primary))" : "hsl(var(--muted))") : "transparent",
             color: value === v ? (v ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))") : "hsl(var(--text-muted))",
@@ -119,7 +120,7 @@ const PillToggle = ({ value, onChange }: { value: boolean; onChange: (v: boolean
           }}
           onClick={() => onChange(v)}
         >
-          {v ? "SÍ" : "NO"}
+          {v ? "Sí" : "No"}
         </button>
       ))}
     </div>
@@ -138,6 +139,7 @@ const SummaryChip = ({ icon: Icon, text }: { icon: React.ElementType; text: stri
 const ValuationTool = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState("");
@@ -173,7 +175,7 @@ const ValuationTool = () => {
       estado ? `✨ Estado: ${estado}` : null,
       `🚗 Cochera: ${cochera ? "Sí" : "No"}`,
       ``,
-      `¿Me podés hacer una tasación gratuita? ¡Muchas gracias!`,
+      `¡Muchas gracias!`,
     ].filter((l) => l !== null);
     return lines.join("\n");
   }, [selectedType, zona, direccion, superficie, ambientes, estado, cochera]);
@@ -201,31 +203,16 @@ const ValuationTool = () => {
   const progress = step === 1 ? 50 : 100;
 
   const slideVariants = {
-    enter: (d: number) => ({ x: d > 0 ? 50 : -50, opacity: 0 }),
+    enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -50 : 50, opacity: 0 }),
+    exit: (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
   };
 
   return (
     <>
       <div className="section-divider" />
       <section id="tasacion" ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "hsl(var(--bg-secondary))", contain: "content" }}>
-        <div className="max-w-[640px] mx-auto relative z-10">
-          {/* Header */}
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
-            <p className="label-eyebrow text-primary mb-4">Tasación gratuita</p>
-            <h2 className="font-display text-[clamp(32px,4vw,48px)] text-foreground mb-3">
-              ¿Cuánto vale tu propiedad?
-            </h2>
-            <p className="font-body text-sm text-text-muted">
-              Completá los datos y te contactamos en menos de 2 horas
-            </p>
-          </motion.div>
+        <div className="max-w-[660px] mx-auto relative z-10">
 
           {/* Wizard card */}
           <motion.div
@@ -236,7 +223,7 @@ const ValuationTool = () => {
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             {/* Progress bar */}
             <div className="h-[2px] w-full" style={{ backgroundColor: "hsl(var(--border))" }}>
@@ -247,21 +234,23 @@ const ValuationTool = () => {
               />
             </div>
 
-            {/* Step dots */}
-            <div className="flex items-center justify-center gap-3 pt-6 pb-2">
-              {[1, 2].map((s) => (
-                <div
-                  key={s}
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: step >= s ? "hsl(var(--primary))" : "transparent",
-                    border: `1px solid ${step >= s ? "hsl(var(--primary))" : "hsl(var(--text-muted))"}`,
-                  }}
-                />
-              ))}
+            {/* Step indicator */}
+            <div className="flex items-center justify-between px-8 pt-6 pb-1">
+              <span
+                className="font-body text-xs uppercase tracking-[0.15em]"
+                style={{ color: "hsl(var(--text-muted))" }}
+              >
+                Paso {step} de 2
+              </span>
+              <span
+                className="font-body text-xs"
+                style={{ color: "hsl(var(--primary))", opacity: 0.75 }}
+              >
+                {step === 1 ? "Tipo de propiedad" : "Ubicación y detalles"}
+              </span>
             </div>
 
-            <div className="p-8 min-h-[420px] flex flex-col">
+            <div className="p-8 min-h-[460px] flex flex-col">
               <AnimatePresence mode="wait" custom={direction}>
                 {!submitted ? (
                   <motion.div
@@ -277,15 +266,15 @@ const ValuationTool = () => {
                     {/* ── STEP 1: Property type ── */}
                     {step === 1 && (
                       <>
-                        <p className="font-body text-primary mb-6" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-                          Tipo de propiedad
+                        <p className="font-body text-foreground mb-6 text-base">
+                          Seleccioná el tipo de propiedad:
                         </p>
                         <div className="grid grid-cols-2 gap-3 mb-auto">
                           {propertyTypes.map((pt, i) => (
                             <motion.button
                               key={pt.label}
                               type="button"
-                              className="relative h-20 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all"
+                              className="relative h-28 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all"
                               style={{
                                 border: selectedType === pt.label
                                   ? "1px solid hsl(var(--primary))"
@@ -297,14 +286,17 @@ const ValuationTool = () => {
                               initial={{ opacity: 0, y: 15 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3, delay: i * 0.05 }}
-                              whileHover={{ borderColor: "hsl(var(--primary) / 0.4)" }}
+                              whileHover={{ borderColor: "hsl(var(--primary) / 0.5)" }}
                               onClick={() => setSelectedType(pt.label)}
                             >
                               {selectedType === pt.label && (
-                                <Check className="absolute top-2 right-2 w-3.5 h-3.5 text-primary" />
+                                <Check className="absolute top-2.5 right-2.5 w-4 h-4 text-primary" />
                               )}
-                              <pt.icon className="w-5 h-5 text-text-secondary stroke-[1.2]" />
-                              <span className="font-body text-xs text-text-secondary">{pt.label}</span>
+                              <pt.icon
+                                className="w-7 h-7 stroke-[1.2] transition-colors"
+                                style={{ color: selectedType === pt.label ? "hsl(var(--primary))" : "hsl(var(--text-secondary))" }}
+                              />
+                              <span className="font-body text-sm text-text-secondary">{pt.label}</span>
                             </motion.button>
                           ))}
                         </div>
@@ -313,7 +305,7 @@ const ValuationTool = () => {
                             type="button"
                             disabled={!selectedType}
                             onClick={handleNext}
-                            className="w-full font-body text-sm uppercase tracking-wider py-3 transition-all"
+                            className="w-full font-body text-base uppercase tracking-wider py-4 transition-all"
                             style={{
                               backgroundColor: selectedType ? "hsl(var(--primary))" : "hsl(var(--muted))",
                               color: selectedType ? "hsl(var(--primary-foreground))" : "hsl(var(--text-muted))",
@@ -329,9 +321,6 @@ const ValuationTool = () => {
                     {/* ── STEP 2: Location & characteristics ── */}
                     {step === 2 && (
                       <>
-                        <p className="font-body text-primary mb-6" style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-                          Ubicación y características
-                        </p>
                         <div className="space-y-7">
                           <FloatingField
                             label="Zona / Barrio"
@@ -356,13 +345,13 @@ const ValuationTool = () => {
                             error={errors.superficie}
                           />
                           <PillSelector label="Ambientes" options={ambientesOptions} value={ambientes} onChange={setAmbientes} />
-                          <PillSelector label="Estado" options={estadoOptions} value={estado} onChange={setEstado} />
+                          <PillSelector label="Estado de la propiedad" options={estadoOptions} value={estado} onChange={setEstado} />
                           <PillToggle value={cochera} onChange={setCochera} />
                         </div>
 
                         {/* Summary preview */}
-                        <div className="mt-6 p-4" style={{ background: "hsl(var(--bg-surface))", border: "1px solid hsl(var(--border))" }}>
-                          <p className="font-body text-xs text-text-muted mb-3">Resumen de tu propiedad:</p>
+                        <div className="mt-7 p-4" style={{ background: "hsl(var(--bg-surface))", border: "1px solid hsl(var(--border))" }}>
+                          <p className="font-body text-xs text-text-muted mb-3 uppercase tracking-[0.1em]">Resumen</p>
                           <div className="flex flex-wrap gap-2">
                             {selectedType && <SummaryChip icon={Home} text={selectedType} />}
                             {zona && <SummaryChip icon={MapPin} text={zona} />}
@@ -373,7 +362,7 @@ const ValuationTool = () => {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between mt-6">
+                        <div className="flex items-center justify-between mt-7">
                           <button
                             type="button"
                             onClick={handleBack}
@@ -381,17 +370,15 @@ const ValuationTool = () => {
                           >
                             ← Volver
                           </button>
-                          <motion.button
+                          <button
                             type="button"
                             onClick={handleSendWhatsApp}
-                            className="font-body text-sm uppercase tracking-wider py-3 px-6 flex items-center gap-2"
+                            className="font-body text-sm uppercase tracking-wider py-4 px-8 flex items-center gap-2 hover:opacity-90 transition-opacity"
                             style={{ backgroundColor: "hsl(var(--whatsapp))", color: "#fff", cursor: "pointer" }}
-                            animate={{ scale: [1, 1.02, 1] }}
-                            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                           >
                             <MessageCircle className="w-4 h-4" />
                             Solicitar tasación
-                          </motion.button>
+                          </button>
                         </div>
                       </>
                     )}
@@ -405,7 +392,10 @@ const ValuationTool = () => {
                     transition={{ duration: 0.5, ease: EASE }}
                     className="flex-1 flex flex-col items-center justify-center text-center py-8"
                   >
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 border-2 border-primary">
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+                      style={{ border: "1.5px solid hsl(var(--primary))", background: "hsl(var(--gold-dim))" }}
+                    >
                       <motion.svg
                         viewBox="0 0 24 24"
                         className="w-8 h-8"
@@ -424,17 +414,18 @@ const ValuationTool = () => {
                       </motion.svg>
                     </div>
 
-                    <h3 className="font-display text-2xl text-foreground mb-2">¡Tu consulta fue enviada!</h3>
-                    <p className="font-body text-sm text-text-secondary mb-8">
-                      Analía te responde en menos de 2 horas por WhatsApp
+                    <h3 className="font-display text-2xl text-foreground mb-2">¡Consulta enviada!</h3>
+                    <p className="font-body text-sm text-text-secondary mb-10 max-w-xs">
+                      Analía te responde en menos de 2 horas por WhatsApp con la valuación de tu propiedad.
                     </p>
 
-                    <a
-                      href="#propiedades"
-                      className="font-body text-[13px] text-text-muted hover:text-primary transition-colors mb-4"
+                    <button
+                      type="button"
+                      onClick={() => navigate("/propiedades")}
+                      className="font-body text-sm text-text-muted hover:text-primary transition-colors mb-4"
                     >
                       Ver propiedades disponibles →
-                    </a>
+                    </button>
 
                     <button
                       type="button"

@@ -19,21 +19,21 @@ const HeroSearchBar = () => {
   };
 
   const selectClass =
-    "bg-transparent border-none font-body text-[13px] text-foreground/80 placeholder:text-foreground/40 focus:outline-none appearance-none w-full py-2 px-1";
+    "bg-transparent border-none font-body text-[15px] focus:outline-none appearance-none w-full py-2 px-1";
 
   return (
     <div
       className="flex flex-col sm:flex-row items-stretch sm:items-center gap-0 sm:gap-0 w-full max-w-2xl mx-auto mt-6 md:mt-10 overflow-hidden"
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background: "rgba(255,255,255,0.10)",
         backdropFilter: "blur(16px)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
       {/* Operación */}
-      <div className="flex-1 px-4 py-1 sm:py-0 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <label className="font-body text-[9px] uppercase tracking-[0.15em] text-foreground/40 block mb-0.5">Operación</label>
-        <select value={operacion} onChange={(e) => setOperacion(e.target.value)} className={selectClass}>
+      <div className="flex-1 px-4 py-2 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+        <label className="font-body text-[11px] uppercase tracking-[0.15em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Operación</label>
+        <select value={operacion} onChange={(e) => setOperacion(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)" }}>
           <option value="">Todas</option>
           <option value="venta">Venta</option>
           <option value="alquiler">Alquiler</option>
@@ -41,9 +41,9 @@ const HeroSearchBar = () => {
       </div>
 
       {/* Tipo */}
-      <div className="flex-1 px-4 py-1 sm:py-0 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <label className="font-body text-[9px] uppercase tracking-[0.15em] text-foreground/40 block mb-0.5">Tipo</label>
-        <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={selectClass}>
+      <div className="flex-1 px-4 py-2 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+        <label className="font-body text-[11px] uppercase tracking-[0.15em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Tipo</label>
+        <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)" }}>
           <option value="">Todos</option>
           {options?.tipos.map((t) => (
             <option key={t} value={t}>{t}</option>
@@ -52,9 +52,9 @@ const HeroSearchBar = () => {
       </div>
 
       {/* Dormitorios */}
-      <div className="flex-1 px-4 py-1 sm:py-0 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <label className="font-body text-[9px] uppercase tracking-[0.15em] text-foreground/40 block mb-0.5">Dormitorios</label>
-        <select value={dormitorios} onChange={(e) => setDormitorios(e.target.value)} className={selectClass}>
+      <div className="flex-1 px-4 py-2 border-b sm:border-b-0 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+        <label className="font-body text-[11px] uppercase tracking-[0.15em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Dormitorios</label>
+        <select value={dormitorios} onChange={(e) => setDormitorios(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)" }}>
           <option value="">Todos</option>
           <option value="1">1+</option>
           <option value="2">2+</option>
@@ -63,14 +63,13 @@ const HeroSearchBar = () => {
         </select>
       </div>
 
-      {/* Search button */}
+      {/* Search button — full width en mobile */}
       <button
         onClick={handleSearch}
-        className="flex items-center justify-center gap-2 px-6 py-3 sm:py-4 bg-primary text-primary-foreground font-body text-[13px] uppercase tracking-[0.1em] hover:bg-gold-light transition-colors shrink-0"
+        className="flex items-center justify-center gap-2 px-6 py-4 bg-primary text-primary-foreground font-body text-[14px] uppercase tracking-[0.1em] hover:bg-gold-light transition-colors shrink-0 w-full sm:w-auto"
       >
         <Search className="w-4 h-4" />
-        <span className="sm:hidden">Buscar propiedades</span>
-        <span className="hidden sm:inline">Buscar</span>
+        <span>Buscar propiedades</span>
       </button>
     </div>
   );

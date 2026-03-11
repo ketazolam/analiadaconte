@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
+
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
 import PropertyCard from "@/components/PropertyCard";
@@ -59,7 +60,6 @@ const Propiedades = () => {
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
-  // Accumulate properties across pages
   useEffect(() => {
     if (data?.properties) {
       if (page === 0) {
@@ -81,9 +81,7 @@ const Propiedades = () => {
     setPage(0);
     setAccumulated([]);
     setPrevCount(0);
-    // Sync to URL
     setSearchParams(filtersToParams(newFilters), { replace: true });
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [setSearchParams]);
 
@@ -93,31 +91,10 @@ const Propiedades = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollProgress />
-
       <Navigation />
-      
-      {/* Header */}
-      <div className="pt-24 pb-8 px-6 md:px-12 lg:px-20 noise-overlay" style={{ backgroundColor: "hsl(var(--bg-secondary))" }}>
-        <div className="max-w-7xl mx-auto">
-          <motion.h1
-            className="font-display text-[clamp(36px,5vw,56px)] text-foreground leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
-            Propiedades en{" "}
-            <span className="italic gold-gradient-text">Mar del Plata</span>
-          </motion.h1>
-          <motion.p
-            className="font-body text-sm text-text-secondary mt-3 max-w-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-          >
-            Explorá nuestro catálogo completo de propiedades en venta y alquiler.
-          </motion.p>
-        </div>
-      </div>
+
+      {/* Nav spacer */}
+      <div className="h-[73px]" />
 
       {/* Sticky Filters */}
       <div className="sticky top-[73px] z-40">

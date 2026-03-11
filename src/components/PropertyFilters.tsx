@@ -14,16 +14,21 @@ interface PropertyFiltersProps {
   onViewModeChange?: (mode: "grid" | "list") => void;
 }
 
+/* ── Shared style tokens ── */
+const BORDER = "1px solid hsl(var(--border))";
+const pillBase = "font-body text-xs uppercase tracking-wider px-4 py-2.5 transition-colors border shrink-0";
+const pillActive = "bg-primary text-primary-foreground border-primary";
+const pillInactive = "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground hover:border-foreground/30";
+const selectBase = "font-body text-xs bg-transparent border border-[hsl(var(--border))] px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors shrink-0";
+
 const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, viewMode = "grid", onViewModeChange }: PropertyFiltersProps) => {
   const { data: options } = usePropertyFilterOptions();
   const [searchInput, setSearchInput] = useState(filters.searchText || "");
 
-  // Sync external filter changes to local search input
   useEffect(() => {
     setSearchInput(filters.searchText || "");
   }, [filters.searchText]);
 
-  // Debounce search
   useEffect(() => {
     const t = setTimeout(() => {
       if (searchInput !== (filters.searchText || "")) {
@@ -34,30 +39,27 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
   }, [searchInput]);
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.barrio || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
-  const activeCount = [filters.operacion, filters.tipo, filters.dormitorios, filters.barrio, filters.searchText, filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax, filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas].filter(Boolean).length;
+  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.barrio
+    || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax
+    || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
-  const selectClass =
-    "font-body text-xs bg-transparent border px-3 py-2.5 text-foreground appearance-none outline-none focus:border-primary transition-colors border-[hsl(var(--border))] w-auto shrink-0";
-
-  const inputClass =
-    "font-body text-xs bg-transparent border border-[hsl(var(--border))] px-3 py-2.5 text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted w-full";
+  const activeCount = [
+    filters.operacion, filters.tipo, filters.dormitorios, filters.barrio, filters.searchText,
+    filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax,
+    filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas,
+  ].filter(Boolean).length;
 
   const clearAll = () => { onChange({ sort: filters.sort }); setSearchInput(""); };
 
-  /* ── Shared filter rows ── */
+  /* ── Reusable pieces ── */
   const operacionPills = (className = "") => (
     <div className={`flex gap-0 ${className}`}>
       {["venta", "alquiler"].map((op) => (
         <button
           key={op}
           onClick={() => update({ operacion: filters.operacion === op ? undefined : op })}
-          className={`font-body text-xs uppercase tracking-wider px-4 py-2.5 transition-colors border ${
-            filters.operacion === op
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
-          } ${className}`}
+          className={`${pillBase} ${filters.operacion === op ? pillActive : pillInactive}`}
         >
           {op}
         </button>
@@ -65,149 +67,175 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
     </div>
   );
 
-  const destacadaToggle = (className = "") => (
-    <button
-      onClick={() => update({ destacada: filters.destacada ? undefined : true })}
-      className={`flex items-center gap-1.5 font-body text-xs uppercase tracking-wider px-3 py-2.5 transition-colors border ${
-        filters.destacada
-          ? "bg-primary text-primary-foreground border-primary"
-          : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
-      } ${className}`}
-    >
-      <Star className="w-3 h-3" /> Destacadas
-    </button>
-  );
-
   const tipoSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.tipo || ""} onChange={(e) => update({ tipo: e.target.value || undefined })}>
+    <select className={`${selectBase} ${className}`} value={filters.tipo || ""} onChange={(e) => update({ tipo: e.target.value || undefined })}>
       <option value="">Tipo</option>
       {(options?.tipos || []).map((t) => (<option key={t} value={t}>{t}</option>))}
     </select>
   );
 
   const dormSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.dormitorios || ""} onChange={(e) => update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })}>
+    <select className={`${selectBase} ${className}`} value={filters.dormitorios || ""} onChange={(e) => update({ dormitorios: e.target.value ? Number(e.target.value) : undefined })}>
       <option value="">Dormitorios</option>
       {[1, 2, 3, 4, 5].map((n) => (<option key={n} value={n}>{n}+</option>))}
     </select>
   );
 
   const barrioSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.barrio || ""} onChange={(e) => update({ barrio: e.target.value || undefined })}>
+    <select className={`${selectBase} ${className}`} value={filters.barrio || ""} onChange={(e) => update({ barrio: e.target.value || undefined })}>
       <option value="">Ubicación</option>
       {(options?.barrios || []).map((b) => (<option key={b} value={b}>{b}</option>))}
     </select>
   );
 
-
-  const amenityToggle = (
-    field: "cochera" | "aptoCreditico" | "aceptaMascotas",
-    label: string,
-    Icon: React.ElementType,
-    className = ""
-  ) => (
-    <button
-      onClick={() => update({ [field]: filters[field] ? undefined : true })}
-      className={`flex items-center gap-1.5 font-body text-xs uppercase tracking-wider px-3 py-2.5 transition-colors border ${
-        filters[field]
-          ? "bg-primary text-primary-foreground border-primary"
-          : "bg-transparent text-text-secondary border-[hsl(var(--border))] hover:text-foreground"
-      } ${className}`}
-    >
-      <Icon className="w-3 h-3" /> {label}
-    </button>
-  );
-
   const sortSelect = (className = "") => (
-    <select className={`${selectClass} ${className}`} value={filters.sort || "recientes"} onChange={(e) => update({ sort: e.target.value as Filters["sort"] })}>
+    <select className={`${selectBase} ${className}`} value={filters.sort || "recientes"} onChange={(e) => update({ sort: e.target.value as Filters["sort"] })}>
       <option value="recientes">Más recientes</option>
       <option value="precio_asc">Precio ↑</option>
       <option value="precio_desc">Precio ↓</option>
     </select>
   );
 
-  const priceRange = (className = "") => (
-    <div className={`flex items-center gap-1 ${className}`}>
-      <input
-        type="number"
-        placeholder="Precio desde"
-        value={filters.precioMin || ""}
-        onChange={(e) => update({ precioMin: e.target.value ? Number(e.target.value) : undefined })}
-        className={`${inputClass} w-[110px]`}
-      />
-      <span className="text-text-muted text-xs">–</span>
-      <input
-        type="number"
-        placeholder="Precio hasta"
-        value={filters.precioMax || ""}
-        onChange={(e) => update({ precioMax: e.target.value ? Number(e.target.value) : undefined })}
-        className={`${inputClass} w-[110px]`}
-      />
-    </div>
+  const amenityBtn = (
+    field: "cochera" | "aptoCreditico" | "aceptaMascotas" | "destacada",
+    label: string,
+    Icon: React.ElementType,
+    className = ""
+  ) => (
+    <button
+      onClick={() => update({ [field]: filters[field] ? undefined : true })}
+      className={`flex items-center gap-1.5 ${pillBase} ${filters[field] ? pillActive : pillInactive} ${className}`}
+    >
+      <Icon className="w-3 h-3" /> {label}
+    </button>
   );
 
-  const surfaceRange = (className = "") => (
-    <div className={`flex items-center gap-1 ${className}`}>
+  /* ── Grouped range input ── */
+  const RangeGroup = ({
+    label,
+    fromVal, fromChange, fromPlaceholder,
+    toVal, toChange, toPlaceholder,
+  }: {
+    label: string;
+    fromVal: number | undefined; fromChange: (v: number | undefined) => void; fromPlaceholder: string;
+    toVal: number | undefined; toChange: (v: number | undefined) => void; toPlaceholder: string;
+  }) => (
+    <div className="flex items-center shrink-0" style={{ border: BORDER }}>
+      <span
+        className="font-body text-[10px] uppercase tracking-wider text-text-muted px-3 py-2.5 shrink-0"
+        style={{ borderRight: BORDER }}
+      >
+        {label}
+      </span>
       <input
         type="number"
-        placeholder="m² desde"
-        value={filters.superficieMin || ""}
-        onChange={(e) => update({ superficieMin: e.target.value ? Number(e.target.value) : undefined })}
-        className={`${inputClass} w-[100px]`}
+        placeholder={fromPlaceholder}
+        value={fromVal || ""}
+        onChange={(e) => fromChange(e.target.value ? Number(e.target.value) : undefined)}
+        className="font-body text-xs bg-transparent outline-none px-3 py-2.5 w-[88px] text-foreground placeholder:text-text-muted focus:text-primary transition-colors"
       />
-      <span className="text-text-muted text-xs">–</span>
+      <span className="font-body text-xs text-text-muted px-1">–</span>
       <input
         type="number"
-        placeholder="m² hasta"
-        value={filters.superficieMax || ""}
-        onChange={(e) => update({ superficieMax: e.target.value ? Number(e.target.value) : undefined })}
-        className={`${inputClass} w-[100px]`}
+        placeholder={toPlaceholder}
+        value={toVal || ""}
+        onChange={(e) => toChange(e.target.value ? Number(e.target.value) : undefined)}
+        className="font-body text-xs bg-transparent outline-none px-3 py-2.5 w-[88px] text-foreground placeholder:text-text-muted focus:text-primary transition-colors"
+        style={{ borderLeft: BORDER }}
       />
     </div>
   );
 
   return (
-    <div className="w-full noise-overlay" style={{ backgroundColor: "hsl(var(--card))", borderBottom: "1px solid hsl(var(--border))" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-4">
-        {/* Desktop filters */}
-        <div className="hidden md:flex flex-wrap items-center gap-3">
-          {/* Search */}
-          <div className="relative flex-1 min-w-[180px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+    <div
+      className="w-full noise-overlay"
+      style={{ backgroundColor: "hsl(var(--card))", borderBottom: BORDER, borderTop: "2px solid hsl(var(--primary) / 0.18)" }}
+    >
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-3.5">
+
+        {/* Desktop Row 1: search + operation + selects + sort + clear */}
+        <div className="hidden md:flex items-center gap-2.5 flex-wrap">
+          <div className="relative flex-1 min-w-[180px] max-w-[280px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
             <input
               type="text"
-              placeholder="Buscar por zona, dirección..."
+              placeholder="Buscar zona, dirección..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="font-body text-xs bg-transparent border border-[hsl(var(--border))] pl-9 pr-3 py-2.5 w-full text-foreground outline-none focus:border-primary transition-colors placeholder:text-text-muted"
             />
           </div>
 
+          {/* Separator */}
+          <div className="h-5 w-px" style={{ backgroundColor: "hsl(var(--border))" }} />
+
           {operacionPills()}
+
+          {/* Separator */}
+          <div className="h-5 w-px" style={{ backgroundColor: "hsl(var(--border))" }} />
+
           {tipoSelect()}
           {barrioSelect()}
           {dormSelect()}
-          
-          {sortSelect()}
 
-          {hasFilters && (
-            <button onClick={clearAll} className="flex items-center gap-1 font-body text-xs text-text-muted hover:text-primary transition-colors">
-              <X className="w-3 h-3" /> Limpiar
-            </button>
-          )}
-        </div>
-
-        {/* Desktop row 2: ranges + amenities */}
-        <div className="hidden md:flex flex-wrap items-center gap-3 mt-3">
-          <span className="font-body text-[10px] uppercase tracking-wider text-text-muted">Precio</span>
-          {priceRange()}
-          <span className="font-body text-[10px] uppercase tracking-wider text-text-muted ml-2">Superficie</span>
-          {surfaceRange()}
-          <div className="ml-2 flex gap-1.5">
-            {amenityToggle("cochera", "Cochera", Car)}
-            {amenityToggle("aptoCreditico", "Apto crédito", CreditCard)}
-            {amenityToggle("aceptaMascotas", "Mascotas", PawPrint)}
-            {destacadaToggle()}
+          <div className="ml-auto flex items-center gap-2.5">
+            {sortSelect()}
+            <Drawer>
+              <DrawerTrigger asChild>
+                <button
+                  className="relative flex items-center gap-2 font-body text-xs uppercase tracking-wider px-4 py-2.5 text-foreground shrink-0"
+                  style={{ border: BORDER }}
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  Más filtros
+                  {activeCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
+                      {activeCount}
+                    </span>
+                  )}
+                </button>
+              </DrawerTrigger>
+              <DrawerContent className="px-6 pb-8">
+                <div className="pt-4 space-y-4">
+                  <p className="font-display text-lg text-foreground">Filtros avanzados</p>
+                  <div>
+                    <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>
+                    <RangeGroup
+                      label="Precio"
+                      fromVal={filters.precioMin} fromChange={(v) => update({ precioMin: v })} fromPlaceholder="Desde"
+                      toVal={filters.precioMax} toChange={(v) => update({ precioMax: v })} toPlaceholder="Hasta"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Superficie (m²)</p>
+                    <RangeGroup
+                      label="m²"
+                      fromVal={filters.superficieMin} fromChange={(v) => update({ superficieMin: v })} fromPlaceholder="Desde"
+                      toVal={filters.superficieMax} toChange={(v) => update({ superficieMax: v })} toPlaceholder="Hasta"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {amenityBtn("cochera", "Cochera", Car)}
+                    {amenityBtn("aptoCreditico", "Apto crédito", CreditCard)}
+                    {amenityBtn("aceptaMascotas", "Mascotas", PawPrint)}
+                    {amenityBtn("destacada", "Destacadas", Star)}
+                  </div>
+                  {hasFilters && (
+                    <button onClick={clearAll} className="w-full font-body text-xs text-text-muted hover:text-primary transition-colors py-2">
+                      Limpiar filtros
+                    </button>
+                  )}
+                </div>
+              </DrawerContent>
+            </Drawer>
+            {hasFilters && (
+              <button
+                onClick={clearAll}
+                className="flex items-center gap-1.5 font-body text-xs text-text-muted hover:text-primary transition-colors"
+              >
+                <X className="w-3.5 h-3.5" /> Limpiar
+              </button>
+            )}
           </div>
         </div>
 
@@ -226,7 +254,10 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
 
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="relative flex items-center gap-2 font-body text-xs uppercase tracking-wider px-4 py-2.5 text-foreground" style={{ border: "1px solid hsl(var(--border))" }}>
+              <button
+                className="relative flex items-center gap-2 font-body text-xs uppercase tracking-wider px-4 py-2.5 text-foreground shrink-0"
+                style={{ border: BORDER }}
+              >
                 <SlidersHorizontal className="w-3.5 h-3.5" /> Filtros
                 {activeCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
@@ -238,31 +269,33 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
             <DrawerContent className="px-6 pb-8">
               <div className="pt-4 space-y-4">
                 <p className="font-display text-lg text-foreground">Filtros</p>
-
                 {operacionPills("flex-1")}
                 {tipoSelect("w-full")}
                 {barrioSelect("w-full")}
                 {dormSelect("w-full")}
-                
-
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Rango de precio</p>
-                  {priceRange("w-full")}
+                  <RangeGroup
+                    label="Precio"
+                    fromVal={filters.precioMin} fromChange={(v) => update({ precioMin: v })} fromPlaceholder="Desde"
+                    toVal={filters.precioMax} toChange={(v) => update({ precioMax: v })} toPlaceholder="Hasta"
+                  />
                 </div>
                 <div>
                   <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-2">Superficie (m²)</p>
-                  {surfaceRange("w-full")}
+                  <RangeGroup
+                    label="m²"
+                    fromVal={filters.superficieMin} fromChange={(v) => update({ superficieMin: v })} fromPlaceholder="Desde"
+                    toVal={filters.superficieMax} toChange={(v) => update({ superficieMax: v })} toPlaceholder="Hasta"
+                  />
                 </div>
-
                 <div className="flex flex-wrap gap-2">
-                  {amenityToggle("cochera", "Cochera", Car)}
-                  {amenityToggle("aptoCreditico", "Apto crédito", CreditCard)}
-                  {amenityToggle("aceptaMascotas", "Mascotas", PawPrint)}
-                  {destacadaToggle()}
+                  {amenityBtn("cochera", "Cochera", Car)}
+                  {amenityBtn("aptoCreditico", "Apto crédito", CreditCard)}
+                  {amenityBtn("aceptaMascotas", "Mascotas", PawPrint)}
+                  {amenityBtn("destacada", "Destacadas", Star)}
                 </div>
-
                 {sortSelect("w-full")}
-
                 {hasFilters && (
                   <button onClick={clearAll} className="w-full font-body text-xs text-text-muted hover:text-primary transition-colors py-2">
                     Limpiar filtros
@@ -273,28 +306,25 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           </Drawer>
         </div>
 
-        {/* Results row */}
-        <div className="flex items-center justify-between mt-3">
-          <p className="font-body text-xs text-text-secondary">
+        {/* Results + view mode + map link */}
+        <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: BORDER }}>
+          <p className="font-body text-xs text-text-muted">
             {total !== undefined ? (
-              <>{total} propiedad{total !== 1 ? "es" : ""} encontrada{total !== 1 ? "s" : ""}</>
-            ) : (
-              "Cargando..."
-            )}
+              <><span className="text-foreground font-medium">{total}</span> propiedad{total !== 1 ? "es" : ""} encontrada{total !== 1 ? "s" : ""}</>
+            ) : "Cargando..."}
           </p>
-          <div className="flex items-center gap-3">
-            {/* View toggle */}
+          <div className="flex items-center gap-4">
             {onViewModeChange && (
-              <div className="hidden md:flex items-center gap-1">
+              <div className="hidden md:flex items-center gap-0.5">
                 <button
                   onClick={() => onViewModeChange("grid")}
-                  className={`p-1.5 transition-colors ${viewMode === "grid" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
+                  className={`p-1.5 transition-colors rounded ${viewMode === "grid" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => onViewModeChange("list")}
-                  className={`p-1.5 transition-colors ${viewMode === "list" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
+                  className={`p-1.5 transition-colors rounded ${viewMode === "list" ? "text-primary" : "text-text-muted hover:text-foreground"}`}
                 >
                   <LayoutList className="w-4 h-4" />
                 </button>
@@ -310,6 +340,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
             )}
           </div>
         </div>
+
       </div>
     </div>
   );

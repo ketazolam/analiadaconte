@@ -121,23 +121,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-lazy gpu-layer section-padding noise-overlay relative overflow-hidden" style={{ contain: "content" }}>
-        {/* Background */}
-        <img
-          src="/images/waiting-room.jpg"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 0 }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, rgba(24,22,30,0.93) 0%, rgba(24,22,30,0.97) 100%)",
-            zIndex: 1,
-          }}
-        />
+      <section ref={ref} className="section-lazy gpu-layer section-padding relative overflow-hidden" style={{ backgroundColor: "hsl(0 0% 99%)", contain: "content" }}>
 
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Google badge header */}
@@ -151,7 +135,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
             <span className="font-display text-2xl text-foreground font-semibold">4.5</span>
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, j) => (
-                <Star key={j} className="w-4 h-4 fill-primary text-primary" />
+                <Star key={j} className="w-4 h-4" style={{ fill: "#FBBC04", color: "#FBBC04" }} />
               ))}
             </div>
           </motion.div>
@@ -191,8 +175,8 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
                     <div
                       className="p-6 h-full flex flex-col rounded-sm"
                       style={{
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        backgroundColor: "#141218",
+                        border: "1px solid rgba(100,30,160,0.12)",
+                        backgroundColor: "hsl(270 20% 97%)",
                       }}
                     >
                       {/* Header: avatar + name + time */}
@@ -214,7 +198,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
                       {/* Stars */}
                       <div className="flex gap-0.5 mb-3">
                         {Array.from({ length: review.stars }).map((_, j) => (
-                          <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
+                          <Star key={j} className="w-3.5 h-3.5" style={{ fill: "#FBBC04", color: "#FBBC04" }} />
                         ))}
                       </div>
 
@@ -224,7 +208,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
                       </p>
 
                       {/* Google attribution */}
-                      <div className="flex items-center gap-1.5 mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                      <div className="flex items-center gap-1.5 mt-4 pt-4" style={{ borderTop: "1px solid rgba(100,30,160,0.10)" }}>
                         <GoogleLogo className="w-4 h-4" />
                         <span className="font-body text-[10px] text-text-muted uppercase tracking-wider">
                           Google Review
@@ -241,9 +225,10 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
               onClick={() => emblaApi?.scrollPrev()}
               className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
               style={{
-                backgroundColor: "rgba(20,18,24,0.9)",
-                border: "1px solid rgba(196,154,60,0.2)",
-                opacity: canScrollPrev ? 1 : 0.3,
+                backgroundColor: "white",
+                border: "1px solid rgba(100,30,160,0.15)",
+                opacity: canScrollPrev ? 1 : 0.5,
+                cursor: canScrollPrev ? "pointer" : "not-allowed",
               }}
               aria-label="Anterior"
             >
@@ -253,9 +238,10 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
               onClick={() => emblaApi?.scrollNext()}
               className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
               style={{
-                backgroundColor: "rgba(20,18,24,0.9)",
-                border: "1px solid rgba(196,154,60,0.2)",
-                opacity: canScrollNext ? 1 : 0.3,
+                backgroundColor: "white",
+                border: "1px solid rgba(100,30,160,0.15)",
+                opacity: canScrollNext ? 1 : 0.5,
+                cursor: canScrollNext ? "pointer" : "not-allowed",
               }}
               aria-label="Siguiente"
             >

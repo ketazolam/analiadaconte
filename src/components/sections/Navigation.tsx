@@ -9,7 +9,6 @@ const navLinks = [
   { label: "Propiedades", href: "/propiedades" },
   { label: "Mapa", href: "/mapa" },
   { label: "Tasación", href: "/tasaciones" },
-  { label: "Quiénes somos", target: "about" },
   { label: "Contacto", href: "/contacto" },
 ];
 
@@ -19,6 +18,7 @@ const Navigation = () => {
   const rafRef = useRef(0);
   const navigate = useNavigate();
   const location = useLocation();
+  const isHome = location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => {
@@ -56,19 +56,22 @@ const Navigation = () => {
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
           scrolled ? "backdrop-blur-xl" : ""
         }`}
-        style={scrolled
-          ? { backgroundColor: "rgba(12,11,15,0.92)", borderBottom: "1px solid rgba(255,255,255,0.06)" }
-          : { background: "linear-gradient(to bottom, rgba(12,11,15,0.6) 0%, transparent 100%)" }
+        style={
+          scrolled
+            ? { backgroundColor: "rgba(252,252,252,0.95)", borderBottom: "1px solid rgba(100,30,160,0.10)" }
+            : isHome
+              ? { background: "linear-gradient(to bottom, rgba(60,15,100,0.30) 0%, transparent 100%)" }
+              : { backgroundColor: "rgba(252,252,252,0.95)", borderBottom: "1px solid rgba(100,30,160,0.08)" }
         }
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: EASE }}
       >
         {/* Logo */}
-        <a href="#" className="flex flex-col items-start relative">
-          <span className="font-display italic text-2xl text-foreground leading-none">AD</span>
-          <div className="w-full h-[1px] mt-0.5" style={{ background: "linear-gradient(90deg, hsl(274,69%,40%), transparent)" }} />
-          <span className="label-accent text-text-secondary mt-0.5" style={{ fontSize: 9 }}>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="flex flex-col items-start relative">
+          <span className="font-display italic text-2xl leading-none" style={{ color: (scrolled || !isHome) ? "hsl(270 15% 10%)" : "white" }}>AD</span>
+          <div className="w-full h-[1px] mt-0.5" style={{ background: (scrolled || !isHome) ? "linear-gradient(90deg, hsl(275,62%,38%), transparent)" : "linear-gradient(90deg, rgba(200,160,255,0.8), transparent)" }} />
+          <span className="label-accent mt-0.5" style={{ fontSize: 9, color: (scrolled || !isHome) ? "hsl(270 8% 38%)" : "rgba(255,255,255,0.65)" }}>
             Analía Daconte
           </span>
         </a>
@@ -79,7 +82,8 @@ const Navigation = () => {
             <button
               key={link.label}
               onClick={() => handleNav(link)}
-              className="font-body text-[12px] uppercase tracking-[2px] text-text-secondary hover:text-primary transition-colors duration-300 bg-transparent border-none cursor-pointer"
+              className="font-body text-[12px] uppercase tracking-[2px] transition-colors duration-300 bg-transparent border-none cursor-pointer"
+              style={{ color: (scrolled || !isHome) ? "hsl(270 8% 38%)" : "rgba(255,255,255,0.80)" }}
             >
               {link.label}
             </button>
@@ -89,7 +93,8 @@ const Navigation = () => {
         {/* Right */}
         <div className="flex items-center gap-4">
           <button
-            className="md:hidden text-foreground"
+            className="md:hidden"
+            style={{ color: (scrolled || !isHome) ? "hsl(270 15% 10%)" : "white" }}
             onClick={() => setMenuOpen(true)}
             aria-label="Abrir menú de navegación"
           >
@@ -103,7 +108,7 @@ const Navigation = () => {
         {menuOpen && (
           <motion.div
             className="fixed inset-0 z-[60] flex flex-col items-center justify-center"
-            style={{ backgroundColor: "#0C0B0F" }}
+            style={{ backgroundColor: "#fcfcfc" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -120,8 +125,8 @@ const Navigation = () => {
               {navLinks.map((link, i) => (
                 <motion.button
                   key={link.label}
-                  className="font-display text-3xl text-foreground pl-4 bg-transparent border-none cursor-pointer"
-                  style={{ borderLeft: "2px solid rgba(196,154,60,0.4)" }}
+                  className="font-display text-3xl pl-4 bg-transparent border-none cursor-pointer"
+                  style={{ color: "hsl(240 10% 12%)", borderLeft: "2px solid rgba(100,30,160,0.5)" }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}

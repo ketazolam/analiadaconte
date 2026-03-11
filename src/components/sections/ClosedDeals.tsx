@@ -27,7 +27,7 @@ const ClosedDeals = () => {
   return (
     <>
       <div className="section-divider" />
-      <section ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
+      <section ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "hsl(270 18% 97%)", contain: "content" }}>
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.p
             className="label-eyebrow text-primary mb-4"
@@ -64,23 +64,23 @@ const ClosedDeals = () => {
                   width={350}
                   height={263}
                 />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,11,15,0.6) 0%, transparent 50%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(30,6,60,0.65) 0%, transparent 55%)" }} />
                 
-                {/* Diagonal ribbon */}
+                {/* Status badge */}
                 <div
-                  className="absolute top-3 right-[-35px] w-[140px] text-center rotate-45 font-body text-[9px] uppercase tracking-wider py-1"
+                  className="absolute top-3 right-3 px-2.5 py-1 font-body text-[11px] uppercase tracking-wider rounded-sm"
                   style={
                     deal.status === "VENDIDO"
-                      ? { backgroundColor: "#C49A3C", color: "#0C0B0F" }
-                      : { backgroundColor: "rgba(255,255,255,0.15)", color: "white" }
+                      ? { backgroundColor: "hsl(275,62%,38%)", color: "white", backdropFilter: "blur(4px)" }
+                      : { backgroundColor: "rgba(160,80,220,0.75)", color: "white", backdropFilter: "blur(4px)" }
                   }
                 >
                   {deal.status}
                 </div>
 
                 <div className="absolute bottom-4 left-4">
-                  <p className="font-body text-xs text-text-muted">{deal.year}</p>
-                  <p className="font-body text-sm text-foreground">{deal.type}</p>
+                  <p className="font-body text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>{deal.year}</p>
+                  <p className="font-body text-sm" style={{ color: "white", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{deal.type}</p>
                 </div>
               </motion.div>
             ))}

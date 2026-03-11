@@ -4,7 +4,7 @@ import { EASE as ease } from "@/lib/constants";
 
 const badges = [
   { label: "Matrícula 2815" },
-  { label: "+25 años" },
+  { label: "+28 años" },
   { label: "Mar del Plata" },
 ];
 
@@ -15,7 +15,7 @@ const AboutSection = () => {
   return (
     <>
       <div className="section-divider" />
-      <section id="about" ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "#111015", contain: "content" }}>
+      <section id="about" ref={ref} className="section-lazy section-padding noise-overlay" style={{ backgroundColor: "hsl(240 36% 44% / 0.05)", contain: "content" }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-[45%_55%] gap-12 lg:gap-20 items-center relative z-10">
           {/* Photo with frame */}
           <motion.div
@@ -25,9 +25,9 @@ const AboutSection = () => {
             transition={{ duration: 0.8, ease }}
           >
             {/* Outer gold frame */}
-            <div className="absolute -top-4 -left-4 w-full h-full" style={{ border: "1px solid rgba(196,154,60,0.3)" }} />
+            <div className="absolute -top-4 -left-4 w-full h-full" style={{ border: "1px solid rgba(100,30,160,0.35)" }} />
             {/* Inner subtle frame */}
-            <div className="absolute -top-2 -left-2 w-full h-full" style={{ border: "1px solid rgba(255,255,255,0.05)" }} />
+            <div className="absolute -top-2 -left-2 w-full h-full" style={{ border: "1px solid rgba(100,30,160,0.18)" }} />
             <div className="relative aspect-[3/4] overflow-hidden" style={{ backgroundColor: "#141218" }}>
               <img
                 src="/images/team-celebration.jpg"
@@ -53,9 +53,9 @@ const AboutSection = () => {
               Quién soy
             </p>
             <h2 className="font-display text-[clamp(32px,4vw,42px)] text-foreground font-light leading-[1.15] mb-6">
-              25 años eligiendo el mejor futuro para mis clientes
+              28 años eligiendo el mejor futuro para mis clientes
             </h2>
-            <div className="w-12 h-px bg-primary mb-8" />
+            <div className="w-16 h-px bg-primary mb-8" />
             <p className="font-body text-[15px] text-text-secondary leading-relaxed mb-4">
               Soy Analía Daconte, Martillera y Corredora Pública (Matrícula 2815). 
               Llevo más de dos décadas trabajando en el mercado inmobiliario de Mar del Plata, 
@@ -70,7 +70,7 @@ const AboutSection = () => {
                 <span
                   key={badge.label}
                   className="label-accent px-4 py-2 text-primary"
-                  style={{ border: "1px solid rgba(196,154,60,0.3)" }}
+                  style={{ border: "1px solid rgba(100,30,160,0.25)", background: "rgba(100,30,160,0.06)" }}
                 >
                   {badge.label}
                 </span>
@@ -78,7 +78,7 @@ const AboutSection = () => {
             </div>
 
             {/* Secondary office photo */}
-            <div className="relative aspect-[16/9] overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="relative aspect-[16/9] overflow-hidden" style={{ border: "1px solid rgba(100,30,160,0.15)" }}>
               <img
                 src="/images/private-office.jpg"
                 alt="Oficina privada de Analía Daconte"

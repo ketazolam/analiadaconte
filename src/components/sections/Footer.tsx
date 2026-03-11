@@ -25,8 +25,8 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 const Footer = () => {
   return (
-    <footer id="contacto" style={{ backgroundColor: "#080709" }}>
-      <div className="h-px w-full" style={{ background: "rgba(196,154,60,0.2)" }} />
+    <footer id="contacto" style={{ backgroundColor: "hsl(270 55% 12%)" }}>
+      <div className="h-px w-full" style={{ background: "rgba(160,80,220,0.25)" }} />
 
       <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 pt-12 md:pt-16 pb-8">
         {/* Mobile-first optimized layout */}
@@ -37,7 +37,7 @@ const Footer = () => {
             <span className="font-display italic text-4xl md:text-5xl text-primary mb-1">AD</span>
             <span className="label-accent text-muted-foreground mb-4 text-xs md:text-[10px]">Inversiones Inmobiliarias</span>
             <p className="font-body text-sm leading-relaxed mb-6 max-w-xs md:max-w-none" style={{ color: "rgba(255,255,255,0.5)" }}>
-              Más de 25 años como Martillera y Corredora Pública en la ciudad de Mar&nbsp;del&nbsp;Plata y alrededores.
+              Más de 28 años como Martillera y Corredora Pública en la ciudad de Mar&nbsp;del&nbsp;Plata y alrededores.
             </p>
             <a
               href={whatsappLink("Hola Analía, quiero más información.")}
@@ -128,8 +128,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 text-center" style={{ borderTop: "1px solid rgba(196,154,60,0.15)" }}>
-          <p className="font-body text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <div className="pt-6 text-center" style={{ borderTop: "1px solid rgba(160,80,220,0.25)" }}>
+          <p className="font-body text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
             © 2026 Analía Daconte Inversiones Inmobiliarias. Todos los derechos reservados.
           </p>
         </div>
