@@ -37,7 +37,7 @@ const Footer = () => {
             <img
               src="/images/logo-ad.png"
               alt="Analía Daconte Inversiones Inmobiliarias"
-              className="h-14 w-auto object-contain mb-4"
+              className="h-10 w-auto object-contain mb-4"
               style={{ filter: "brightness(0) invert(1)" }}
             />
             <p className="font-body text-sm leading-relaxed mb-6 max-w-xs md:max-w-none" style={{ color: "rgba(255,255,255,0.5)" }}>

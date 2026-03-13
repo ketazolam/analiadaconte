@@ -72,7 +72,7 @@ const Navigation = () => {
           <img
             src="/images/logo-ad.png"
             alt="Analía Daconte Inversiones Inmobiliarias"
-            className="h-10 w-auto object-contain"
+            className="h-7 w-auto object-contain"
             style={{
               filter: (scrolled || !isHome) ? "none" : "brightness(0) invert(1)",
             }}
