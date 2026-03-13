@@ -34,8 +34,12 @@ const Footer = () => {
           
           {/* Col 1 — Brand (Mobile: Full width, prominent) */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <span className="font-display italic text-4xl md:text-5xl text-primary mb-1">AD</span>
-            <span className="label-accent text-muted-foreground mb-4 text-xs md:text-[10px]">Inversiones Inmobiliarias</span>
+            <img
+              src="/images/logo-ad.png"
+              alt="Analía Daconte Inversiones Inmobiliarias"
+              className="h-14 w-auto object-contain mb-4"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
             <p className="font-body text-sm leading-relaxed mb-6 max-w-xs md:max-w-none" style={{ color: "rgba(255,255,255,0.5)" }}>
               Más de 28 años como Martillera y Corredora Pública en la ciudad de Mar&nbsp;del&nbsp;Plata y alrededores.
             </p>

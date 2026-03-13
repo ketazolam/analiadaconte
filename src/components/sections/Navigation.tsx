@@ -68,12 +68,15 @@ const Navigation = () => {
         transition={{ duration: 0.8, ease: EASE }}
       >
         {/* Logo */}
-        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="flex flex-col items-start relative">
-          <span className="font-display italic text-2xl leading-none" style={{ color: (scrolled || !isHome) ? "hsl(270 15% 10%)" : "white" }}>AD</span>
-          <div className="w-full h-[1px] mt-0.5" style={{ background: (scrolled || !isHome) ? "linear-gradient(90deg, hsl(275,62%,38%), transparent)" : "linear-gradient(90deg, rgba(200,160,255,0.8), transparent)" }} />
-          <span className="label-accent mt-0.5" style={{ fontSize: 9, color: (scrolled || !isHome) ? "hsl(270 8% 38%)" : "rgba(255,255,255,0.65)" }}>
-            Analía Daconte
-          </span>
+        <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="flex items-center relative">
+          <img
+            src="/images/logo-ad.png"
+            alt="Analía Daconte Inversiones Inmobiliarias"
+            className="h-10 w-auto object-contain"
+            style={{
+              filter: (scrolled || !isHome) ? "none" : "brightness(0) invert(1)",
+            }}
+          />
         </a>
 
         {/* Desktop Links */}
