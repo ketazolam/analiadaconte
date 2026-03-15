@@ -10,6 +10,7 @@ const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProp
 const StatsBar = lazy(() => import("@/components/sections/StatsBar"));
 const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
 const AboutSection = lazy(() => import("@/components/sections/AboutSection"));
+const MapPreviewSection = lazy(() => import("@/components/sections/MapPreviewSection"));
 const ReviewsSection = lazy(() => import("@/components/sections/ReviewsSection"));
 const NewsletterSection = lazy(() => import("@/components/sections/NewsletterSection"));
 const Footer = lazy(() => import("@/components/sections/Footer"));
@@ -38,6 +39,9 @@ const Index = () => {
         </Suspense>
         <Suspense fallback={null}>
           <AboutSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>
           <ReviewsSection />
