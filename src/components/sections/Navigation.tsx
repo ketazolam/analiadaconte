@@ -40,13 +40,6 @@ const Navigation = () => {
     setMenuOpen(false);
     if (link.href) {
       navigate(link.href);
-    } else if (link.target) {
-      if (location.pathname !== "/") {
-        navigate("/");
-        setTimeout(() => smoothScrollTo(link.target!), 300);
-      } else {
-        smoothScrollTo(link.target);
-      }
     }
   };
 

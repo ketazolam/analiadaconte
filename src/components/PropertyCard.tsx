@@ -134,7 +134,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
                   <ChevronRight className="w-4 h-4 text-foreground" />
                 </button>
                 {/* Photo count */}
-                <span className="absolute top-4 right-4 font-body text-[10px] px-2 py-0.5 bg-background/60 backdrop-blur-sm text-foreground z-10">
+                <span className="absolute bottom-3 right-4 font-body text-[10px] px-2 py-0.5 bg-background/60 backdrop-blur-sm text-foreground z-10">
                   {currentImg + 1}/{images.length}
                 </span>
               </>
@@ -176,13 +176,6 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
               <p className="font-display text-[clamp(20px,4vw,26px)] text-primary leading-none">{priceDisplay}</p>
             </div>
 
-            {/* Surface overlay */}
-            {property.superficie_total && (
-              <div className="absolute bottom-4 right-4 flex items-center gap-1 font-body text-xs text-foreground/80 z-10">
-                <Maximize className="w-3 h-3" />
-                {property.superficie_total} m²
-              </div>
-            )}
           </div>
 
           {/* Content */}
@@ -210,7 +203,12 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
                   <Bath className="w-3.5 h-3.5" /> {property.banos}
                 </span>
               )}
-              {property.superficie_cubierta && (
+              {property.superficie_total && (
+                <span className="flex items-center gap-1">
+                  <Maximize className="w-3.5 h-3.5" /> {property.superficie_total} m²
+                </span>
+              )}
+              {!property.superficie_total && property.superficie_cubierta && (
                 <span>{property.superficie_cubierta} m² cub.</span>
               )}
               {property.cochera && (

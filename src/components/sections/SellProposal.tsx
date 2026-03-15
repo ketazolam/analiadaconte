@@ -118,7 +118,7 @@ const SellProposal = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <MagneticButton variant="filled" className="text-base py-5 px-12 shadow-[0_0_40px_rgba(160,80,220,0.30)]">
+              <MagneticButton variant="filled" className="text-base py-5 px-12 shadow-[0_0_40px_rgba(160,80,220,0.15)]">
                 Quiero vender mi propiedad
               </MagneticButton>
             </a>

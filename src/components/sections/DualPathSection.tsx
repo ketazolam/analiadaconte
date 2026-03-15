@@ -44,7 +44,7 @@ const DualPathSection = () => {
           {panels.map((panel, i) => (
             <motion.button
               key={panel.title}
-              className="relative overflow-hidden group text-left min-h-[300px] md:min-h-[420px]"
+              className="relative overflow-hidden group text-left min-h-[220px] md:min-h-[420px]"
               initial={{ opacity: 0, y: 40 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease, delay: i * 0.1 }}

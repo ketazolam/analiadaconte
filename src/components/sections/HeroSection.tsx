@@ -38,7 +38,7 @@ const HeroSection = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.52) 45%, rgba(5,2,10,0.82) 100%)"
+            background: "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.65) 45%, rgba(5,2,10,0.82) 100%)"
           }}
         />
       </motion.div>

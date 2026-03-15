@@ -155,7 +155,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
           >
-            Reseñas en Google
+            Lo que dicen nuestros clientes
           </motion.h2>
 
           {/* Carousel */}

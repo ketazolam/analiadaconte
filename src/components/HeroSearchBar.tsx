@@ -25,9 +25,10 @@ const HeroSearchBar = () => {
     <div
       className="flex flex-col sm:flex-row items-stretch w-full max-w-2xl mx-auto mt-6 md:mt-10 overflow-hidden"
       style={{
-        background: "rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.15)",
         backdropFilter: "blur(16px)",
         border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: "2px",
       }}
     >
       {/* Filtros — fila en mobile y desktop */}
