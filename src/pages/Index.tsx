@@ -29,6 +29,9 @@ const Index = () => {
           <DualPathSection />
         </Suspense>
         <Suspense fallback={null}>
+          <MapPreviewSection />
+        </Suspense>
+        <Suspense fallback={null}>
           <FeaturedProperties />
         </Suspense>
         <Suspense fallback={null}>
@@ -39,9 +42,6 @@ const Index = () => {
         </Suspense>
         <Suspense fallback={null}>
           <AboutSection />
-        </Suspense>
-        <Suspense fallback={null}>
-          <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>
           <ReviewsSection />
