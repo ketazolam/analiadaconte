@@ -94,7 +94,7 @@ const Footer = () => {
                   <Mail className="w-4 h-4 text-primary shrink-0" />
                   <a 
                     href={`mailto:${EMAIL}`} 
-                    className="hover:text-primary transition-colors text-xs md:text-sm touch-manipulation break-all"
+                    className="hover:text-primary transition-colors text-[11px] md:text-sm touch-manipulation break-all"
                   >
                     {EMAIL}
                   </a>
