@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -263,7 +264,7 @@ const SidebarCard = ({ property, selected, onSelect }: SidebarCardProps) => {
         {img && !imgError ? (
           <img
             src={img}
-            alt=""
+            alt={property.titulo || "Propiedad"}
             width={140}
             height={105}
             style={{ width: 140, height: 105, objectFit: "cover", display: "block" }}
@@ -390,7 +391,7 @@ const MapPopup = ({ property }: { property: Propiedad }) => {
       {img && !imgError && (
         <img
           src={img}
-          alt=""
+          alt={property.titulo || "Propiedad"}
           width={80}
           height={62}
           style={{ width: 80, height: 62, objectFit: "cover", borderRadius: 4, flexShrink: 0 }}
@@ -673,6 +674,12 @@ const mapBtnStyle: React.CSSProperties = {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const Mapa = () => {
+  usePageMeta({
+    title: "Mapa de Propiedades en Mar del Plata",
+    description:
+      "Visualizá todas las propiedades disponibles geolocalizadas en Mar del Plata. Filtrá por zona, precio y tipo de propiedad.",
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filters, setFilters] = useState<PropertyFilters>({

@@ -15,7 +15,8 @@ import Footer from "@/components/sections/Footer";
 import { useProperty } from "@/hooks/useProperty";
 import { useProperties } from "@/hooks/useProperties";
 import { sanitizeBarrio } from "@/lib/utils";
-import { whatsappLink, EASE } from "@/lib/constants";
+import { whatsappLink, EASE, SITE_URL } from "@/lib/constants";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -183,15 +184,87 @@ const PropiedadDetalle = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: property, isLoading, isError } = useProperty(slug);
 
-  // SEO: dynamic title
+  const images = property ? getAllImages(property.fotos) : [];
+  const firstPhoto = images[0];
+
+  usePageMeta({
+    title: property
+      ? `${property.titulo} en ${property.barrio || property.ciudad || "Mar del Plata"}`
+      : "Propiedad",
+    description:
+      property?.descripcion?.slice(0, 155) ||
+      `${property?.tipo || "Propiedad"} en ${property?.barrio || "Mar del Plata"}.${property?.dormitorios ? ` ${property.dormitorios} dormitorios.` : ""} Consultá con Analía Daconte.`,
+    image: firstPhoto || undefined,
+  });
+
+  // JSON-LD: RealEstateListing
   useEffect(() => {
-    if (property?.titulo) {
-      document.title = `${property.titulo} | Analía Da Conte Propiedades`;
+    if (!property) return;
+    const imgs = getAllImages(property.fotos);
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      name: property.titulo || "Propiedad",
+      description: property.descripcion || `${property.tipo} en ${property.barrio || "Mar del Plata"}`,
+      url: window.location.href,
+      image: imgs.slice(0, 5),
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: property.direccion || undefined,
+        addressLocality: property.ciudad || "Mar del Plata",
+        addressRegion: "Buenos Aires",
+        addressCountry: "AR",
+      },
+      ...(property.superficie_total && {
+        floorSize: {
+          "@type": "QuantitativeValue",
+          value: property.superficie_total,
+          unitCode: "MTK",
+        },
+      }),
+      ...(property.dormitorios && { numberOfRooms: property.dormitorios }),
+      ...(property.precio && {
+        offers: {
+          "@type": "Offer",
+          price: property.precio,
+          priceCurrency: property.moneda === "ARS" ? "ARS" : "USD",
+        },
+      }),
+    };
+    let script = document.getElementById("property-ld") as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = "property-ld";
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
     }
-    return () => { document.title = "Analía Da Conte Propiedades"; };
+    script.textContent = JSON.stringify(ld);
+    return () => { document.getElementById("property-ld")?.remove(); };
   }, [property]);
 
-  const images = property ? getAllImages(property.fotos) : [];
+  // JSON-LD: BreadcrumbList
+  useEffect(() => {
+    if (!property) return;
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Propiedades", item: `${SITE_URL}/propiedades` },
+        { "@type": "ListItem", position: 3, name: property.titulo || "Propiedad" },
+      ],
+    };
+    let script = document.getElementById("breadcrumb-ld") as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = "breadcrumb-ld";
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(ld);
+    return () => { document.getElementById("breadcrumb-ld")?.remove(); };
+  }, [property]);
+
   const priceDisplay = property?.precio_texto || (property?.precio ? `${property.moneda || "USD"} ${property.precio.toLocaleString("es-AR")}` : "Consultar");
   const barrio = sanitizeBarrio(property?.barrio);
   const location = property ? [barrio, property.ciudad].filter(Boolean).join(", ") || "Mar del Plata" : "";

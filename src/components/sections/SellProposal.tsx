@@ -23,6 +23,7 @@ const SellProposal = () => {
         <img
           src="/images/chesterfield-lounge.jpg"
           alt=""
+          aria-hidden="true"
           loading="lazy"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover"

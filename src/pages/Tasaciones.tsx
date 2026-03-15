@@ -6,9 +6,16 @@ import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/sections/Footer";
 import { EASE } from "@/lib/constants";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 
 const Tasaciones = () => {
+  usePageMeta({
+    title: "Tasación Gratuita de Propiedades en Mar del Plata",
+    description:
+      "Conocé el valor real de tu propiedad en Mar del Plata. Tasación profesional gratuita a cargo de Analía Daconte, Martillera Mat. 2815.",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <ScrollProgress />
@@ -19,6 +26,7 @@ const Tasaciones = () => {
         <img
           src="/images/waiting-room.jpg"
           alt=""
+          aria-hidden="true"
           loading="eager"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover"

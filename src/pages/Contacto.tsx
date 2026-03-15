@@ -9,6 +9,7 @@ import {
   INSTAGRAM_URL, FACEBOOK_URL, WHATSAPP_URL,
   whatsappLink, EASE,
 } from "@/lib/constants";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const WHATSAPP_MSG = "Hola Analía! Me comunico desde la web, quería consultarte algo.";
 
@@ -58,6 +59,12 @@ const ContactRow = ({
 );
 
 const Contacto = () => {
+  usePageMeta({
+    title: "Contacto",
+    description:
+      "Contactate con Analía Daconte Inversiones Inmobiliarias en Mar del Plata. WhatsApp, teléfono y dirección. Respondemos en menos de 2 horas.",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -67,6 +74,7 @@ const Contacto = () => {
         <img
           src="/images/private-office.jpg"
           alt=""
+          aria-hidden="true"
           loading="eager"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover"

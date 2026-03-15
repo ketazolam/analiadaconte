@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 import Navigation from "@/components/sections/Navigation";
 import PropertyFiltersBar from "@/components/PropertyFilters";
@@ -49,6 +50,12 @@ function filtersToParams(f: PropertyFilters): Record<string, string> {
 }
 
 const Propiedades = () => {
+  usePageMeta({
+    title: "Propiedades en Venta y Alquiler en Mar del Plata",
+    description:
+      "Explorá más de 200 propiedades en Mar del Plata: departamentos, casas, PHs, lotes. Filtros por zona, precio y dormitorios.",
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(0);
   const [accumulated, setAccumulated] = useState<Propiedad[]>([]);

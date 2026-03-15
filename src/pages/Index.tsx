@@ -29,13 +29,13 @@ const Index = () => {
           <DualPathSection />
         </Suspense>
         <Suspense fallback={null}>
-          <MapPreviewSection />
-        </Suspense>
-        <Suspense fallback={null}>
           <FeaturedProperties />
         </Suspense>
         <Suspense fallback={null}>
           <StatsBar />
+        </Suspense>
+        <Suspense fallback={null}>
+          <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>
           <SellProposal />

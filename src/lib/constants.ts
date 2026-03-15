@@ -1,4 +1,5 @@
 // Centralizar datos de contacto — cambiar aquí actualiza toda la web
+export const SITE_URL = "https://analiadaconte.lovable.app";
 export const WHATSAPP_NUMBER = "542235382577";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const PHONE = "223 300-1242";

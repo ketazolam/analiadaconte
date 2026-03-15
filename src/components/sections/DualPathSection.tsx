@@ -17,6 +17,7 @@ const DualPathSection = () => {
       cta: "Ver propiedades",
       href: "/propiedades?operacion=venta",
       bgImage: "/images/waiting-room.jpg",
+      imgAlt: "Explorar propiedades en venta en Mar del Plata",
     },
     {
       icon: Key,
@@ -25,6 +26,7 @@ const DualPathSection = () => {
       cta: "Quiero vender",
       href: "/tasaciones",
       bgImage: "/images/office-wide.jpg",
+      imgAlt: "Vender tu propiedad con Analía Daconte",
     },
     {
       icon: Building2,
@@ -33,6 +35,7 @@ const DualPathSection = () => {
       cta: "Ver alquileres",
       href: "/propiedades?operacion=alquiler",
       bgImage: "/images/chesterfield-lounge.jpg",
+      imgAlt: "Propiedades en alquiler en Mar del Plata",
     },
   ];
 
@@ -53,7 +56,7 @@ const DualPathSection = () => {
               {/* BG image */}
               <img
                 src={panel.bgImage}
-                alt=""
+                alt={panel.imgAlt}
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
