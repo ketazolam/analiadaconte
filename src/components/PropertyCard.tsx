@@ -99,7 +99,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
               <>
                 <img
                   src={images[currentImg]}
-                  alt={property.titulo || "Propiedad"}
+                  alt={[property.tipo, property.dormitorios ? `${property.dormitorios} dorm.` : null, property.barrio, "Mar del Plata"].filter(Boolean).join(", ")}
                   className={`w-full h-full object-cover transition-[opacity,transform] duration-200 group-hover:scale-105 ${
                     imgLoaded ? "opacity-100" : "opacity-0"
                   }`}
@@ -121,7 +121,7 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
             )}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(to top, rgba(252,252,252,0.88) 0%, rgba(252,252,252,0.20) 38%, transparent 55%)" }}
+              style={{ background: "linear-gradient(to top, rgba(252,252,252,0.22) 0%, rgba(252,252,252,0.04) 35%, transparent 50%)" }}
             />
 
             {/* Navigation arrows */}
