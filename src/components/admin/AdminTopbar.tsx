@@ -80,6 +80,7 @@ export function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
   const initials = displayName.charAt(0).toUpperCase();
 
   return (
+    <>
     <header className="flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4 gap-4">
       {/* Left: mobile menu + breadcrumb */}
       <div className="flex items-center gap-2 min-w-0">
@@ -198,5 +199,6 @@ export function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
         </CommandGroup>
       </CommandList>
     </CommandDialog>
+    </>
   );
 }
