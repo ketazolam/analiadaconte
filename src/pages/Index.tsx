@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import Navigation from "@/components/sections/Navigation";
 import HeroSection from "@/components/sections/HeroSection";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -16,6 +17,11 @@ const NewsletterSection = lazy(() => import("@/components/sections/NewsletterSec
 const Footer = lazy(() => import("@/components/sections/Footer"));
 
 const Index = () => {
+  usePageMeta({
+    title: "Inmobiliaria en Mar del Plata",
+    description: "28 años de trayectoria en el mercado inmobiliario de Mar del Plata. Compra, venta y tasación de propiedades con asesoramiento personalizado.",
+  });
+
   return (
     <>
       <ScrollProgress />

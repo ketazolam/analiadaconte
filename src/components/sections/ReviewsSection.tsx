@@ -69,6 +69,36 @@ import { forwardRef } from "react";
 const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwardedRef) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      itemListElement: reviews.map((r, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Review",
+          author: { "@type": "Person", name: r.name },
+          reviewRating: { "@type": "Rating", ratingValue: String(r.stars), bestRating: "5" },
+          reviewBody: r.text,
+          itemReviewed: {
+            "@type": "RealEstateAgent",
+            name: "Analía Daconte Inversiones Inmobiliarias",
+          },
+        },
+      })),
+    };
+    let script = document.getElementById("reviews-ld") as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = "reviews-ld";
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(ld);
+    return () => { document.getElementById("reviews-ld")?.remove(); };
+  }, []);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     loop: true,

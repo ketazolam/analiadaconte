@@ -11,7 +11,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#f8f7fc] text-gray-900 overflow-hidden">
+    <div className="admin-layout flex h-screen bg-[#f8f7fc] text-gray-900 overflow-hidden">
       <AdminSidebar
         collapsed={collapsed}
         onCollapse={setCollapsed}

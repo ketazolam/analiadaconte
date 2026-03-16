@@ -135,6 +135,7 @@ export default function AdminDashboard() {
           icon={Building2}
           href="/admin/propiedades"
           loading={isLoading}
+          accent="purple"
         />
         <KPICard
           label="Contactos"
@@ -143,6 +144,7 @@ export default function AdminDashboard() {
           icon={Users}
           href="/admin/contactos"
           loading={isLoading}
+          accent="blue"
         />
         <KPICard
           label="Sin leer"
@@ -152,6 +154,7 @@ export default function AdminDashboard() {
           href="/admin/mensajes"
           loading={isLoading}
           alert={stats?.mensajesSinLeer > 0}
+          accent="amber"
         />
         <KPICard
           label="Tareas"
@@ -160,13 +163,14 @@ export default function AdminDashboard() {
           icon={CheckSquare}
           href="/admin/tareas"
           loading={isLoading}
+          accent="green"
         />
       </div>
 
       {/* Chart + Activity */}
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Chart */}
-        <Card className="lg:col-span-2 bg-white border-gray-200 p-4">
+        <Card className="lg:col-span-2 bg-white border-gray-100 p-4 rounded-xl" style={{ boxShadow: "var(--shadow-card)" }}>
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wider">Visitas</p>
@@ -220,7 +224,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Activity */}
-        <Card className="bg-white border-gray-200 p-4">
+        <Card className="bg-white border-gray-100 p-4 rounded-xl" style={{ boxShadow: "var(--shadow-card)" }}>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">Actividad reciente</p>
           {actividad && actividad.length > 0 ? (
             <div className="space-y-2.5 overflow-y-auto max-h-52">
@@ -276,7 +280,7 @@ export default function AdminDashboard() {
         <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">Publicaciones por portal</p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
           {portales.map((p) => (
-            <Card key={p.label} className="bg-white border-gray-200 p-3">
+            <Card key={p.label} className="bg-white border-gray-100 p-3 rounded-xl hover:shadow-md transition-all duration-150" style={{ boxShadow: "var(--shadow-card)" }}>
               <div className="flex items-center gap-2 mb-2">
                 <p.icon className="h-4 w-4 text-gray-400" />
                 <span className="text-xs text-gray-600 truncate">{p.label}</span>
@@ -311,25 +315,37 @@ interface KPICardProps {
   href: string;
   loading?: boolean;
   alert?: boolean;
+  accent?: "purple" | "blue" | "amber" | "green";
 }
 
-function KPICard({ label, value, sub, icon: Icon, href, loading, alert }: KPICardProps) {
+const accentConfig = {
+  purple: { bg: "bg-purple-50", icon: "text-purple-600", border: "border-t-purple-500", number: "text-gray-900" },
+  blue:   { bg: "bg-blue-50",   icon: "text-blue-600",   border: "border-t-blue-500",   number: "text-gray-900" },
+  amber:  { bg: "bg-amber-50",  icon: "text-amber-600",  border: "border-t-amber-500",  number: "text-amber-600" },
+  green:  { bg: "bg-emerald-50",icon: "text-emerald-600",border: "border-t-emerald-500",number: "text-gray-900" },
+};
+
+function KPICard({ label, value, sub, icon: Icon, href, loading, alert, accent = "purple" }: KPICardProps) {
+  const cfg = alert ? accentConfig.amber : accentConfig[accent];
   return (
     <Link to={href}>
-      <Card className="bg-white border-gray-200 p-4 hover:border-gray-300 transition-colors group cursor-pointer">
+      <Card className={`bg-white border-gray-100 border-t-4 ${cfg.border} p-4 hover:shadow-md transition-all duration-150 group cursor-pointer rounded-xl`}
+        style={{ boxShadow: "var(--shadow-card)" }}>
         <div className="flex items-start justify-between">
-          <Icon className={`h-4 w-4 ${alert ? "text-amber-500" : "text-gray-300"}`} />
-          <ArrowUpRight className="h-3.5 w-3.5 text-gray-200 group-hover:text-gray-400 transition-colors" />
+          <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${cfg.bg}`}>
+            <Icon className={`h-4.5 w-4.5 ${cfg.icon}`} style={{ width: 18, height: 18 }} />
+          </div>
+          <ArrowUpRight className="h-3.5 w-3.5 text-gray-200 group-hover:text-gray-400 transition-colors mt-0.5" />
         </div>
         {loading ? (
-          <div className="mt-3 h-7 w-16 animate-pulse bg-gray-100 rounded" />
+          <div className="mt-3 h-7 w-16 animate-pulse bg-gray-100 rounded-lg" />
         ) : (
-          <p className={`mt-3 text-2xl font-semibold ${alert ? "text-amber-500" : "text-gray-900"}`}>
+          <p className={`mt-3 text-2xl font-semibold ${cfg.number}`}>
             {value.toLocaleString("es-AR")}
           </p>
         )}
-        <p className="mt-0.5 text-xs font-medium text-gray-600">{label}</p>
-        <p className="text-[10px] text-gray-400">{sub}</p>
+        <p className="mt-0.5 text-xs font-semibold text-gray-600">{label}</p>
+        <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>
       </Card>
     </Link>
   );

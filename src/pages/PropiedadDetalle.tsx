@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useCallback, useEffect, useRef } from "react";
+import { externalSupabase } from "@/lib/externalSupabase";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Bed, Bath, Maximize, Car, PawPrint, CreditCard,
@@ -124,7 +125,7 @@ function Gallery({ images, title }: { images: string[]; title: string }) {
                 i === current ? "ring-2 ring-primary opacity-100" : "opacity-50 hover:opacity-80"
               }`}
             >
-              <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+              <img src={img} alt={`${title} - foto ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
             </button>
           ))}
         </div>
@@ -228,8 +229,14 @@ const PropiedadDetalle = () => {
           "@type": "Offer",
           price: property.precio,
           priceCurrency: property.moneda === "ARS" ? "ARS" : "USD",
+          availability: "https://schema.org/InStock",
         },
       }),
+      agent: {
+        "@type": "RealEstateAgent",
+        name: "Analía Daconte",
+        url: "https://analiadaconte.lovable.app",
+      },
     };
     let script = document.getElementById("property-ld") as HTMLScriptElement | null;
     if (!script) {
@@ -264,6 +271,15 @@ const PropiedadDetalle = () => {
     script.textContent = JSON.stringify(ld);
     return () => { document.getElementById("breadcrumb-ld")?.remove(); };
   }, [property]);
+
+  // Registrar visita (silencioso, sin bloquear render)
+  useEffect(() => {
+    if (!property?.id) return;
+    externalSupabase
+      .from("property_views")
+      .insert({ propiedad_id: property.id, path: window.location.pathname })
+      .then(() => {});
+  }, [property?.id]);
 
   const priceDisplay = property?.precio_texto || (property?.precio ? `${property.moneda || "USD"} ${property.precio.toLocaleString("es-AR")}` : "Consultar");
   const barrio = sanitizeBarrio(property?.barrio);

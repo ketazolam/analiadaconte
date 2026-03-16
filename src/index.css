@@ -33,7 +33,18 @@
     --input: 270 20% 88%;
     --ring: 275 62% 38%;
 
-    --radius: 2px;
+    --radius: 10px;
+
+    /* Shadows */
+    --shadow-card: 0 1px 3px rgba(80,0,130,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-card-hover: 0 4px 14px rgba(80,0,130,0.08), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-sidebar: 2px 0 8px rgba(80,0,130,0.04);
+
+    /* KPI card accent backgrounds */
+    --kpi-purple: #f5f3ff;
+    --kpi-blue: #eff6ff;
+    --kpi-green: #f0fdf4;
+    --kpi-amber: #fffbeb;
 
     /* Custom tokens — purple brand palette */
     --gold: 275 62% 38%;
@@ -196,6 +207,46 @@
 @keyframes whatsapp-pulse {
   0% { transform: scale(1); opacity: 0.6; }
   100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Admin panel: restore pointer cursor within admin routes */
+.admin-layout,
+.admin-layout * {
+  cursor: default !important;
+}
+.admin-layout a,
+.admin-layout button,
+.admin-layout [role="button"],
+.admin-layout select,
+.admin-layout input,
+.admin-layout textarea,
+.admin-layout label[for] {
+  cursor: pointer !important;
+}
+
+/* Admin card polish */
+.admin-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #f0eef7;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+.admin-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: #e2ddf5;
+}
+
+/* Admin nav section labels */
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #b0a8c8;
+  padding: 0 12px;
+  margin-top: 8px;
+  margin-bottom: 2px;
 }
 
 /* ScrollProgress GPU hint */

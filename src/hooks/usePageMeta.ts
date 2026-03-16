@@ -37,7 +37,7 @@ export function usePageMeta({ title, description, image, type = "website" }: Pag
   useEffect(() => {
     const fullTitle = `${title} | Analía Daconte`;
     const img = image || DEFAULT_IMAGE;
-    const url = window.location.href;
+    const url = `${SITE_URL}${window.location.pathname}`;
 
     document.title = fullTitle;
     setMeta("name", "description", description);
@@ -48,6 +48,8 @@ export function usePageMeta({ title, description, image, type = "website" }: Pag
     setMeta("property", "og:url", url);
     setMeta("property", "og:image", img);
     setMeta("property", "og:type", type);
+    setMeta("property", "og:site_name", "Analía Daconte Inversiones Inmobiliarias");
+    setMeta("property", "og:locale", "es_AR");
 
     setMeta("name", "twitter:title", fullTitle);
     setMeta("name", "twitter:description", description);
@@ -63,6 +65,8 @@ export function usePageMeta({ title, description, image, type = "website" }: Pag
       setMeta("property", "og:url", `${SITE_URL}/`);
       setMeta("property", "og:image", DEFAULT_IMAGE);
       setMeta("property", "og:type", "website");
+      setMeta("property", "og:site_name", "Analía Daconte Inversiones Inmobiliarias");
+      setMeta("property", "og:locale", "es_AR");
 
       setMeta("name", "twitter:title", DEFAULT_TITLE);
       setMeta("name", "twitter:description", DEFAULT_DESC);

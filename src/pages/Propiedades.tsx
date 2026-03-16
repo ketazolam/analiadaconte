@@ -99,6 +99,7 @@ const Propiedades = () => {
     <div className="min-h-screen bg-background">
       <ScrollProgress />
       <Navigation />
+      <h1 className="sr-only">Propiedades en Venta y Alquiler en Mar del Plata</h1>
 
       {/* Nav spacer */}
       <div className="h-[73px]" />

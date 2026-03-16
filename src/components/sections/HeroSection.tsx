@@ -49,7 +49,7 @@ const HeroSection = () => {
         style={{ y: textY }}
       >
         <motion.h1 className="font-display text-[clamp(48px,7vw,100px)] leading-[1.0] mb-8">
-          {["Expertos en", "Mar del Plata"].map((line, i) => (
+          {["Inmobiliaria en", "Mar del Plata"].map((line, i) => (
             <motion.span
               key={line}
               className={`block ${i === 1 ? "italic" : "font-light"}`}

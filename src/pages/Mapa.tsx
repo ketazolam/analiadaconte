@@ -860,6 +860,7 @@ const Mapa = () => {
 
       {/* Navigation */}
       <Navigation />
+      <h1 className="sr-only">Mapa de Propiedades en Mar del Plata</h1>
 
       {/* Spacer mobile: Navigation es fixed, este div empuja el contenido debajo de ella */}
       <div className="md:hidden" style={{ height: NAV_HEIGHT + 10, flexShrink: 0 }} />

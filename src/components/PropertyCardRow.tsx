@@ -65,7 +65,7 @@ const PropertyCardRow = forwardRef<HTMLDivElement, Props>(({ property, className
             <>
               <img
                 src={images[currentImg]}
-                alt={property.titulo || "Propiedad"}
+                alt={[property.tipo, property.dormitorios ? `${property.dormitorios} dorm.` : null, property.barrio, "Mar del Plata"].filter(Boolean).join(", ")}
                 className={`w-full h-full object-cover transition-[opacity,transform] duration-200 group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
                 loading="lazy"
                 onError={() => setImgError(true)}

@@ -1,216 +1,57 @@
-import { useMemo, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useMemo, useRef, useEffect, useState } from "react";
+import { motion, useInView, animate } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAllMapProperties } from "@/hooks/useProperties";
-import { sanitizeBarrio } from "@/lib/utils";
 import { EASE } from "@/lib/constants";
 
-// ─── Colores únicos por zona (oscuros, consistentes con la paleta del sitio) ──
-const ZONE_HUES = [265, 185, 155, 210, 290, 240];
-function zoneColor(index: number) {
-  const h = ZONE_HUES[index] ?? 250;
-  return `hsl(${h}, 38%, 11%)`;
-}
-function zoneBorder(index: number) {
-  const h = ZONE_HUES[index] ?? 250;
-  return `hsl(${h}, 50%, 30%)`;
-}
+// ─── Counter animado (mismo patrón que StatsBar) ──────────────────────────────
+function Counter({ value, size = "lg" }: { value: number; size?: "lg" | "md" }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
 
-// ─── Card de zona ─────────────────────────────────────────────────────────────
-interface ZonaCardProps {
-  zona: string;
-  count: number;
-  colorIndex: number;
-  index: number;
-  inView: boolean;
-  snapAlign?: boolean;
-}
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(0, value, {
+      duration: 1.8,
+      ease: "easeOut",
+      onUpdate: (v) => setCount(Math.floor(v)),
+    });
+    return () => controls.stop();
+  }, [inView, value]);
 
-const ZonaCard = ({ zona, count, colorIndex, index, inView, snapAlign }: ZonaCardProps) => {
-  const [hovered, setHovered] = useState(false);
-  const navigate = useNavigate();
+  const fontSize =
+    size === "lg"
+      ? "clamp(36px, 5vw, 56px)"
+      : "clamp(24px, 3vw, 36px)";
 
   return (
-    <motion.div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: EASE, delay: 0.15 + index * 0.08 }}
+    <span
+      ref={ref}
+      className="font-display"
       style={{
-        width: 252,
-        minWidth: 252,
-        height: 340,
-        background: zoneColor(colorIndex),
-        border: `1px solid rgba(255,255,255,0.07)`,
-        borderLeft: `3px solid ${hovered ? zoneBorder(colorIndex) : "rgba(255,255,255,0.06)"}`,
-        borderRadius: 2,
-        position: "relative",
-        overflow: "hidden",
-        flexShrink: 0,
-        scrollSnapAlign: snapAlign ? "start" : undefined,
-        transform: hovered ? "translateY(-8px)" : "translateY(0)",
-        boxShadow: hovered
-          ? "0 24px 48px rgba(80,10,140,0.30), 0 4px 16px rgba(0,0,0,0.40)"
-          : "0 4px 16px rgba(0,0,0,0.30)",
-        transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
-        cursor: "pointer",
+        fontSize,
+        fontWeight: size === "lg" ? 200 : 300,
+        color: size === "lg" ? "hsl(var(--primary))" : "rgba(255,255,255,0.95)",
+        lineHeight: 1,
+        letterSpacing: "-0.02em",
       }}
-      onClick={() => navigate(`/propiedades?barrio=${encodeURIComponent(zona)}`)}
     >
-      {/* Número decorativo de fondo */}
-      <div
-        className="font-display"
-        style={{
-          fontSize: "clamp(72px, 8vw, 96px)",
-          fontWeight: 200,
-          lineHeight: 1,
-          color: "rgba(255,255,255,0.07)",
-          position: "absolute",
-          top: 12,
-          right: 14,
-          pointerEvents: "none",
-          userSelect: "none",
-          letterSpacing: "-0.03em",
-        }}
-      >
-        {count}
-      </div>
-
-      {/* Contenido */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          padding: "22px 20px 22px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-        }}
-      >
-        {/* Conteo visible */}
-        <p
-          className="font-body"
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: "rgba(255,255,255,0.38)",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            marginBottom: 8,
-          }}
-        >
-          {count} {count === 1 ? "propiedad" : "propiedades"}
-        </p>
-
-        {/* Nombre de zona */}
-        <p
-          className="font-display italic"
-          style={{
-            fontSize: "clamp(22px, 2.4vw, 27px)",
-            color: "rgba(255,255,255,0.95)",
-            lineHeight: 1.15,
-            marginBottom: 18,
-          }}
-        >
-          {zona}
-        </p>
-
-        {/* Separador */}
-        <div
-          style={{
-            height: 1,
-            background: "rgba(255,255,255,0.10)",
-            marginBottom: 16,
-            transition: "background 0.2s",
-          }}
-        />
-
-        {/* Pills de operación */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-          {(["venta", "alquiler"] as const).map((op) => (
-            <button
-              key={op}
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(
-                  `/propiedades?barrio=${encodeURIComponent(zona)}&operacion=${op}`
-                );
-              }}
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.10em",
-                padding: "5px 11px",
-                border: "1px solid rgba(255,255,255,0.18)",
-                borderRadius: 99,
-                background: "transparent",
-                color: "rgba(255,255,255,0.60)",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background =
-                  "rgba(255,255,255,0.12)";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(255,255,255,0.95)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  "rgba(255,255,255,0.60)";
-              }}
-            >
-              {op}
-            </button>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div
-          className="font-body"
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: hovered
-              ? "hsl(var(--primary))"
-              : "rgba(255,255,255,0.35)",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            transition: "color 0.2s",
-          }}
-        >
-          Ver propiedades{" "}
-          <span
-            style={{
-              display: "inline-block",
-              transform: hovered ? "translateX(4px)" : "translateX(0)",
-              transition: "transform 0.2s ease",
-            }}
-          >
-            →
-          </span>
-        </div>
-      </div>
-    </motion.div>
+      {count}
+    </span>
   );
-};
+}
 
-// ─── Skeleton card ────────────────────────────────────────────────────────────
-const SkeletonCard = () => (
+// ─── Divisor vertical ─────────────────────────────────────────────────────────
+const Divider = () => (
   <div
+    className="hidden md:block"
     style={{
-      width: 252,
-      minWidth: 252,
-      height: 340,
-      background: "hsl(265, 38%, 11%)",
-      border: "1px solid rgba(255,255,255,0.07)",
-      borderRadius: 2,
+      width: 1,
+      height: "60%",
+      background: "rgba(255,255,255,0.08)",
+      alignSelf: "center",
       flexShrink: 0,
-      animation: "pulse 1.6s ease-in-out infinite",
     }}
   />
 );
@@ -218,162 +59,119 @@ const SkeletonCard = () => (
 // ─── Main ─────────────────────────────────────────────────────────────────────
 const MapPreviewSection = () => {
   const ref = useRef(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   const navigate = useNavigate();
 
-  const { data, isLoading } = useAllMapProperties({});
+  const { data } = useAllMapProperties({});
 
-  // Top 6 zonas por número de propiedades
-  const zonas = useMemo(() => {
-    if (!data) return [];
-    const counts: Record<string, number> = {};
-    data.forEach((p) => {
-      const z = sanitizeBarrio(p.barrio) || "Otras zonas";
-      counts[z] = (counts[z] || 0) + 1;
-    });
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6);
-  }, [data]);
+  const total = data?.length ?? 0;
+
+  const ventaCount = useMemo(
+    () => data?.filter((p) => p.operacion?.toLowerCase() === "venta").length ?? 0,
+    [data]
+  );
+
+  const alquilerCount = useMemo(
+    () => data?.filter((p) => p.operacion?.toLowerCase() === "alquiler").length ?? 0,
+    [data]
+  );
 
   return (
     <>
       <div className="section-divider" />
       <section
         ref={ref}
-        className="noise-overlay relative overflow-hidden"
-        style={{ background: "hsl(var(--background))" }}
+        className="noise-overlay relative"
+        style={{ background: "hsl(270 25% 5%)" }}
       >
-        <div className="section-padding">
+        <motion.div
+          className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20"
+          style={{
+            paddingTop: "clamp(32px, 4vw, 48px)",
+            paddingBottom: "clamp(32px, 4vw, 48px)",
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(16px, 3vw, 40px)",
+          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: EASE }}
+        >
 
-          {/* ── Header ── */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease: EASE }}
-            >
+          {/* ── Mobile layout ─────────────────────────────────────────── */}
+          <div className="md:hidden w-full flex flex-col items-center gap-5">
+            {/* Total */}
+            <div className="flex flex-col items-center gap-1">
+              <Counter value={total} size="lg" />
               <p
-                className="label-eyebrow mb-3"
-                style={{ color: "rgba(200,160,255,0.70)" }}
+                className="font-body"
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.12em",
+                  color: "rgba(255,255,255,0.40)",
+                }}
               >
-                Explorar
+                propiedades disponibles
               </p>
-              <h2
-                className="font-display italic gold-gradient-text leading-none"
-                style={{ fontSize: "clamp(40px, 6vw, 64px)", fontWeight: 300 }}
-              >
-                por zona
-              </h2>
-            </motion.div>
+            </div>
 
-            {/* Hint de drag en desktop */}
-            <motion.p
-              className="font-body hidden sm:block"
-              style={{ fontSize: 11, color: "rgba(255,255,255,0.22)", letterSpacing: "0.08em" }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.6, duration: 0.6, ease: EASE }}
-            >
-              ← arrastrá para explorar →
-            </motion.p>
+            {/* Pills venta / alquiler */}
+            <div style={{ display: "flex", gap: 10 }}>
+              {[
+                { label: "en venta", count: ventaCount, op: "venta" },
+                { label: "en alquiler", count: alquilerCount, op: "alquiler" },
+              ].map(({ label, count, op }) => (
+                <button
+                  key={op}
+                  onClick={() => navigate(`/propiedades?operacion=${op}`)}
+                  className="font-body"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "9px 16px",
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    background: "transparent",
+                    cursor: "pointer",
+                    color: "rgba(255,255,255,0.80)",
+                    fontSize: 13,
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "rgba(255,255,255,0.06)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                  }}
+                >
+                  <span
+                    className="font-display"
+                    style={{ fontWeight: 300, fontSize: 18, color: "rgba(255,255,255,0.95)" }}
+                  >
+                    {count}
+                  </span>
+                  <span style={{ color: "rgba(255,255,255,0.50)", fontSize: 11 }}>{label}</span>
+                  <span style={{ color: "hsl(var(--primary))", fontSize: 13 }}>→</span>
+                </button>
+              ))}
+            </div>
 
-            {/* Hint de swipe en mobile */}
-            <motion.p
-              className="font-body sm:hidden"
-              style={{ fontSize: 11, color: "rgba(255,255,255,0.22)", letterSpacing: "0.08em" }}
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.6, duration: 0.6, ease: EASE }}
-            >
-              deslizá →
-            </motion.p>
-          </div>
-
-          {/* ── Track de cards — desktop drag / mobile scroll ── */}
-
-          {/* Mobile: CSS scroll snap */}
-          <div
-            className="sm:hidden"
-            style={{
-              overflowX: "auto",
-              WebkitOverflowScrolling: "touch",
-              scrollSnapType: "x mandatory",
-              display: "flex",
-              gap: 12,
-              paddingLeft: 24,
-              paddingRight: 24,
-              paddingBottom: 8,
-              scrollbarWidth: "none",
-            }}
-          >
-            {isLoading
-              ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
-              : zonas.map(([zona, count], i) => (
-                  <ZonaCard
-                    key={zona}
-                    zona={zona}
-                    count={count}
-                    colorIndex={i}
-                    index={i}
-                    inView={inView}
-                    snapAlign
-                  />
-                ))}
-          </div>
-
-          {/* Desktop: framer-motion drag */}
-          <div
-            className="hidden sm:block"
-            ref={trackRef}
-            style={{ overflow: "hidden", paddingLeft: "max(24px, calc((100vw - 1280px) / 2 + 48px))" }}
-          >
-            <motion.div
-              drag="x"
-              dragConstraints={trackRef}
-              dragElastic={0.05}
-              dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-              style={{
-                display: "flex",
-                gap: 14,
-                width: "max-content",
-                paddingBottom: 12,
-                paddingRight: 80,
-                cursor: "grab",
-              }}
-              whileDrag={{ cursor: "grabbing" }}
-            >
-              {isLoading
-                ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-                : zonas.map(([zona, count], i) => (
-                    <ZonaCard
-                      key={zona}
-                      zona={zona}
-                      count={count}
-                      colorIndex={i}
-                      index={i}
-                      inView={inView}
-                    />
-                  ))}
-            </motion.div>
-          </div>
-
-          {/* ── CTAs ── */}
-          <motion.div
-            className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 mt-10 flex flex-col sm:flex-row items-center gap-4"
-            initial={{ opacity: 0, y: 16 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.7, duration: 0.6, ease: EASE }}
-          >
+            {/* Botón mapa */}
             <button
               onClick={() => navigate("/mapa")}
-              className="font-body text-[11px] uppercase tracking-[0.16em] px-8 py-3.5 w-full sm:w-auto transition-all duration-200"
+              className="font-body"
               style={{
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: "0.16em",
+                padding: "8px 24px",
                 border: "1px solid rgba(255,255,255,0.20)",
-                color: "rgba(255,255,255,0.80)",
                 background: "transparent",
+                color: "rgba(255,255,255,0.70)",
                 cursor: "pointer",
+                transition: "background 0.15s",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.background =
@@ -383,29 +181,141 @@ const MapPreviewSection = () => {
                 (e.currentTarget as HTMLButtonElement).style.background = "transparent";
               }}
             >
-              Ver mapa completo
+              Ver mapa completo →
             </button>
-            <button
-              onClick={() => navigate("/propiedades")}
-              className="font-body text-[11px] uppercase tracking-[0.16em] px-8 py-3.5 w-full sm:w-auto transition-all duration-200"
-              style={{
-                background: "hsl(var(--primary))",
-                color: "hsl(var(--primary-foreground))",
-                border: "none",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.filter = "brightness(1.15)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.filter = "brightness(1)";
-              }}
-            >
-              Todas las propiedades
-            </button>
-          </motion.div>
+          </div>
 
-        </div>
+          {/* ── Desktop layout — 4 columnas ───────────────────────────── */}
+          <div
+            className="hidden md:flex w-full items-center"
+            style={{ gap: "clamp(24px, 3vw, 48px)" }}
+          >
+            {/* Col 1: Total */}
+            <div style={{ flexShrink: 0 }}>
+              <Counter value={total} size="lg" />
+              <p
+                className="font-body mt-1.5"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.12em",
+                  color: "rgba(255,255,255,0.38)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                propiedades disponibles
+              </p>
+            </div>
+
+            <Divider />
+
+            {/* Col 2: Venta */}
+            <div style={{ flexShrink: 0 }}>
+              <Counter value={ventaCount} size="md" />
+              <p
+                className="font-body mt-1"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  color: "rgba(255,255,255,0.38)",
+                  marginBottom: 6,
+                }}
+              >
+                en venta
+              </p>
+              <button
+                onClick={() => navigate("/propiedades?operacion=venta")}
+                className="font-body"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  color: "hsl(var(--primary))",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                Ver →
+              </button>
+            </div>
+
+            <Divider />
+
+            {/* Col 3: Alquiler */}
+            <div style={{ flexShrink: 0 }}>
+              <Counter value={alquilerCount} size="md" />
+              <p
+                className="font-body mt-1"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  color: "rgba(255,255,255,0.38)",
+                  marginBottom: 6,
+                }}
+              >
+                en alquiler
+              </p>
+              <button
+                onClick={() => navigate("/propiedades?operacion=alquiler")}
+                className="font-body"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  color: "hsl(var(--primary))",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                Ver →
+              </button>
+            </div>
+
+            <Divider />
+
+            {/* Col 4: CTA mapa — alineado a la derecha */}
+            <div style={{ marginLeft: "auto", flexShrink: 0 }}>
+              <button
+                onClick={() => navigate("/mapa")}
+                className="font-body"
+                style={{
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.16em",
+                  padding: "10px 22px",
+                  border: "1px solid rgba(255,255,255,0.20)",
+                  background: "transparent",
+                  color: "rgba(255,255,255,0.70)",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    "rgba(255,255,255,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                }}
+              >
+                Ver mapa →
+              </button>
+            </div>
+          </div>
+
+        </motion.div>
       </section>
       <div className="section-divider" />
     </>

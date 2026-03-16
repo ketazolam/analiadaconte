@@ -29,8 +29,10 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Calendar,
+  Calendar as CalendarIcon,
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -203,7 +205,25 @@ export default function AdminTareas() {
                 </div>
                 <div className="space-y-1">
                   <Label className="text-xs text-gray-500">Fecha vencimiento</Label>
-                  <Input type="date" value={newTarea.fecha_vencimiento} onChange={e => setNewTarea(t => ({ ...t, fecha_vencimiento: e.target.value }))} className="bg-white border-gray-200 text-gray-900 h-8 text-sm focus-visible:ring-purple-500/30 focus-visible:border-purple-400" />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal h-8 text-sm bg-white border-gray-200 text-gray-900 hover:bg-gray-50">
+                        <CalendarIcon className="mr-2 h-3.5 w-3.5 text-gray-400" />
+                        {newTarea.fecha_vencimiento
+                          ? format(new Date(newTarea.fecha_vencimiento), "d 'de' MMM yyyy", { locale: es })
+                          : <span className="text-gray-400">Sin fecha</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={newTarea.fecha_vencimiento ? new Date(newTarea.fecha_vencimiento) : undefined}
+                        onSelect={(date) => setNewTarea(t => ({ ...t, fecha_vencimiento: date ? date.toISOString().split("T")[0] : "" }))}
+                        locale={es}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
               <Button
@@ -276,7 +296,7 @@ export default function AdminTareas() {
                     </div>
                     {t.fecha_vencimiento && (
                       <div className="flex items-center gap-1 mt-2 text-[10px] text-gray-400">
-                        <Calendar className="h-3 w-3" />
+                        <CalendarIcon className="h-3 w-3" />
                         {format(new Date(t.fecha_vencimiento), "dd/MM/yyyy")}
                       </div>
                     )}
@@ -318,7 +338,7 @@ function TareaRow({ tarea: t, onUpdateEstado }: { tarea: Tarea; onUpdateEstado: 
         {t.fecha_vencimiento && (
           <div className={`flex items-center gap-1 text-[10px] ${vencida ? "text-red-500" : "text-gray-400"}`}>
             {vencida && <AlertCircle className="h-3 w-3" />}
-            <Calendar className="h-3 w-3" />
+            <CalendarIcon className="h-3 w-3" />
             {format(new Date(t.fecha_vencimiento), "dd/MM")}
           </div>
         )}

@@ -1,0 +1,13 @@
+{
+  "name": "Analía Daconte Inversiones Inmobiliarias",
+  "short_name": "Analía Daconte",
+  "description": "28 años en el mercado inmobiliario de Mar del Plata. Compra, venta y tasación.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1a0533",
+  "background_color": "#0a030f",
+  "lang": "es-AR",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
+  ]
+}
