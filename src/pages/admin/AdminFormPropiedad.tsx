@@ -202,7 +202,7 @@ export default function AdminFormPropiedad() {
   const qc = useQueryClient();
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
 
-  const { isLoading: loadingEdit } = useQuery({
+  const { data: editData, isLoading: loadingEdit } = useQuery({
     queryKey: ["propiedad-edit", id],
     queryFn: async () => {
       const { data, error } = await externalSupabase.from("propiedades").select("*").eq("id", id).single();
@@ -210,8 +210,11 @@ export default function AdminFormPropiedad() {
       return data as Propiedad;
     },
     enabled: isEdit,
-    onSuccess: (p: Propiedad) => setForm(propiedadToForm(p)),
-  } as any);
+  });
+
+  useEffect(() => {
+    if (editData) setForm(propiedadToForm(editData));
+  }, [editData]);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
