@@ -1,3 +1,10 @@
+# Environment variables
+.env
+.env.*
+
+# Supabase temp files
+supabase/.temp/
+
 # Logs
 logs
 *.log
