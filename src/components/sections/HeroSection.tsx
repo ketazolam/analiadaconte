@@ -64,29 +64,18 @@ const HeroSection = () => {
       {/* Background: video en mobile, carousel en desktop */}
       <motion.div className="absolute inset-0 overflow-hidden" style={{ y: bgY }}>
         {isMobile ? (
-          /* ── Mobile: carousel imágenes aéreas ── */
-          <>
-            {heroImagesMobile.map((src, i) => (
-              <motion.img
-                key={src}
-                src={src}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ objectPosition: "center 40%" }}
-                initial={{ opacity: 0, scale: 1 }}
-                animate={
-                  i === currentSlide
-                    ? { opacity: 1, scale: 1.05 }
-                    : { opacity: 0, scale: 1 }
-                }
-                transition={
-                  i === currentSlide
-                    ? { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" }, scale: { duration: SLIDE_DURATION / 1000, ease: "linear" } }
-                    : { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" } }
-                }
-              />
-            ))}
-          </>
+          /* ── Mobile: video ── */
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster="/images/mdp-aerial-hero.jpg"
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/images/office-video.mp4" type="video/mp4" />
+          </video>
         ) : (
           /* ── Desktop: carousel de 4 imágenes con crossfade ── */
           <>
@@ -116,9 +105,7 @@ const HeroSection = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: isMobile
-              ? "linear-gradient(to bottom, rgba(5,2,10,0.40) 0%, rgba(5,2,10,0.72) 40%, rgba(5,2,10,0.88) 100%)"
-              : "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.65) 45%, rgba(5,2,10,0.82) 100%)"
+            background: "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.65) 45%, rgba(5,2,10,0.82) 100%)"
           }}
         />
       </motion.div>
