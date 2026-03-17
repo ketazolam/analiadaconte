@@ -6,7 +6,6 @@ import ScrollProgress from "@/components/ScrollProgress";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ScrollToTop from "@/components/ScrollToTop";
 
-const DualPathSection = lazy(() => import("@/components/sections/DualPathSection"));
 const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProperties"));
 const StatsBar = lazy(() => import("@/components/sections/StatsBar"));
 const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
@@ -31,9 +30,6 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
-        <Suspense fallback={null}>
-          <DualPathSection />
-        </Suspense>
         <Suspense fallback={null}>
           <FeaturedProperties />
         </Suspense>
