@@ -3,48 +3,53 @@ import { useRef } from "react";
 import { Home, Key, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { EASE as ease } from "@/lib/constants";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const panelsData = [
+  {
+    icon: Home,
+    title: "Comprar",
+    desc: "200+ propiedades en las mejores zonas de Mar del Plata.",
+    cta: "Ver propiedades",
+    href: "/propiedades?operacion=venta",
+    bgDesktop: "/images/waiting-room.jpg",
+    bgMobile: "/images/hero-aerial-1.jpg",
+    imgAlt: "Explorar propiedades en venta en Mar del Plata",
+  },
+  {
+    icon: Key,
+    title: "Vender",
+    desc: "Tasación profesional, fotografía y plan de marketing a medida.",
+    cta: "Quiero vender",
+    href: "/tasaciones",
+    bgDesktop: "/images/office-wide.jpg",
+    bgMobile: "/images/hero-aerial-2.jpg",
+    imgAlt: "Vender tu propiedad con Analía Daconte",
+  },
+  {
+    icon: Building2,
+    title: "Alquilar",
+    desc: "Alquileres temporarios y permanentes con asesoramiento integral.",
+    cta: "Ver alquileres",
+    href: "/propiedades?operacion=alquiler",
+    bgDesktop: "/images/chesterfield-lounge.jpg",
+    bgMobile: "/images/hero-aerial-4.jpg",
+    imgAlt: "Propiedades en alquiler en Mar del Plata",
+  },
+];
 
 const DualPathSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const navigate = useNavigate();
-
-  const panels = [
-    {
-      icon: Home,
-      title: "Comprar",
-      desc: "200+ propiedades en las mejores zonas de Mar del Plata.",
-      cta: "Ver propiedades",
-      href: "/propiedades?operacion=venta",
-      bgImage: "/images/hero-aerial-1.jpg",
-      imgAlt: "Explorar propiedades en venta en Mar del Plata",
-    },
-    {
-      icon: Key,
-      title: "Vender",
-      desc: "Tasación profesional, fotografía y plan de marketing a medida.",
-      cta: "Quiero vender",
-      href: "/tasaciones",
-      bgImage: "/images/hero-aerial-2.jpg",
-      imgAlt: "Vender tu propiedad con Analía Daconte",
-    },
-    {
-      icon: Building2,
-      title: "Alquilar",
-      desc: "Alquileres temporarios y permanentes con asesoramiento integral.",
-      cta: "Ver alquileres",
-      href: "/propiedades?operacion=alquiler",
-      bgImage: "/images/hero-aerial-4.jpg",
-      imgAlt: "Propiedades en alquiler en Mar del Plata",
-    },
-  ];
+  const isMobile = useIsMobile();
 
   return (
     <>
       <div className="section-divider" />
       <section ref={ref} className="section-lazy gpu-layer relative" style={{ contain: "content" }}>
         <div className="grid grid-cols-1 md:grid-cols-3">
-          {panels.map((panel, i) => (
+          {panelsData.map((panel, i) => (
             <motion.button
               key={panel.title}
               className="relative overflow-hidden group text-left min-h-[220px] md:min-h-[420px]"
@@ -55,13 +60,14 @@ const DualPathSection = () => {
             >
               {/* BG image */}
               <img
-                src={panel.bgImage}
+                src={isMobile ? panel.bgMobile : panel.bgDesktop}
                 alt={panel.imgAlt}
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                style={{ objectPosition: isMobile ? "center 40%" : "center" }}
               />
-              {/* Overlay — oscuro neutral para legibilidad */}
+              {/* Overlay */}
               <div
                 className="absolute inset-0 transition-opacity duration-500"
                 style={{ background: "linear-gradient(to bottom, rgba(10,3,20,0.40) 0%, rgba(10,3,20,0.88) 100%)" }}
