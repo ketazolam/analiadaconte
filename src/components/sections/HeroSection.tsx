@@ -16,9 +16,10 @@ const heroImages = [
 ];
 
 const heroImagesMobile = [
-  "/images/waiting-room.jpg",
-  "/images/office-wide.jpg",
-  "/images/chesterfield-lounge.jpg",
+  "/images/hero-aerial-1.jpg",
+  "/images/hero-aerial-2.jpg",
+  "/images/hero-aerial-3.png",
+  "/images/hero-aerial-4.jpg",
 ];
 
 const SLIDE_DURATION = 5000; // ms por slide
@@ -63,7 +64,7 @@ const HeroSection = () => {
       {/* Background: video en mobile, carousel en desktop */}
       <motion.div className="absolute inset-0 overflow-hidden" style={{ y: bgY }}>
         {isMobile ? (
-          /* ── Mobile: carousel de las 3 imágenes de servicios ── */
+          /* ── Mobile: carousel imágenes aéreas ── */
           <>
             {heroImagesMobile.map((src, i) => (
               <motion.img
@@ -71,6 +72,7 @@ const HeroSection = () => {
                 src={src}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
+                style={{ objectPosition: "center 40%" }}
                 initial={{ opacity: 0, scale: 1 }}
                 animate={
                   i === currentSlide
@@ -114,7 +116,9 @@ const HeroSection = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.65) 45%, rgba(5,2,10,0.82) 100%)"
+            background: isMobile
+              ? "linear-gradient(to bottom, rgba(5,2,10,0.40) 0%, rgba(5,2,10,0.72) 40%, rgba(5,2,10,0.88) 100%)"
+              : "linear-gradient(to bottom, rgba(5,2,10,0.25) 0%, rgba(5,2,10,0.65) 45%, rgba(5,2,10,0.82) 100%)"
           }}
         />
       </motion.div>
