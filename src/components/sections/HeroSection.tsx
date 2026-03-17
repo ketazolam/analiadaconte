@@ -116,21 +116,25 @@ const HeroSection = () => {
         style={{ y: textY }}
       >
         <motion.h1 className="font-display text-[clamp(42px,6.5vw,88px)] leading-[1.0] mb-8">
-          {["Inmobiliaria en", "Mar del Plata"].map((line, i) => (
-            <motion.span
-              key={line}
-              className={`block ${i === 1 ? "italic" : "font-light"}`}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.4 + i * 0.25 }}
-              style={{
-                color: i === 0 ? "white" : "rgba(240,230,255,0.96)",
-                textShadow: "0 2px 24px rgba(0,0,0,0.65)"
-              }}
-            >
-              {line}
-            </motion.span>
-          ))}
+          <motion.span
+            className="block"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.4 }}
+            style={{ color: "white", textShadow: "0 2px 24px rgba(0,0,0,0.65)" }}
+          >
+            Inversiones reales
+          </motion.span>
+          <motion.span
+            className="block italic"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.65 }}
+            style={{ textShadow: "0 2px 24px rgba(0,0,0,0.65)" }}
+          >
+            <span style={{ color: "rgba(240,230,255,0.96)" }}>para </span>
+            <span className="gold-gradient-text">proyectos de vida</span>
+          </motion.span>
         </motion.h1>
 
         <motion.p
