@@ -52,7 +52,7 @@ const AboutSection = () => {
             <p className="label-eyebrow text-primary mb-6">
               Quién soy
             </p>
-            <h2 className="font-display text-[clamp(32px,4vw,42px)] text-foreground font-light leading-[1.15] mb-6">
+            <h2 className="font-display text-[clamp(32px,4vw,42px)] text-foreground leading-[1.15] mb-6">
               28 años eligiendo el mejor futuro para mis clientes
             </h2>
             <div className="w-16 h-px bg-primary mb-8" />

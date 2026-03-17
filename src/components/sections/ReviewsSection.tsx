@@ -162,7 +162,7 @@ const ReviewsSection = forwardRef<HTMLElement>(function ReviewsSection(_, forwar
             transition={{ duration: 0.7, ease: EASE }}
           >
             <GoogleLogo />
-            <span className="font-display text-2xl text-foreground font-semibold">4.5</span>
+            <span className="font-display text-2xl text-foreground">4.5</span>
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, j) => (
                 <Star key={j} className="w-4 h-4" style={{ fill: "#FBBC04", color: "#FBBC04" }} />

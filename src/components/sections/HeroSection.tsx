@@ -115,7 +115,7 @@ const HeroSection = () => {
         className="relative z-10 text-center max-w-4xl px-6"
         style={{ y: textY }}
       >
-        <motion.h1 className="font-display text-[clamp(48px,7vw,100px)] leading-[1.0] mb-8">
+        <motion.h1 className="font-display text-[clamp(42px,6.5vw,88px)] leading-[1.0] mb-8">
           {["Inmobiliaria en", "Mar del Plata"].map((line, i) => (
             <motion.span
               key={line}

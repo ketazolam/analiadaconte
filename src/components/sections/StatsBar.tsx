@@ -23,7 +23,7 @@ const Counter = ({ value, prefix, suffix }: { value: number; prefix: string; suf
   }, [inView, value]);
 
   return (
-    <span ref={ref} className="font-display text-[clamp(42px,6vw,80px)] font-light text-primary leading-none" style={{ textShadow: "0 0 30px rgba(100,30,160,0.3)" }}>
+    <span ref={ref} className="font-display text-[clamp(38px,5.5vw,72px)] text-primary leading-none" style={{ textShadow: "0 0 30px rgba(100,30,160,0.3)" }}>
       {`${prefix}${count}${suffix}`}
     </span>
   );

@@ -19,7 +19,7 @@ const FeaturedProperties = () => {
         <div className="flex items-end justify-between gap-4">
           <div>
             <motion.h2
-              className="font-display text-[clamp(40px,5vw,56px)] text-foreground leading-tight"
+              className="font-display text-[clamp(36px,4.5vw,52px)] text-foreground leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease: EASE }}

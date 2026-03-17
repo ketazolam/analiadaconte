@@ -8,7 +8,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 const DualPathSection = lazy(() => import("@/components/sections/DualPathSection"));
 const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProperties"));
-const StatsBar = lazy(() => import("@/components/sections/StatsBar"));
 const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
 const AboutSection = lazy(() => import("@/components/sections/AboutSection"));
 const MapPreviewSection = lazy(() => import("@/components/sections/MapPreviewSection"));
@@ -37,10 +36,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <FeaturedProperties />
         </Suspense>
-        <Suspense fallback={null}>
-          <StatsBar />
-        </Suspense>
-        <Suspense fallback={null}>
+<Suspense fallback={null}>
           <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>

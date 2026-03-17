@@ -50,7 +50,7 @@ const SellProposal = () => {
             </motion.p>
 
             <motion.h2
-              className="font-display text-[clamp(40px,5vw,64px)] leading-[1.05] mb-4"
+              className="font-display text-[clamp(36px,4.5vw,58px)] leading-[1.05] mb-4"
               style={{ color: "white" }}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
