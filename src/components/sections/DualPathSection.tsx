@@ -16,7 +16,7 @@ const DualPathSection = () => {
       desc: "200+ propiedades en las mejores zonas de Mar del Plata.",
       cta: "Ver propiedades",
       href: "/propiedades?operacion=venta",
-      bgImage: "/images/waiting-room.jpg",
+      bgImage: "/images/hero-aerial-1.jpg",
       imgAlt: "Explorar propiedades en venta en Mar del Plata",
     },
     {
@@ -25,7 +25,7 @@ const DualPathSection = () => {
       desc: "Tasación profesional, fotografía y plan de marketing a medida.",
       cta: "Quiero vender",
       href: "/tasaciones",
-      bgImage: "/images/office-wide.jpg",
+      bgImage: "/images/hero-aerial-2.jpg",
       imgAlt: "Vender tu propiedad con Analía Daconte",
     },
     {
@@ -34,7 +34,7 @@ const DualPathSection = () => {
       desc: "Alquileres temporarios y permanentes con asesoramiento integral.",
       cta: "Ver alquileres",
       href: "/propiedades?operacion=alquiler",
-      bgImage: "/images/chesterfield-lounge.jpg",
+      bgImage: "/images/hero-aerial-4.jpg",
       imgAlt: "Propiedades en alquiler en Mar del Plata",
     },
   ];
