@@ -21,7 +21,7 @@ const SellProposal = () => {
       <section ref={ref} className="section-lazy relative overflow-hidden noise-overlay" style={{ contain: "content" }}>
         {/* Lazy background image */}
         <img
-          src="/images/chesterfield-lounge.jpg"
+          src="/images/mdp-coastline.jpg"
           alt=""
           aria-hidden="true"
           loading="lazy"

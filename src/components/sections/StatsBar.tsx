@@ -3,7 +3,7 @@ import { motion, useInView, animate } from "framer-motion";
 
 const stats = [
   { value: 200, prefix: "+", suffix: "", label: "Propiedades vendidas" },
-  { value: 25, prefix: "", suffix: "", label: "Años de trayectoria" },
+  { value: 28, prefix: "", suffix: "", label: "Años de trayectoria" },
   { value: 98, prefix: "", suffix: "%", label: "Clientes satisfechos" },
 ];
 

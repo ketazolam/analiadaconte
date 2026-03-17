@@ -37,7 +37,7 @@ const HeroSearchBar = () => {
         <div className="flex-1 px-3 py-2 sm:px-4 border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <label className="font-body text-[9px] sm:text-[11px] uppercase tracking-[0.12em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Operación</label>
           <select value={operacion} onChange={(e) => setOperacion(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px" }}>
-            <option value="">Todas</option>
+            <option value="">Selecciona</option>
             <option value="venta">Venta</option>
             <option value="alquiler">Alquiler</option>
           </select>
@@ -47,7 +47,7 @@ const HeroSearchBar = () => {
         <div className="flex-1 px-3 py-2 sm:px-4 border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <label className="font-body text-[9px] sm:text-[11px] uppercase tracking-[0.12em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Tipo</label>
           <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px" }}>
-            <option value="">Todos</option>
+            <option value="">Selecciona</option>
             {options?.tipos.map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}
@@ -58,7 +58,7 @@ const HeroSearchBar = () => {
         <div className="flex-1 px-3 py-2 sm:px-4 sm:border-r" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <label className="font-body text-[9px] sm:text-[11px] uppercase tracking-[0.12em] block mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>Dormitorios</label>
           <select value={dormitorios} onChange={(e) => setDormitorios(e.target.value)} className={selectClass} style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px" }}>
-            <option value="">Todos</option>
+            <option value="">Selecciona</option>
             <option value="1">1+</option>
             <option value="2">2+</option>
             <option value="3">3+</option>
