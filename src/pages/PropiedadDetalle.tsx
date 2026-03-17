@@ -294,6 +294,18 @@ const PropiedadDetalle = () => {
   const { data: similarData } = useProperties(similarFilters, 0);
   const similarProperties = (similarData?.properties || []).filter((p) => p.id !== property?.id).slice(0, 3);
 
+  const [consultaNombre, setConsultaNombre] = useState("");
+  const [consultaMensaje, setConsultaMensaje] = useState("");
+
+  const handleConsultar = () => {
+    const nombreTexto = consultaNombre.trim() || "un interesado";
+    const mensajeTexto = consultaMensaje.trim()
+      ? `\n\n${consultaMensaje.trim()}`
+      : "";
+    const msg = `Hola Analía, soy ${nombreTexto}.\nMe interesa la propiedad: ${property?.titulo} (${priceDisplay}) en ${location}.${mensajeTexto}`;
+    window.open(whatsappLink(msg), "_blank", "noopener,noreferrer");
+  };
+
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -417,15 +429,65 @@ const PropiedadDetalle = () => {
               {/* Sidebar */}
               <motion.aside className="lg:col-span-1 space-y-4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}>
                 <div className="lg:sticky lg:top-28 space-y-4">
-                  <a
-                    href={whatsappLink(`Hola Analía, me interesa la propiedad: ${property.titulo} (${priceDisplay}) en ${location}`)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 w-full font-body text-sm uppercase tracking-wider py-4 transition-all hover:brightness-110"
-                    style={{ backgroundColor: "hsl(var(--whatsapp))", color: "hsl(var(--primary-foreground))" }}
+                  {/* Mini form consulta WhatsApp */}
+                  <div
+                    className="p-5 space-y-4"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(160,80,220,0.15)",
+                    }}
                   >
-                    <MessageCircle className="w-4 h-4" /> Consultar por WhatsApp
-                  </a>
+                    <p className="font-body text-[10px] uppercase tracking-wider text-text-muted">Consultá sobre esta propiedad</p>
+
+                    {/* Propiedad seleccionada (solo visual) */}
+                    <div
+                      className="p-3 space-y-0.5"
+                      style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid hsl(var(--border))" }}
+                    >
+                      <p className="font-body text-xs text-foreground leading-snug line-clamp-2">{property.titulo}</p>
+                      <p className="font-body text-xs text-primary font-medium">{priceDisplay}</p>
+                      {location && (
+                        <p className="font-body text-[11px] text-text-muted flex items-center gap-1">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />{location}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Campo nombre */}
+                    <input
+                      type="text"
+                      value={consultaNombre}
+                      onChange={(e) => setConsultaNombre(e.target.value)}
+                      placeholder="Tu nombre"
+                      className="w-full font-body text-sm text-foreground placeholder:text-text-muted px-3 py-2.5 outline-none focus:border-primary/50 transition-colors"
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                      }}
+                    />
+
+                    {/* Campo mensaje */}
+                    <textarea
+                      value={consultaMensaje}
+                      onChange={(e) => setConsultaMensaje(e.target.value)}
+                      placeholder="¿Qué querés saber sobre esta propiedad?"
+                      rows={3}
+                      className="w-full font-body text-sm text-foreground placeholder:text-text-muted px-3 py-2.5 outline-none focus:border-primary/50 transition-colors resize-none"
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                      }}
+                    />
+
+                    {/* Botón enviar */}
+                    <button
+                      onClick={handleConsultar}
+                      className="flex items-center justify-center gap-3 w-full font-body text-sm uppercase tracking-wider py-4 transition-all hover:brightness-110 active:scale-[0.98]"
+                      style={{ backgroundColor: "hsl(var(--whatsapp))", color: "hsl(var(--primary-foreground))" }}
+                    >
+                      <MessageCircle className="w-4 h-4" /> Enviar consulta
+                    </button>
+                  </div>
 
                   <button
                     onClick={handleShare}

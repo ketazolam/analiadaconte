@@ -28,6 +28,7 @@ const AdminTareas = lazy(() => import("./pages/admin/AdminTareas"));
 const AdminPublicaciones = lazy(() => import("./pages/admin/AdminPublicaciones"));
 const AdminConfiguracion = lazy(() => import("./pages/admin/AdminConfiguracion"));
 const AdminFormPropiedad = lazy(() => import("./pages/admin/AdminFormPropiedad"));
+const AdminAprobarPropiedad = lazy(() => import("./pages/admin/AdminAprobarPropiedad"));
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const App = () => (
                         <Route path="dashboard" element={<AdminDashboard />} />
                         <Route path="propiedades" element={<AdminPropiedades />} />
                         <Route path="propiedades/nueva" element={<AdminFormPropiedad />} />
+                        <Route path="propiedades/:id/aprobar" element={<AdminAprobarPropiedad />} />
                         <Route path="propiedades/:id" element={<AdminFormPropiedad />} />
                         <Route path="contactos" element={<AdminContactos />} />
                         <Route path="mensajes" element={<AdminMensajes />} />

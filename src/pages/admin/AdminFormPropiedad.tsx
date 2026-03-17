@@ -223,14 +223,19 @@ export default function AdminFormPropiedad() {
         const { error } = await externalSupabase.from("propiedades").update(payload).eq("id", id);
         if (error) throw error;
       } else {
-        const { error } = await externalSupabase.from("propiedades").insert(payload);
+        const { data, error } = await externalSupabase.from("propiedades").insert(payload).select("id").single();
         if (error) throw error;
+        return data as { id: number };
       }
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       toast.success(isEdit ? "Propiedad actualizada" : "Propiedad creada");
       qc.invalidateQueries({ queryKey: ["properties"] });
-      navigate("/admin/propiedades");
+      if (isEdit) {
+        navigate("/admin/propiedades");
+      } else {
+        navigate(`/admin/propiedades/${(result as { id: number }).id}/aprobar`);
+      }
     },
     onError: (e: any) => toast.error(e.message ?? "Error al guardar"),
   });
