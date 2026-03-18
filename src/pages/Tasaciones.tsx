@@ -80,7 +80,7 @@ const Tasaciones = () => {
       {/* Valuation wizard */}
       <ValuationTool />
 
-      <WhatsAppFAB />
+      <WhatsAppFAB mode="minimal" />
       <ScrollToTop />
       <Footer />
     </div>
