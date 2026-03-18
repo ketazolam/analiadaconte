@@ -2,9 +2,10 @@ import { lazy, Suspense } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Navigation from "@/components/sections/Navigation";
 import HeroSection from "@/components/sections/HeroSection";
-import ScrollProgress from "@/components/ScrollProgress";
-import WhatsAppFAB from "@/components/WhatsAppFAB";
-import ScrollToTop from "@/components/ScrollToTop";
+
+const ScrollProgress = lazy(() => import("@/components/ScrollProgress"));
+const WhatsAppFAB = lazy(() => import("@/components/WhatsAppFAB"));
+const ScrollToTop = lazy(() => import("@/components/ScrollToTop"));
 
 const DualPathSection = lazy(() => import("@/components/sections/DualPathSection"));
 const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProperties"));
@@ -23,10 +24,16 @@ const Index = () => {
 
   return (
     <>
-      <ScrollProgress />
+      <Suspense fallback={null}>
+        <ScrollProgress />
+      </Suspense>
 
-      <WhatsAppFAB />
-      <ScrollToTop />
+      <Suspense fallback={null}>
+        <WhatsAppFAB />
+      </Suspense>
+      <Suspense fallback={null}>
+        <ScrollToTop />
+      </Suspense>
       <Navigation />
       <main>
         <HeroSection />
@@ -36,7 +43,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <FeaturedProperties />
         </Suspense>
-<Suspense fallback={null}>
+        <Suspense fallback={null}>
           <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>

@@ -30,7 +30,7 @@ const AboutSection = () => {
             <div className="absolute -top-2 -left-2 w-full h-full" style={{ border: "1px solid rgba(100,30,160,0.18)" }} />
             <div className="relative aspect-[3/4] overflow-hidden" style={{ backgroundColor: "#141218" }}>
               <img
-                src="/images/team-celebration.jpg"
+                src="/images/team-celebration.webp"
                 alt="Equipo Analía Daconte Propiedades"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -80,7 +80,7 @@ const AboutSection = () => {
             {/* Secondary office photo */}
             <div className="relative aspect-[16/9] overflow-hidden" style={{ border: "1px solid rgba(100,30,160,0.15)" }}>
               <img
-                src="/images/private-office.jpg"
+                src="/images/private-office.webp"
                 alt="Oficina privada de Analía Daconte"
                 className="w-full h-full object-cover"
                 loading="lazy"

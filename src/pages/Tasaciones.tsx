@@ -24,10 +24,10 @@ const Tasaciones = () => {
       {/* Hero header */}
       <div className="relative pt-32 pb-12 px-6 md:px-12 lg:px-20 overflow-hidden noise-overlay">
         <img
-          src="/images/waiting-room.jpg"
+          src="/images/waiting-room.webp"
           alt=""
           aria-hidden="true"
-          loading="eager"
+          loading="lazy"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ zIndex: 0 }}

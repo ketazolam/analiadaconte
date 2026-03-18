@@ -1,25 +1,16 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-import MagneticButton from "../MagneticButton";
 import HeroSearchBar from "../HeroSearchBar";
 import GoogleLogo from "@/components/GoogleLogo";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const heroImages = [
-  "/images/hero-aerial-1.jpg",
-  "/images/hero-aerial-2.jpg",
-  "/images/hero-aerial-3.png",
-  "/images/hero-aerial-4.jpg",
-];
-
-const heroImagesMobile = [
-  "/images/hero-aerial-1.jpg",
-  "/images/hero-aerial-2.jpg",
-  "/images/hero-aerial-3.png",
-  "/images/hero-aerial-4.jpg",
+  "/images/hero-aerial-1.webp",
+  "/images/hero-aerial-2.webp",
+  "/images/hero-aerial-3.webp",
+  "/images/hero-aerial-4.webp",
 ];
 
 const SLIDE_DURATION = 5000; // ms por slide
@@ -27,32 +18,48 @@ const CROSSFADE_DURATION = 1.2; // segundos
 
 const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disableParallax = isMobile || prefersReduced;
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  // Track which slides have been loaded into DOM (start with only slide 0)
+  const [mountedSlides, setMountedSlides] = useState<Set<number>>(() => new Set([0]));
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const startTimer = (length: number) => {
+  const startTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % length);
+      setCurrentSlide(prev => {
+        const next = (prev + 1) % heroImages.length;
+        // Mount the next slide before it becomes active
+        setMountedSlides(s => new Set(s).add(next));
+        return next;
+      });
     }, SLIDE_DURATION);
   };
 
   useEffect(() => {
-    const length = isMobile ? heroImagesMobile.length : heroImages.length;
-    setCurrentSlide(0);
-    startTimer(length);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [isMobile]);
+    startTimer();
+
+    // Preload remaining slides in background after initial mount (no DOM nodes)
+    const preloadTimer = setTimeout(() => {
+      heroImages.slice(1).forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    }, 2000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      clearTimeout(preloadTimer);
+    };
+  }, []);
 
   const goToSlide = (i: number) => {
+    setMountedSlides(s => new Set(s).add(i));
     setCurrentSlide(i);
-    const length = isMobile ? heroImagesMobile.length : heroImages.length;
-    startTimer(length);
+    startTimer();
   };
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -71,33 +78,36 @@ const HeroSection = () => {
             loop
             playsInline
             preload="none"
-            poster="/images/mdp-aerial-hero.jpg"
+            poster="/images/mdp-aerial-hero.webp"
             className="absolute inset-0 w-full h-full object-cover"
           >
             <source src="/images/office-video.mp4" type="video/mp4" />
           </video>
         ) : (
-          /* ── Desktop: carousel de 4 imágenes con crossfade ── */
+          /* ── Desktop: carousel — only mounted slides rendered ── */
           <>
-            {heroImages.map((src, i) => (
-              <motion.img
-                key={src}
-                src={src}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                initial={{ opacity: 0, scale: 1 }}
-                animate={
-                  i === currentSlide
-                    ? { opacity: 1, scale: 1.05 }
-                    : { opacity: 0, scale: 1 }
-                }
-                transition={
-                  i === currentSlide
-                    ? { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" }, scale: { duration: SLIDE_DURATION / 1000, ease: "linear" } }
-                    : { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" } }
-                }
-              />
-            ))}
+            {heroImages.map((src, i) =>
+              mountedSlides.has(i) ? (
+                <motion.img
+                  key={src}
+                  src={src}
+                  alt=""
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  initial={{ opacity: 0, scale: 1 }}
+                  animate={
+                    i === currentSlide
+                      ? { opacity: 1, scale: 1.05 }
+                      : { opacity: 0, scale: 1 }
+                  }
+                  transition={
+                    i === currentSlide
+                      ? { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" }, scale: { duration: SLIDE_DURATION / 1000, ease: "linear" } }
+                      : { opacity: { duration: CROSSFADE_DURATION, ease: "easeInOut" } }
+                  }
+                />
+              ) : null
+            )}
           </>
         )}
 
@@ -133,7 +143,7 @@ const HeroSection = () => {
             style={{ textShadow: "0 2px 24px rgba(0,0,0,0.65)" }}
           >
             <span style={{ color: "rgba(240,230,255,0.96)" }}>para </span>
-            <span className="gold-gradient-text">proyectos de vida</span>
+            <span style={{ color: "hsl(275 70% 78%)", textShadow: "0 2px 24px rgba(0,0,0,0.65)" }}>proyectos de vida</span>
           </motion.span>
         </motion.h1>
 
@@ -147,7 +157,7 @@ const HeroSection = () => {
           28 años convirtiendo decisiones en hogares
         </motion.p>
 
-        {/* Search bar — visible en mobile también */}
+        {/* Search bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -208,7 +218,7 @@ const HeroSection = () => {
         </motion.div>
       )}
 
-      {/* Scroll indicator — chevron elegante */}
+      {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         initial={{ opacity: 0 }}
