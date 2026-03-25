@@ -51,7 +51,7 @@ export interface Propiedad {
 
 export interface PropertyFilters {
   operacion?: string;
-  tipo?: string;
+  tipos?: string[];
   dormitorios?: number;
   precioMin?: number;
   precioMax?: number;

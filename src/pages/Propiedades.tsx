@@ -22,7 +22,7 @@ import { EASE } from "@/lib/constants";
 function filtersFromParams(sp: URLSearchParams): PropertyFilters {
   return {
     operacion: sp.get("operacion") || undefined,
-    tipo: sp.get("tipo") || undefined,
+    tipos: sp.get("tipo") ? sp.get("tipo")!.split(",") : undefined,
     dormitorios: sp.get("dormitorios") ? Number(sp.get("dormitorios")) : undefined,
     precioMin: sp.get("precioMin") ? Number(sp.get("precioMin")) : undefined,
     precioMax: sp.get("precioMax") ? Number(sp.get("precioMax")) : undefined,
@@ -37,7 +37,7 @@ function filtersFromParams(sp: URLSearchParams): PropertyFilters {
 function filtersToParams(f: PropertyFilters): Record<string, string> {
   const p: Record<string, string> = {};
   if (f.operacion) p.operacion = f.operacion;
-  if (f.tipo) p.tipo = f.tipo;
+  if (f.tipos && f.tipos.length > 0) p.tipo = f.tipos.join(",");
   if (f.dormitorios) p.dormitorios = String(f.dormitorios);
   if (f.precioMin) p.precioMin = String(f.precioMin);
   if (f.precioMax) p.precioMax = String(f.precioMax);

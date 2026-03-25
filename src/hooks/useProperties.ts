@@ -6,7 +6,7 @@ const PAGE_SIZE = 21;
 
 function applyCommonFilters(query: any, filters: Omit<PropertyFilters, "sort" | "searchText" | "superficieMin" | "superficieMax" | "destacada">) {
   if (filters.operacion) query = query.eq("operacion", filters.operacion);
-  if (filters.tipo) query = query.eq("tipo", filters.tipo);
+  if (filters.tipos && filters.tipos.length > 0) query = query.in("tipo", filters.tipos);
   if (filters.barrio) query = query.eq("barrio", filters.barrio);
   if (filters.dormitorios) query = query.gte("dormitorios", filters.dormitorios);
   if (filters.precioMin) query = query.gte("precio", filters.precioMin);

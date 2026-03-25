@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Search, X, Map, SlidersHorizontal, LayoutGrid, LayoutList, Star, Car, PawPrint, CreditCard, ChevronDown, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePropertyFilterOptions } from "@/hooks/useProperties";
 import type { PropertyFilters as Filters } from "@/lib/types";
@@ -24,6 +24,16 @@ const selectBase = "font-body text-xs bg-transparent border border-[hsl(var(--bo
 const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, viewMode = "grid", onViewModeChange }: PropertyFiltersProps) => {
   const { data: options } = usePropertyFilterOptions();
   const [searchInput, setSearchInput] = useState(filters.searchText || "");
+  const [tipoOpen, setTipoOpen] = useState(false);
+  const tipoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (tipoRef.current && !tipoRef.current.contains(e.target as Node)) setTipoOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useEffect(() => {
     setSearchInput(filters.searchText || "");
@@ -40,12 +50,12 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
 
   const update = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
 
-  const hasFilters = filters.operacion || filters.tipo || filters.dormitorios || filters.barrio
+  const hasFilters = filters.operacion || (filters.tipos && filters.tipos.length > 0) || filters.dormitorios || filters.barrio
     || filters.precioMin || filters.precioMax || filters.superficieMin || filters.superficieMax
     || filters.destacada || filters.searchText || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
   const activeCount = [
-    filters.operacion, filters.tipo, filters.dormitorios, filters.barrio, filters.searchText,
+    filters.operacion, filters.tipos?.length ? true : undefined, filters.dormitorios, filters.barrio, filters.searchText,
     filters.precioMin, filters.precioMax, filters.superficieMin, filters.superficieMax,
     filters.destacada, filters.cochera, filters.aptoCreditico, filters.aceptaMascotas,
   ].filter(Boolean).length;
@@ -67,11 +77,66 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
     </div>
   );
 
-  const tipoSelect = (className = "") => (
-    <select className={`${selectBase} ${className}`} value={filters.tipo || ""} onChange={(e) => update({ tipo: e.target.value || undefined })}>
-      <option value="">Tipo</option>
-      {(options?.tipos || []).map((t) => (<option key={t} value={t}>{t}</option>))}
-    </select>
+  const selectedTipos = filters.tipos || [];
+  const tipoLabel =
+    selectedTipos.length === 0 ? "Tipo" :
+    selectedTipos.length === 1 ? selectedTipos[0] :
+    `${selectedTipos[0]} +${selectedTipos.length - 1}`;
+
+  const toggleTipo = (t: string) => {
+    const next = selectedTipos.includes(t)
+      ? selectedTipos.filter((x) => x !== t)
+      : [...selectedTipos, t];
+    update({ tipos: next.length > 0 ? next : undefined });
+  };
+
+  const TipoMultiSelect = ({ className = "" }: { className?: string }) => (
+    <div className={`relative ${className}`} ref={tipoRef}>
+      <button
+        type="button"
+        onClick={() => setTipoOpen((v) => !v)}
+        className={`${selectBase} flex items-center gap-2 w-full ${selectedTipos.length > 0 ? "border-primary text-primary" : ""}`}
+      >
+        <span className="truncate flex-1 text-left">{tipoLabel}</span>
+        <ChevronDown className="w-3 h-3 shrink-0 opacity-60" />
+      </button>
+      {tipoOpen && (
+        <div
+          className="absolute left-0 top-full mt-1 z-50 min-w-[170px] py-1 shadow-xl bg-white"
+          style={{ border: BORDER, borderRadius: "2px" }}
+        >
+          {(options?.tipos || []).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => toggleTipo(t)}
+              className="flex items-center gap-2.5 w-full px-3 py-2 font-body text-xs text-left transition-colors hover:bg-gray-50 text-foreground"
+            >
+              <span
+                className="w-4 h-4 shrink-0 flex items-center justify-center border rounded-sm transition-colors"
+                style={{
+                  borderColor: selectedTipos.includes(t) ? "hsl(var(--primary))" : "hsl(var(--border))",
+                  background: selectedTipos.includes(t) ? "hsl(var(--primary))" : "transparent",
+                }}
+              >
+                {selectedTipos.includes(t) && <Check className="w-2.5 h-2.5 text-white" />}
+              </span>
+              {t}
+            </button>
+          ))}
+          {selectedTipos.length > 0 && (
+            <button
+              type="button"
+              onClick={() => update({ tipos: undefined })}
+              className="w-full px-3 py-2 font-body text-[11px] uppercase tracking-wider text-center text-text-muted hover:text-primary transition-colors"
+              style={{ borderTop: BORDER }}
+            >
+              Limpiar
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
 
   const dormSelect = (className = "") => (
@@ -174,7 +239,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           {/* Separator */}
           <div className="h-5 w-px" style={{ backgroundColor: "hsl(var(--border))" }} />
 
-          {tipoSelect()}
+          <TipoMultiSelect />
           {barrioSelect()}
           {dormSelect()}
 
@@ -270,7 +335,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
               <div className="pt-4 space-y-4">
                 <p className="font-display text-lg text-foreground">Filtros</p>
                 {operacionPills("flex-1")}
-                {tipoSelect("w-full")}
+                <TipoMultiSelect className="w-full" />
                 {barrioSelect("w-full")}
                 {dormSelect("w-full")}
                 <div>
