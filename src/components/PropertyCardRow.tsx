@@ -124,7 +124,12 @@ const PropertyCardRow = forwardRef<HTMLDivElement, Props>(({ property, className
           </div>
 
           <div className="flex items-end justify-between">
-            <p className="font-display text-[22px] text-primary leading-none">{priceDisplay}</p>
+            <span
+              className="font-display text-[18px] leading-none px-3 py-1.5 inline-block"
+              style={{ backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
+            >
+              {priceDisplay}
+            </span>
             <div className="flex items-center gap-4 font-body text-xs text-text-secondary">
               {(property.dormitorios ?? 0) > 0 && (
                 <span className="flex items-center gap-1"><Bed className="w-3.5 h-3.5" /> {property.dormitorios}</span>

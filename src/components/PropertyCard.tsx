@@ -173,7 +173,12 @@ const PropertyCard = forwardRef<HTMLDivElement, PropertyCardProps>(
 
             {/* Price overlay */}
             <div className="absolute bottom-3 left-4 z-10">
-              <p className="font-display text-[clamp(20px,4vw,26px)] text-primary leading-none">{priceDisplay}</p>
+              <span
+                className="font-display text-[clamp(15px,3.5vw,20px)] leading-none px-3 py-1.5 inline-block"
+                style={{ backgroundColor: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}
+              >
+                {priceDisplay}
+              </span>
             </div>
 
           </div>
