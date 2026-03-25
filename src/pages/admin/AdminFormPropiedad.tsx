@@ -274,7 +274,7 @@ export default function AdminFormPropiedad() {
               <SelectTrigger className={`${ic} h-9`}><SelectValue placeholder="Seleccionar" /></SelectTrigger>
               <SelectContent className="bg-white border-gray-200 shadow-md">
                 <SelectItem value="none" className="text-gray-400">—</SelectItem>
-                {["Venta","Alquiler","Alquiler Temporario"].map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                {["Venta","Alquiler"].map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

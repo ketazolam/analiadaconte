@@ -106,7 +106,7 @@ export default function AdminPropiedades() {
   const { data, isLoading } = useProperties(
     {
       operacion: filters.operacion || undefined,
-      tipo: filters.tipo || undefined,
+      tipos: filters.tipo ? [filters.tipo] : undefined,
       searchText: filters.searchText || undefined,
       sort: filters.sort,
     },
@@ -227,7 +227,7 @@ ${p.fotos?.[0] ? `<img src="${p.fotos[0]}" class="foto" />` : ""}
   ${p.acepta_mascotas ? `<div class="item"><b>Mascotas</b>Sí</div>` : ""}
 </div>
 ${p.descripcion ? `<div class="desc">${p.descripcion}</div>` : ""}
-<div class="footer">Analía Daconte Propiedades · info@analiadaconte.com.ar · 2233001242</div>
+<div class="footer">Analía Daconte Propiedades · analiadacontepropiedades@gmail.com · 2233001242</div>
 <script>window.onload=()=>window.print()</script>
 </body></html>`;
 
@@ -276,7 +276,6 @@ ${p.descripcion ? `<div class="desc">${p.descripcion}</div>` : ""}
             <SelectItem value="all" className="text-gray-700 focus:bg-purple-50 focus:text-purple-700 rounded-lg">Todas</SelectItem>
             <SelectItem value="Venta" className="text-gray-700 focus:bg-purple-50 focus:text-purple-700 rounded-lg">Venta</SelectItem>
             <SelectItem value="Alquiler" className="text-gray-700 focus:bg-purple-50 focus:text-purple-700 rounded-lg">Alquiler</SelectItem>
-            <SelectItem value="Alquiler Temporario" className="text-gray-700 focus:bg-purple-50 focus:text-purple-700 rounded-lg">Temporario</SelectItem>
           </SelectContent>
         </Select>
 

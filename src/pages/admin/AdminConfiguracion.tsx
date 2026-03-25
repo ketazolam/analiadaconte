@@ -30,7 +30,7 @@ type Config = {
 
 const EMPTY_CONFIG: Config = {
   nombre: "Analía Daconte Propiedades",
-  email: "info@analiadaconte.com.ar",
+  email: "analiadacontepropiedades@gmail.com",
   telefono: "223 300-1242",
   instagram: "https://www.instagram.com/analiadaconte",
   facebook: "https://www.facebook.com/analiadaconte",

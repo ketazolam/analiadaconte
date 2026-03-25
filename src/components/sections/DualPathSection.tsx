@@ -29,7 +29,7 @@ const panelsData = [
   {
     icon: Building2,
     title: "Alquilar",
-    desc: "Alquileres temporarios y permanentes con asesoramiento integral.",
+    desc: "Alquileres permanentes con asesoramiento integral.",
     cta: "Ver alquileres",
     href: "/propiedades?operacion=alquiler",
     bgDesktop: "/images/chesterfield-lounge.webp",
