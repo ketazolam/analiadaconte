@@ -90,7 +90,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
     update({ tipos: next.length > 0 ? next : undefined });
   };
 
-  const TipoMultiSelect = ({ className = "" }: { className?: string }) => (
+  const tipoDropdown = (className = "") => (
     <div className={`relative ${className}`} ref={tipoRef}>
       <button
         type="button"
@@ -239,7 +239,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
           {/* Separator */}
           <div className="h-5 w-px" style={{ backgroundColor: "hsl(var(--border))" }} />
 
-          <TipoMultiSelect />
+          {tipoDropdown()}
           {barrioSelect()}
           {dormSelect()}
 
@@ -335,7 +335,7 @@ const PropertyFiltersBar = ({ filters, onChange, total, showMapLink = true, view
               <div className="pt-4 space-y-4">
                 <p className="font-display text-lg text-foreground">Filtros</p>
                 {operacionPills("flex-1")}
-                <TipoMultiSelect className="w-full" />
+                {tipoDropdown("w-full")}
                 {barrioSelect("w-full")}
                 {dormSelect("w-full")}
                 <div>
