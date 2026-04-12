@@ -20,7 +20,8 @@ import { sanitizeBarrio } from "@/lib/utils";
 // ─── Constants ────────────────────────────────────────────────────────────────
 const MDP_CENTER: [number, number] = [-38.0055, -57.5426];
 const ACCENT = "#096DD9";
-const NAV_HEIGHT = 73;
+const NAV_HEIGHT = 92; // desktop nav height (py-7 + h-9)
+const NAV_HEIGHT_MOBILE = 73; // mobile nav height (py-5 + h-7)
 
 // ─── SVG Markers ─────────────────────────────────────────────────────────────
 const SHADOW = `<filter id="sh" x="-30%" y="-30%" width="160%" height="160%">
@@ -869,7 +870,7 @@ const Mapa = () => {
       <h1 className="sr-only">Mapa de Propiedades en Mar del Plata</h1>
 
       {/* Spacer mobile: Navigation es fixed, este div empuja el contenido debajo de ella */}
-      <div className="md:hidden" style={{ height: NAV_HEIGHT + 10, flexShrink: 0 }} />
+      <div className="md:hidden" style={{ height: NAV_HEIGHT_MOBILE + 10, flexShrink: 0 }} />
 
       {/* Filter bar — desktop only (compact single row) */}
       <div className="hidden md:block" style={{ paddingTop: NAV_HEIGHT + 12 }}>

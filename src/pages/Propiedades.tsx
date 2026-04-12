@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -15,7 +15,6 @@ import Footer from "@/components/sections/Footer";
 import { useProperties } from "@/hooks/useProperties";
 import { useFavorites } from "@/hooks/useFavorites";
 import type { PropertyFilters } from "@/lib/types";
-import type { Propiedad } from "@/lib/types";
 import { EASE } from "@/lib/constants";
 
 /* ── URL ↔ Filters sync helpers ── */
@@ -58,8 +57,6 @@ const Propiedades = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(0);
-  const [accumulated, setAccumulated] = useState<Propiedad[]>([]);
-  const [prevCount, setPrevCount] = useState(0);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [filters, setFilters] = useState<PropertyFilters>(() => filtersFromParams(searchParams));
@@ -67,33 +64,22 @@ const Propiedades = () => {
 
   const { data, isLoading, isError } = useProperties(filters, page);
 
-  useEffect(() => {
-    if (data?.properties) {
-      if (page === 0) {
-        setAccumulated(data.properties);
-        setPrevCount(0);
-      } else {
-        setAccumulated((prev) => {
-          setPrevCount(prev.length);
-          const existingIds = new Set(prev.map((p) => p.id));
-          const newProps = data.properties.filter((p) => !existingIds.has(p.id));
-          return [...prev, ...newProps];
-        });
-      }
-    }
-  }, [data, page]);
-
   const handleFiltersChange = useCallback((newFilters: PropertyFilters) => {
     setFilters(newFilters);
     setPage(0);
-    setAccumulated([]);
-    setPrevCount(0);
     setSearchParams(filtersToParams(newFilters), { replace: true });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [setSearchParams]);
 
   const total = data?.total ?? 0;
-  const showingCount = accumulated.length;
+  const PAGE_SIZE = 21;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const properties = data?.properties ?? [];
+
+  const goToPage = (p: number) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,10 +88,10 @@ const Propiedades = () => {
       <h1 className="sr-only">Propiedades en Venta y Alquiler en Mar del Plata</h1>
 
       {/* Nav spacer */}
-      <div className="h-[73px]" />
+      <div className="h-[73px] md:h-[92px]" />
 
       {/* Sticky Filters */}
-      <div className="sticky top-[73px] z-40">
+      <div className="sticky top-[73px] md:top-[92px] z-40">
         <PropertyFiltersBar
           filters={filters}
           onChange={handleFiltersChange}
@@ -127,7 +113,7 @@ const Propiedades = () => {
           <div className="text-center py-20">
             <p className="font-body text-text-secondary">Error al cargar propiedades. Intentá de nuevo.</p>
           </div>
-        ) : accumulated.length === 0 ? (
+        ) : properties.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-display text-2xl text-foreground mb-2">No encontramos propiedades</p>
             <p className="font-body text-sm text-text-secondary mb-6">Probá ajustando los filtros de búsqueda.</p>
@@ -141,41 +127,86 @@ const Propiedades = () => {
         ) : (
           <>
             <div className={viewMode === "list" ? "space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-              {accumulated.map((prop, i) => {
-                const isNew = i >= prevCount;
-                return (
-                  <motion.div
-                    key={prop.id}
-                    initial={isNew ? { opacity: 0, y: 20 } : false}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: EASE, delay: isNew ? Math.min((i - prevCount) * 0.05, 0.3) : 0 }}
-                  >
-                    {viewMode === "list" ? (
-                      <PropertyCardRow property={prop} />
-                    ) : (
-                      <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
-                    )}
-                  </motion.div>
-                );
-              })}
+              {properties.map((prop, i) => (
+                <motion.div
+                  key={prop.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, ease: EASE, delay: Math.min(i * 0.04, 0.25) }}
+                >
+                  {viewMode === "list" ? (
+                    <PropertyCardRow property={prop} />
+                  ) : (
+                    <PropertyCard property={prop} isFavorite={isFavorite(prop.id)} onToggleFavorite={toggleFavorite} />
+                  )}
+                </motion.div>
+              ))}
             </div>
 
-            {/* Load more */}
-            <div className="text-center mt-12 space-y-3">
-              <p className="font-body text-xs text-text-muted">
-                Mostrando {showingCount} de {total}
-              </p>
-              {data?.hasMore && (
-                <button
-                  onClick={() => setPage((p) => p + 1)}
-                  disabled={isLoading}
-                  className="font-body text-sm uppercase tracking-[0.1em] px-8 py-3 text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
-                  style={{ border: "1px solid hsl(var(--primary))" }}
-                >
-                  {isLoading ? "Cargando..." : "Cargar más propiedades"}
-                </button>
-              )}
-            </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex flex-col items-center gap-4 mt-12">
+                <p className="font-body text-xs text-text-muted">
+                  {total} propiedades · página {page + 1} de {totalPages}
+                </p>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => goToPage(page - 1)}
+                    disabled={page === 0 || isLoading}
+                    className="font-body text-xs uppercase tracking-[0.1em] px-4 py-2 transition-colors disabled:opacity-30 hover:bg-primary/8"
+                    style={{ border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
+                  >
+                    ← Anterior
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => {
+                    const show =
+                      i === 0 || i === totalPages - 1 ||
+                      Math.abs(i - page) <= 1;
+                    const showEllipsisBefore = i === 1 && page > 2;
+                    const showEllipsisAfter = i === totalPages - 2 && page < totalPages - 3;
+                    if (!show) return null;
+                    if (showEllipsisBefore) return <span key={`el-${i}`} className="font-body text-xs text-text-muted px-1">…</span>;
+                    if (showEllipsisAfter) return (
+                      <>
+                        <button
+                          key={i}
+                          onClick={() => goToPage(i)}
+                          disabled={isLoading}
+                          className="font-body text-xs w-8 h-8 transition-colors"
+                          style={i === page
+                            ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
+                            : { border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
+                        >
+                          {i + 1}
+                        </button>
+                        <span key={`el-after-${i}`} className="font-body text-xs text-text-muted px-1">…</span>
+                      </>
+                    );
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => goToPage(i)}
+                        disabled={isLoading}
+                        className="font-body text-xs w-8 h-8 transition-colors"
+                        style={i === page
+                          ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
+                          : { border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
+                      >
+                        {i + 1}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => goToPage(page + 1)}
+                    disabled={!data?.hasMore || isLoading}
+                    className="font-body text-xs uppercase tracking-[0.1em] px-4 py-2 transition-colors disabled:opacity-30 hover:bg-primary/8"
+                    style={{ border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

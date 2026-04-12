@@ -126,6 +126,31 @@ const HeroSection = () => {
         className="relative z-10 text-center max-w-4xl px-6"
         style={{ y: textY }}
       >
+        {/* Certification badge */}
+        <motion.div
+          className="inline-flex items-center gap-2 mb-6"
+          style={{
+            border: "1px solid rgba(180,130,255,0.32)",
+            borderRadius: "2px",
+            padding: "6px 14px",
+            backdropFilter: "blur(8px)",
+            background: "rgba(120,45,190,0.12)",
+          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
+        >
+          <span style={{
+            color: "hsl(275, 80%, 74%)",
+            fontSize: 10,
+            fontFamily: "var(--font-body)",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+          }}>
+            28 años en el mercado inmobiliario
+          </span>
+        </motion.div>
+
         <motion.h1 className="font-display text-[clamp(42px,6.5vw,88px)] leading-[1.0] mb-8">
           <motion.span
             className="block"
@@ -147,16 +172,6 @@ const HeroSection = () => {
             <span style={{ color: "hsl(275 70% 78%)", textShadow: "0 2px 24px rgba(0,0,0,0.65)" }}>proyectos de vida</span>
           </motion.span>
         </motion.h1>
-
-        <motion.p
-          className="font-body text-lg md:text-xl mb-6 md:mb-10 max-w-md mx-auto"
-          style={{ color: "white", textShadow: "0 1px 10px rgba(0,0,0,0.7)" }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.9 }}
-        >
-          28 años convirtiendo decisiones en hogares
-        </motion.p>
 
         {/* Hero CTAs */}
         <motion.div

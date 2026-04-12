@@ -46,7 +46,7 @@ const Navigation = () => {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-[1300] flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 transition-colors duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[1300] flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 md:py-7 transition-colors duration-500 ${
           (scrolled || !isHome) ? "backdrop-blur-xl" : ""
         }`}
         style={
@@ -65,7 +65,7 @@ const Navigation = () => {
           <img
             src="/images/logo-ad.png"
             alt="Analía Daconte Inversiones Inmobiliarias"
-            className="h-7 w-auto object-contain"
+            className="h-7 md:h-9 w-auto object-contain"
             style={{
               filter: (scrolled || !isHome) ? "none" : "brightness(0) invert(1)",
             }}
