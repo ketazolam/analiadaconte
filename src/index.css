@@ -90,12 +90,15 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
     cursor: none;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   /* Hide default cursor on desktop */
@@ -118,11 +121,14 @@
 
 @layer components {
   .font-display {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   .font-body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
   }
 
   .label-accent {

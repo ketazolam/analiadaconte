@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"DM Serif Display"', 'serif'],
-        body: ['"DM Sans"', 'sans-serif'],
+        display: ['"Barlow"', 'sans-serif'],
+        body: ['"Barlow"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
