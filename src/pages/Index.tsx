@@ -7,11 +7,10 @@ const ScrollProgress = lazy(() => import("@/components/ScrollProgress"));
 const WhatsAppFAB = lazy(() => import("@/components/WhatsAppFAB"));
 const ScrollToTop = lazy(() => import("@/components/ScrollToTop"));
 
-const DualPathSection = lazy(() => import("@/components/sections/DualPathSection"));
+const MapShowcaseSection = lazy(() => import("@/components/sections/MapShowcaseSection"));
 const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProperties"));
 const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
 const AboutSection = lazy(() => import("@/components/sections/AboutSection"));
-const MapPreviewSection = lazy(() => import("@/components/sections/MapPreviewSection"));
 const ReviewsSection = lazy(() => import("@/components/sections/ReviewsSection"));
 const NewsletterSection = lazy(() => import("@/components/sections/NewsletterSection"));
 const Footer = lazy(() => import("@/components/sections/Footer"));
@@ -38,13 +37,10 @@ const Index = () => {
       <main>
         <HeroSection />
         <Suspense fallback={null}>
-          <DualPathSection />
+          <MapShowcaseSection />
         </Suspense>
         <Suspense fallback={null}>
           <FeaturedProperties />
-        </Suspense>
-        <Suspense fallback={null}>
-          <MapPreviewSection />
         </Suspense>
         <Suspense fallback={null}>
           <SellProposal />
