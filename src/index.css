@@ -95,10 +95,20 @@
     cursor: none;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
     font-family: 'Barlow', sans-serif;
     font-weight: 800;
     letter-spacing: -0.02em;
+  }
+  h2 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  h3, h4, h5, h6 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   /* Hide default cursor on desktop */

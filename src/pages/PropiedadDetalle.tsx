@@ -174,7 +174,7 @@ function FeaturePill({ icon: Icon, label, value }: { icon: any; label: string; v
       <Icon className="w-5 h-5 text-primary flex-shrink-0" />
       <div>
         <p className="font-body text-[10px] uppercase tracking-wider text-text-muted">{label}</p>
-        <p className="font-display text-lg text-foreground">{value}</p>
+        <p className="font-body font-semibold text-base text-foreground">{value}</p>
       </div>
     </div>
   );

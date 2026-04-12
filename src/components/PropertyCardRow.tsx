@@ -114,7 +114,7 @@ const PropertyCardRow = forwardRef<HTMLDivElement, Props>(({ property, className
             {property.tipo && (
               <p className="font-body text-[10px] uppercase tracking-wider text-text-muted mb-1">{property.tipo}</p>
             )}
-            <h3 className="font-display text-lg text-foreground mb-1 line-clamp-1">{property.titulo || "Sin título"}</h3>
+            <h3 className="font-body font-semibold tracking-tight text-lg text-foreground mb-1 line-clamp-1">{property.titulo || "Sin título"}</h3>
             <p className="flex items-center gap-1 font-body text-xs text-text-muted mb-2">
               <MapPin className="w-3 h-3" /> {locationText}
             </p>
