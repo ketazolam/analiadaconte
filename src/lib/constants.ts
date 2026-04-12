@@ -6,7 +6,7 @@ export const PHONE = "223 300-1242";
 export const EMAIL = "analiadacontepropiedades@gmail.com";
 export const INSTAGRAM_URL = "https://www.instagram.com/analiadaconte";
 export const ADDRESS = "Mar del Plata, Buenos Aires";
-export const ADDRESS_FULL = "Ortega y Gasset 658 / Av. Constitución 4920, Mar del Plata, Buenos Aires";
+export const ADDRESS_FULL = "Av. Constitución 4920, Mar del Plata, Buenos Aires";
 export const FACEBOOK_URL = "https://www.facebook.com/analiadaconte";
 
 export const GOOGLE_MAPS_URL =
