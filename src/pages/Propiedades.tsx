@@ -158,44 +158,30 @@ const Propiedades = () => {
                   >
                     ← Anterior
                   </button>
-                  {Array.from({ length: totalPages }, (_, i) => {
-                    const show =
-                      i === 0 || i === totalPages - 1 ||
-                      Math.abs(i - page) <= 1;
-                    const showEllipsisBefore = i === 1 && page > 2;
-                    const showEllipsisAfter = i === totalPages - 2 && page < totalPages - 3;
-                    if (!show) return null;
-                    if (showEllipsisBefore) return <span key={`el-${i}`} className="font-body text-xs text-text-muted px-1">…</span>;
-                    if (showEllipsisAfter) return (
-                      <>
+                  {(() => {
+                    const pages: (number | "…")[] = [0];
+                    if (page > 2) pages.push("…");
+                    for (let i = Math.max(1, page - 1); i <= Math.min(totalPages - 2, page + 1); i++) pages.push(i);
+                    if (page < totalPages - 3) pages.push("…");
+                    if (totalPages > 1) pages.push(totalPages - 1);
+                    return pages.map((p, idx) =>
+                      p === "…" ? (
+                        <span key={`el-${idx}`} className="font-body text-xs text-text-muted px-1">…</span>
+                      ) : (
                         <button
-                          key={i}
-                          onClick={() => goToPage(i)}
+                          key={p}
+                          onClick={() => goToPage(p)}
                           disabled={isLoading}
                           className="font-body text-xs w-8 h-8 transition-colors"
-                          style={i === page
+                          style={p === page
                             ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
                             : { border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
                         >
-                          {i + 1}
+                          {p + 1}
                         </button>
-                        <span key={`el-after-${i}`} className="font-body text-xs text-text-muted px-1">…</span>
-                      </>
+                      )
                     );
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => goToPage(i)}
-                        disabled={isLoading}
-                        className="font-body text-xs w-8 h-8 transition-colors"
-                        style={i === page
-                          ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
-                          : { border: "1px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
-                      >
-                        {i + 1}
-                      </button>
-                    );
-                  })}
+                  })()}
                   <button
                     onClick={() => goToPage(page + 1)}
                     disabled={!data?.hasMore || isLoading}
