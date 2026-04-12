@@ -470,7 +470,7 @@ const MapFiltersBar = ({
   const { data: options } = usePropertyFilterOptions();
   const update = (patch: Partial<PropertyFilters>) => onChange({ ...filters, ...patch });
   const hasFilters =
-    filters.operacion || filters.tipo || filters.barrio || filters.dormitorios ||
+    filters.operacion || filters.tipos?.length || filters.barrio || filters.dormitorios ||
     filters.precioMin || filters.precioMax || filters.cochera || filters.aptoCreditico || filters.aceptaMascotas;
 
   const pillStyle = (active: boolean): React.CSSProperties => ({
@@ -546,9 +546,9 @@ const MapFiltersBar = ({
 
       {/* Tipo */}
       <select
-        value={filters.tipo || ""}
-        onChange={(e) => update({ tipo: e.target.value || undefined })}
-        style={selectStyle(!!filters.tipo)}
+        value={filters.tipos?.[0] || ""}
+        onChange={(e) => update({ tipos: e.target.value ? [e.target.value] : undefined })}
+        style={selectStyle(!!filters.tipos?.length)}
       >
         <option value="">Tipo</option>
         {(options?.tipos || []).map((t) => (
@@ -684,7 +684,7 @@ const Mapa = () => {
 
   const [filters, setFilters] = useState<PropertyFilters>({
     operacion: searchParams.get("operacion") || undefined,
-    tipo: searchParams.get("tipo") || undefined,
+    tipos: searchParams.get("tipo") ? [searchParams.get("tipo")!] : undefined,
     dormitorios: searchParams.get("dormitorios")
       ? Number(searchParams.get("dormitorios"))
       : undefined,
@@ -733,7 +733,7 @@ const Mapa = () => {
   useEffect(() => {
     const params: Record<string, string> = {};
     if (filters.operacion) params.operacion = filters.operacion;
-    if (filters.tipo) params.tipo = filters.tipo;
+    if (filters.tipos?.length) params.tipo = filters.tipos[0];
     if (filters.dormitorios) params.dormitorios = String(filters.dormitorios);
     if (filters.precioMin) params.precioMin = String(filters.precioMin);
     if (filters.precioMax) params.precioMax = String(filters.precioMax);
@@ -856,6 +856,12 @@ const Mapa = () => {
         /* Zoom control — no overlap con safe area */
         .leaflet-top { padding-top: env(safe-area-inset-top, 0px); }
         .leaflet-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+        /* Restaurar cursors en el mapa — más específicos que * { cursor: none } */
+        .leaflet-container { cursor: grab !important; }
+        .leaflet-drag-target { cursor: grabbing !important; }
+        .leaflet-interactive { cursor: pointer !important; }
+        .leaflet-control a,
+        .leaflet-control button { cursor: pointer !important; }
       `}</style>
 
       {/* Navigation */}
