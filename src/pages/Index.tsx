@@ -9,6 +9,7 @@ const ScrollToTop = lazy(() => import("@/components/ScrollToTop"));
 
 const MapShowcaseSection = lazy(() => import("@/components/sections/MapShowcaseSection"));
 const FeaturedProperties = lazy(() => import("@/components/sections/FeaturedProperties"));
+const EmprendimientosSection = lazy(() => import("@/components/sections/EmprendimientosSection"));
 const SellProposal = lazy(() => import("@/components/sections/SellProposal"));
 const AboutSection = lazy(() => import("@/components/sections/AboutSection"));
 const ReviewsSection = lazy(() => import("@/components/sections/ReviewsSection"));
@@ -41,6 +42,9 @@ const Index = () => {
         </Suspense>
         <Suspense fallback={null}>
           <FeaturedProperties />
+        </Suspense>
+        <Suspense fallback={null}>
+          <EmprendimientosSection />
         </Suspense>
         <Suspense fallback={null}>
           <SellProposal />

@@ -101,6 +101,24 @@ export function useAllMapProperties(filters: Omit<PropertyFilters, "sort">) {
   });
 }
 
+export function useEmprendimientos(limit = 6) {
+  return useQuery({
+    queryKey: ["emprendimientos", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("propiedades")
+        .select("id,pixel_slug,titulo,tipo,operacion,precio,precio_texto,moneda,fotos,barrio,ciudad,direccion,etiqueta,a_estrenar,superficie_total,dormitorios,cantidad_plantas")
+        .ilike("tipo", "%emprendimiento%")
+        .order("destacada", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as unknown as Propiedad[]) || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function usePropertyFilterOptions() {
   return useQuery({
     queryKey: ["property-filter-options"],
