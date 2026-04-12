@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import HeroSearchBar from "../HeroSearchBar";
+import { ChevronDown, Search, TrendingUp } from "lucide-react";
 import GoogleLogo from "@/components/GoogleLogo";
 import { EASE, GOOGLE_MAPS_URL } from "@/lib/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -18,6 +18,7 @@ const CROSSFADE_DURATION = 1.2; // segundos
 
 const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const disableParallax = isMobile || prefersReduced;
@@ -157,13 +158,70 @@ const HeroSection = () => {
           28 años convirtiendo decisiones en hogares
         </motion.p>
 
-        {/* Search bar */}
+        {/* Hero CTAs */}
         <motion.div
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 md:mt-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 1.1 }}
         >
-          <HeroSearchBar />
+          {/* Comprar / Alquilar */}
+          <motion.button
+            onClick={() => navigate("/propiedades")}
+            className="group relative flex items-center gap-3 px-8 py-4 sm:px-10 sm:py-4 w-full sm:w-auto justify-center overflow-hidden"
+            style={{
+              background: "hsl(275, 62%, 38%)",
+              border: "1px solid hsl(275, 62%, 52%)",
+              borderRadius: "2px",
+              color: "white",
+              fontFamily: "var(--font-body)",
+              fontSize: "14px",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+          >
+            {/* Shine overlay on hover */}
+            <motion.span
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)" }}
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "100%" }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            />
+            <Search className="w-4 h-4 shrink-0 opacity-80" />
+            <span>Comprar / Alquilar</span>
+          </motion.button>
+
+          {/* Vender */}
+          <motion.button
+            onClick={() => navigate("/tasaciones")}
+            className="group flex items-center gap-3 px-8 py-4 sm:px-10 sm:py-4 w-full sm:w-auto justify-center"
+            style={{
+              background: "rgba(255,255,255,0.07)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.22)",
+              borderRadius: "2px",
+              color: "rgba(255,255,255,0.90)",
+              fontFamily: "var(--font-body)",
+              fontSize: "14px",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+            whileHover={{
+              background: "rgba(255,255,255,0.13)",
+              borderColor: "rgba(255,255,255,0.40)",
+              color: "rgba(255,255,255,1)",
+              scale: 1.02,
+            }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+          >
+            <TrendingUp className="w-4 h-4 shrink-0 opacity-80" />
+            <span>Vender</span>
+          </motion.button>
         </motion.div>
 
         {/* Google rating badge */}
