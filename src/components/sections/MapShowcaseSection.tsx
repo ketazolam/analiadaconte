@@ -377,11 +377,11 @@ const MapShowcaseSection = () => {
             .showcase-map .leaflet-control-zoom { display: none; }
           `}</style>
 
-          <div className="showcase-map" style={{ width: "100%", height: "100%", minHeight: 400 }}>
+          <div className="showcase-map" style={{ position: "absolute", inset: 0 }}>
             <MapContainer
               center={MDP_CENTER}
               zoom={13}
-              style={{ width: "100%", height: "100%", minHeight: 400 }}
+              style={{ width: "100%", height: "100%" }}
               zoomControl={false}
               scrollWheelZoom={false}
               dragging={false}
